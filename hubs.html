@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SkyTrace- Global Network Hubs</title>
+    <style>
+        :root { --gold: --gold; --maroon: --maroon }
+        body { background: black; color: white; font-family: 'Segoe UI', sans-serif; margin: 0; }
+        .nav-bar { background: black; padding: 15px 40px; border-bottom: 1px solid #222; display: flex; gap: 20px; }
+        .nav-link { color: var(--gold); text-decoration: none; font-size: 0.8rem; letter-spacing: 2px; font-weight: bold; }
+        .hero { height: 30vh; display: flex; flex-direction: column; justify-content: center; align-items: center; border-bottom: 2px solid var(--gold); }
+        .hero h1 { font-size: 3.5rem; letter-spacing: 10px; margin: 0; color: var(--gold); text-transform: uppercase; }
+        .container { max-width: 1400px; margin: 40px auto; padding: 0 40px; }
+        .hub-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .hub-card { 
+            background: black; border: 1px solid #222; padding: 25px; border-radius: 4px; 
+            text-decoration: none; color: inherit; transition: 0.3s;
+        }
+        .hub-card:hover { border-color: var(--gold); background: #161616; transform: translateY(-5px); }
+        .country-label { color: var(--gold); font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; }
+        .city-name { font-size: 1.8rem; margin: 10px 0; }
+        .airport-code { color: slategray; font-family: monospace; }
+    </style>
+</head>
+<body>
+    <nav class="nav-bar">
+        <a href="hubs.html" class="nav-link"> HOME</a>
+        <a href="#" class="nav-link" style="color: gray;">NETWORK MAP</a>
+    </nav>
+    <div class="hero">
+        <h1>SKYTRACE</h1>
+        <p style="letter-spacing: 5px; color: grey;">GLOBAL AIRPORT TERMINALS</p>
+    </div>
+    <div class="container">
+        <div class="hub-grid" id="hubGrid"></div>
+    </div>
+    <script>
+        const hubs = [
+            { country: "Qatar", city: "Doha", code: "DOH" },
+            { country: "India", city: "Delhi", code: "DEL" },
+            { country: "United Kingdom", city: "London", code: "LHR" },
+            { country: "United States", city: "New York", code: "JFK" },
+            { country: "UAE", city: "Dubai", code: "DXB" },
+            { country: "Japan", city: "Tokyo", code: "HND" },
+            { country: "France", city: "Paris", code: "CDG" },
+            { country: "Singapore", city: "Singapore", code: "SIN" },
+            { country: "Germany", city: "Frankfurt", code: "FRA" },
+            { country: "Australia", city: "Sydney", code: "SYD" },
+            { country: "Canada", city: "Toronto", code: "YYZ" },
+            { country: "Turkey", city: "Istanbul", code: "IST" }
+        ];
+        const grid = document.getElementById('hubGrid');
+        hubs.forEach(hub => {
+            grid.innerHTML += `
+                <a href="status.html?origin=${hub.code}" class="hub-card">
+                    <span class="country-label">${hub.country}</span>
+                    <h2 class="city-name">${hub.city}</h2>
+                    <div class="airport-code">${hub.code} </div>
+                </a>`;
+        });
+    </script>
+</body>
+</html>
