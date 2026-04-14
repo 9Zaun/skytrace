@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SkyTrace- Live Board & Tracker</title>
+    <style>
+        :root { --gold: #c39d63; --maroon: #81202e; }
+        body { background: black; color: white; font-family: 'Segoe UI', sans-serif; margin: 0; }
+        .wrapper { padding: 40px; max-width: 1400px; margin: 0 auto; }
+        .search-container { margin: 20px 0; }
+        #flightSearch { 
+            width: 100%; padding: 15px; background: black; border: 1px solid grey; 
+            color: var(--gold); font-size: 1rem; border-radius: 4px; outline: none; box-sizing: border-box;
+        }
+        #flightSearch:focus { border-color: var(--gold); }
+        .top-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .home-link { color: var(--gold); text-decoration: none; font-size: 0.8rem; letter-spacing: 2px; border: 1px solid grey; padding: 8px 15px; border-radius: 4px; }
+        header { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 2px solid var(--gold); padding-bottom: 20px; }
+        #clock { font-family: monospace; font-size: 3.5rem; font-weight: bold; }
+        .tab-bar { margin: 20px 0; display: flex; gap: 10px; }
+        .tab { padding: 12px 40px; cursor: pointer; background: black; border: 1px solid grey; color: lightgray; font-weight: bold; }
+        .tab.active { background: var(--gold); color: black; border-color: var(--gold); }
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; color: grey; padding: 15px; border-bottom: 2px solid #222; font-size: 0.8rem; letter-spacing: 2px; }
+        td { padding: 25px 15px; border-bottom: 1px solid black; font-size: 1.2rem; }
+        .st { padding: 6px 12px; font-weight: bold; font-size: 0.85rem; border-radius: 2px; display: inline-block; min-width: 140px; text-align: center; text-transform: uppercase; }
+        .st-boarding { background: var(--maroon); color: white; animation: blink 1s infinite; }
+        .st-on-time { color: limegreen; border: 1px solid limegreen; }
+        .st-arrived { background: white; color: black; }
+        .st-baggage-claim { background: blue; color: white; }
+        .st-immigration { background: purple; color: white; }
+        .st-cancelled { background: red; color: white; }
+        .st-delayed { color: yellow; border: 1px solid yellow; }
+        @keyframes blink { 50% { opacity: 0; } }
+    </style>
+</head>
+<body>
+
+    <div class="wrapper">
+        <div class="top-nav">
+            <a href="hubs.html" class="home-link"> HUB NETWORK</a>
+            <div style="color: limegreen; font-size: 0.8rem; letter-spacing: 2px;"> SYSTEM ONLINE</div>
+        </div>
+
+        <header>
+            <div>
+                <h1 id="airportName" style="margin:0; color:var(--gold); letter-spacing:4px; font-size: 3rem;">AIRPORT</h1>
+                <p id="boardType" style="margin:5px 0 0 0; letter-spacing:3px; color:grey; font-weight:bold;">DEPARTURES</p>
+            </div>
+            <div id="clock">00:00:00</div>
+        </header>
+
+        <div class="search-container">
+            <input type="text" id="flightSearch" placeholder="SEARCH FLIGHT OR CITY..." onkeyup="render()">
+        </div>
+
+        <div class="tab-bar">
+            <div id="depTab" class="tab active" onclick="switchMode('DEP')">DEPARTURES</div>
+            <div id="arrTab" class="tab" onclick="switchMode('ARR')">ARRIVALS</div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>TIME</th>
+                    <th>FLIGHT</th>
+                    <th id="cityLabel">DESTINATION</th>
+                    <th>GATE</th>
+                    <th>STATUS</th>
+                </tr>
+            </thead>
+            <tbody id="fBody"></tbody>
+        </table>
+    </div>
+    <script>
+        const FLIGHT_DATA = {
+            flights: [
+                { id: "QR 001", from: "Doha", fromCode: "DOH", to: "London", sch: "08:00", status: "ON-TIME", gate: "A1" },
+                { id: "QR 701", from: "Doha", fromCode: "DOH", to: "New York", sch: "09:30", status: "CANCELLED", gate: "B3" },
+                { id: "QR 002", from: "London", fromCode: "LHR", to: "Doha", sch: "14:20", status: "ARRIVED", gate: "A1" },
+                { id: "AI 102", from: "Delhi", fromCode: "DEL", to: "Doha", sch: "16:45", status: "BAGGAGE CLAIM", gate: "B2" },
+                { id: "BA 123", from: "London", fromCode: "LHR", to: "Doha", sch: "19:10", status: "IMMIGRATION", gate: "A5" },
+                { id: "AI 101", from: "Delhi", fromCode: "DEL", to: "Mumbai", sch: "01:15", status: "ON-TIME", gate: "T3-12" },
+                { id: "6E 502", from: "Delhi", fromCode: "DEL", to: "Dubai", sch: "02:30", status: "CANCELLED", gate: "T1-04" },
+                { id: "EK 512", from: "Dubai", fromCode: "DXB", to: "Delhi", sch: "10:20", status: "ARRIVED", gate: "T3-01" },
+                { id: "QR 507", from: "Doha", fromCode: "DOH", to: "Delhi", sch: "13:40", status: "BAGGAGE CLAIM", gate: "T3-05" },
+                { id: "BA 217", from: "London", fromCode: "LHR", to: "New York", sch: "11:15", status: "ON-TIME", gate: "A18" },
+                { id: "AA 101", from: "New York", fromCode: "JFK", to: "London", sch: "06:30", status: "ARRIVED", gate: "B4" },
+                { id: "EK 201", from: "Dubai", fromCode: "DXB", to: "New York", sch: "08:30", status: "ON-TIME", gate: "A1" },
+                { id: "AI 912", from: "Delhi", fromCode: "DEL", to: "Dubai", sch: "05:15", status: "ARRIVED", gate: "T1" }
+                // ... (You can add the rest of your 72 flights here later)
+            ]
+        };
+        let currentMode = 'DEP';
+        let currentOrigin = "";
+        const cityMap = { "DOH": "Doha", "DEL": "Delhi", "LHR": "London", "JFK": "New York", "DXB": "Dubai", "HND": "Tokyo", "CDG": "Paris", "SIN": "Singapore", "FRA": "Frankfurt", "SYD": "Sydney", "YYZ": "Toronto", "IST": "Istanbul" };
+        function init() {
+            const params = new URLSearchParams(window.location.search);
+            currentOrigin = params.get('origin') || "DOH";
+            document.getElementById('airportName').innerText = (cityMap[currentOrigin] || "AIRPORT").toUpperCase();
+            setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleTimeString('en-GB'); }, 1000);
+            render();
+        }
+        function switchMode(mode) {
+            currentMode = mode;
+            document.getElementById('depTab').classList.toggle('active', mode === 'DEP');
+            document.getElementById('arrTab').classList.toggle('active', mode === 'ARR');
+            document.getElementById('boardType').innerText = mode === 'DEP' ? 'DEPARTURES' : 'ARRIVALS';
+            document.getElementById('cityLabel').innerText = mode === 'DEP' ? 'DESTINATION' : 'ORIGIN';
+            render();
+        }
+        function render() {
+            const body = document.getElementById('fBody');
+            const searchQuery = document.getElementById('flightSearch').value.toUpperCase();
+            const city = cityMap[currentOrigin];
+            
+            let matches = FLIGHT_DATA.flights.filter(f => {
+                if (currentMode === 'DEP') return f.fromCode === currentOrigin;
+                return f.to.toLowerCase() === city.toLowerCase();
+            });
+            if (searchQuery) {
+                matches = matches.filter(f => 
+                    f.id.toUpperCase().includes(searchQuery) || 
+                    f.to.toUpperCase().includes(searchQuery) || 
+                    f.from.toUpperCase().includes(searchQuery)
+                );
+            }
+            body.innerHTML = '';
+            matches.forEach(f => {
+                let status = f.status;
+                if (currentMode === 'DEP') {
+                    if (["BAGGAGE CLAIM", "IMMIGRATION", "ARRIVED"].includes(status)) status = "ON-TIME";
+                } else {
+                    if (["BOARDING", "GATE OPEN", "ON-TIME"].includes(status)) status = "SCHEDULED";
+                }
+                const slug = status.toLowerCase().replace(/\s+/g, '-');
+                const displayCity = currentMode === 'DEP' ? f.to : f.from;
+                body.innerHTML += `<tr>
+                    <td style="font-family:monospace;">${f.sch}</td>
+                    <td style="color:var(--gold); font-weight:bold;">${f.id}</td>
+                    <td style="text-transform:uppercase;">${displayCity}</td>
+                    <td>${f.gate}</td>
+                    <td><span class="st st-${slug}">${status}</span></td>
+                </tr>`;
+            });
+        }
+        window.onload = init;
+    </script>
+</body>
+</html>
