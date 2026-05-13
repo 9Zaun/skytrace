@@ -1,0 +1,1093 @@
+/*
+======================
+Design tokens
+======================
+*/
+
+:root {
+    /* Brand colours */
+    --gold:          #c39d63;
+    --gold-dim:      #8a6e42;
+    --gold-subtle:   rgba(195, 157, 99, 0.08);
+    --maroon:        #81202e;
+  
+    /* Surfaces */
+    --bg:            #000000;
+    --surface:       #0d0d0d;
+    --surface-2:     #161616;
+    --border:        #222222;
+    --border-hover:  var(--gold);
+  
+    /* Text */
+    --text:          #ffffff;
+    --text-muted:    #888888;
+    --text-faint:    #444444;
+  
+    /* Status colours — used as both text and border */
+    --status-ontime:     #00c853;   /* limegreen */
+    --status-delayed:    #ffd600;   /* yellow */
+    --status-boarding:   var(--maroon);
+    --status-cancelled:  #f44336;   /* red */
+    --status-arrived:    #ffffff;
+    --status-baggage:    #1565c0;   /* blue */
+    --status-immigration:#6a1b9a;   /* purple */
+  
+    /* Typography */
+    --font-ui:       'Segoe UI', system-ui, sans-serif;
+    --font-mono:     'Courier New', Courier, monospace;
+  
+    /* Spacing scale */
+    --sp-1:  4px;
+    --sp-2:  8px;
+    --sp-3:  12px;
+    --sp-4:  16px;
+    --sp-5:  20px;
+    --sp-6:  24px;
+    --sp-8:  32px;
+    --sp-10: 40px;
+    --sp-12: 48px;
+    --sp-16: 64px;
+    --sp-20: 80px;
+  
+    /* Layout */
+    --max-width: 1400px;
+    --nav-height: 64px;
+  
+    /* Motion — keep fast, purposeful only */
+    --transition: 0.25s ease;
+    --transition-fast: 0.15s ease;
+  }
+
+  /*
+  ======================
+  Reset and Base Styles
+  ======================
+  */
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+  
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-ui);
+    font-size: 1rem;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+  
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+  
+  img {
+    display: block;
+    max-width: 100%;
+  }
+  
+  ul, ol {
+    list-style: none;
+  }
+  
+  button {
+    cursor: pointer;
+    font-family: inherit;
+    border: none;
+    background: none;
+  }
+  
+  input, select, textarea {
+    font-family: inherit;
+    font-size: inherit;
+  }
+
+  /*
+  ======================
+  Layout stuff
+  ======================
+  */
+  
+  /* Page-width container */
+.container {
+    width: 100%;
+    max-width: var(--max-width);
+    margin-inline: auto;
+    padding-inline: var(--sp-10);
+  }
+  
+  /* Standard section vertical rhythm */
+  .section {
+    padding-block: var(--sp-16);
+  }
+  
+  .section--sm {
+    padding-block: var(--sp-8);
+  }
+  
+  /* Responsive auto-fit grid */
+  .grid-auto {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: var(--sp-5);
+  }
+  
+  /* Flex row utility */
+  .flex-row {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-4);
+  }
+  
+  /* Section heading */
+  .section-label {
+    font-size: 0.7rem;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: var(--sp-3);
+  }
+  
+  .section-title {
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text);
+    margin-bottom: var(--sp-4);
+  }
+  
+  .section-sub {
+    color: var(--text-muted);
+    max-width: 520px;
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+  
+  /* Gold divider line */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin-block: var(--sp-8);
+  }
+  
+  .divider--gold {
+    border-color: var(--gold);
+  }
+
+  
+/* 
+======================
+Navigation
+======================
+*/
+
+.nav-bar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    height: var(--nav-height);
+    background: rgba(0, 0, 0, 0.92);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    padding-inline: var(--sp-10);
+    gap: var(--sp-8);
+  }
+  
+  .nav-logo {
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    color: var(--gold);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-6);
+    margin-left: auto;
+  }
+  
+  .nav-link {
+    font-size: 0.72rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-weight: 600;
+    transition: color var(--transition-fast);
+    white-space: nowrap;
+  }
+  
+  .nav-link:hover,
+  .nav-link.active {
+    color: var(--gold);
+  }
+  
+  /* Mobile hamburger toggle button */
+  .nav-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    margin-left: auto;
+    padding: var(--sp-2);
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .nav-toggle span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: var(--gold);
+    transition: var(--transition);
+  }
+  
+  /* Mobile nav menu (hidden by default) */
+  .nav-menu {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: var(--nav-height);
+    left: 0;
+    right: 0;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    padding: var(--sp-6) var(--sp-10);
+    gap: var(--sp-5);
+    z-index: 99;
+  }
+  
+  .nav-menu.open {
+    display: flex;
+  }
+  
+  .nav-menu .nav-link {
+    font-size: 0.85rem;
+    padding-block: var(--sp-2);
+    border-bottom: 1px solid var(--border);
+  }
+  
+  /* Responsive: collapse nav links on mobile */
+  @media (max-width: 768px) {
+    .nav-links {
+      display: none;
+    }
+  
+    .nav-toggle {
+      display: flex;
+    }
+  }
+  
+
+  /*
+  ======================
+  Buttons
+  ======================
+  */
+
+  /* Base button */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--sp-2);
+    padding: 12px 28px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border-radius: 2px;
+    transition: var(--transition);
+    white-space: nowrap;
+    cursor: pointer;
+    font-family: var(--font-ui);
+  }
+  
+  /* Gold filled — primary action */
+  .btn-primary {
+    background: var(--gold);
+    color: #000;
+    border: 1px solid var(--gold);
+  }
+  
+  .btn-primary:hover {
+    background: transparent;
+    color: var(--gold);
+  }
+  
+  /* Gold outline — secondary action */
+  .btn-secondary {
+    background: transparent;
+    color: var(--gold);
+    border: 1px solid var(--gold);
+  }
+  
+  .btn-secondary:hover {
+    background: var(--gold);
+    color: #000;
+  }
+  
+  /* Ghost — low emphasis */
+  .btn-ghost {
+    background: transparent;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+  }
+  
+  .btn-ghost:hover {
+    color: var(--gold);
+    border-color: var(--gold);
+  }
+  
+  /* Small size modifier */
+  .btn--sm {
+    padding: 8px 18px;
+    font-size: 0.7rem;
+  }
+
+
+/*
+======================
+Cards
+======================
+*/
+
+/* Base card */
+.card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: var(--sp-6);
+    transition: border-color var(--transition), background var(--transition), transform var(--transition);
+  }
+  
+  .card:hover {
+    border-color: var(--gold);
+    background: var(--surface-2);
+    transform: translateY(-4px);
+  }
+  
+  /* Hub / airport selector card */
+  .hub-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: var(--sp-6);
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    transition: border-color var(--transition), background var(--transition), transform var(--transition);
+  }
+  
+  .hub-card:hover {
+    border-color: var(--gold);
+    background: var(--surface-2);
+    transform: translateY(-5px);
+  }
+  
+  .hub-card .country-label {
+    color: var(--gold);
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  
+  .hub-card .city-name {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-block: var(--sp-2);
+    letter-spacing: 1px;
+  }
+  
+  .hub-card .airport-code {
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+  }
+  
+  /* Flight result card (search page) */
+  .flight-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: var(--sp-5) var(--sp-6);
+    transition: border-color var(--transition), background var(--transition);
+  }
+  
+  .flight-card:hover {
+    border-color: var(--gold);
+    background: var(--surface-2);
+  }
+  
+  .flight-card .flight-id {
+    font-family: var(--font-mono);
+    color: var(--gold);
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 2px;
+  }
+  
+  .flight-card .flight-route {
+    font-size: 1.2rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    margin-block: var(--sp-2);
+  }
+  
+  .flight-card .flight-meta {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+  }
+  
+  /* Stat / counter card */
+  .stat-card {
+    text-align: center;
+    padding: var(--sp-8) var(--sp-6);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+  }
+  
+  .stat-card .stat-number {
+    font-family: var(--font-mono);
+    font-size: clamp(2.4rem, 4vw, 3.5rem);
+    font-weight: 700;
+    color: var(--gold);
+    line-height: 1;
+    display: block;
+  }
+  
+  .stat-card .stat-label {
+    font-size: 0.7rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-top: var(--sp-2);
+  }
+  
+  /* How It Works step card */
+  .step-card {
+    padding: var(--sp-6);
+    border-left: 2px solid var(--border);
+    transition: border-color var(--transition);
+  }
+  
+  .step-card:hover {
+    border-color: var(--gold);
+  }
+  
+  .step-card .step-number {
+    font-family: var(--font-mono);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--gold-dim);
+    line-height: 1;
+    margin-bottom: var(--sp-3);
+  }
+  
+  .step-card .step-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--text);
+    margin-bottom: var(--sp-2);
+  }
+  
+  .step-card .step-desc {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+
+  
+
+/*
+======================
+Status badges
+======================
+*/
+
+.st {
+    display: inline-block;
+    padding: 5px 12px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    border-radius: 2px;
+    min-width: 130px;
+    text-align: center;
+    font-family: var(--font-mono);
+  }
+  
+  .st-on-time {
+    color: var(--status-ontime);
+    border: 1px solid var(--status-ontime);
+  }
+  
+  .st-delayed {
+    color: var(--status-delayed);
+    border: 1px solid var(--status-delayed);
+  }
+  
+  .st-boarding {
+    background: var(--maroon);
+    color: #fff;
+    border: 1px solid var(--maroon);
+    animation: blink 1s step-start infinite;
+  }
+  
+  .st-cancelled {
+    background: var(--status-cancelled);
+    color: #fff;
+    border: 1px solid var(--status-cancelled);
+  }
+  
+  .st-arrived {
+    background: var(--status-arrived);
+    color: #000;
+    border: 1px solid var(--status-arrived);
+  }
+  
+  .st-baggage-claim {
+    background: var(--status-baggage);
+    color: #fff;
+    border: 1px solid var(--status-baggage);
+  }
+  
+  .st-immigration {
+    background: var(--status-immigration);
+    color: #fff;
+    border: 1px solid var(--status-immigration);
+  }
+  
+  .st-scheduled {
+    color: var(--text-muted);
+    border: 1px solid var(--text-faint);
+  }
+  
+  
+/* 
+======================
+Forms
+======================
+*/
+  
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+  }
+  
+  .form-label {
+    font-size: 0.68rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-weight: 600;
+  }
+  
+  .form-input {
+    width: 100%;
+    padding: 13px 16px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--gold);
+    font-size: 0.95rem;
+    font-family: var(--font-ui);
+    border-radius: 2px;
+    outline: none;
+    transition: border-color var(--transition-fast);
+    box-sizing: border-box;
+  }
+  
+  .form-input:focus {
+    border-color: var(--gold);
+  }
+  
+  .form-input::placeholder {
+    color: var(--text-faint);
+    letter-spacing: 1px;
+  }
+  
+  /* Inline error message */
+  .form-error {
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+    color: var(--status-cancelled);
+    display: none;
+    margin-top: var(--sp-1);
+  }
+  
+  .form-error.visible {
+    display: block;
+  }
+  
+  /* Inline form row (used in homepage search widget + search page) */
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: var(--sp-3);
+    align-items: end;
+  }
+  
+  @media (max-width: 640px) {
+    .form-row {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  /* Success state */
+  .form-success {
+    display: none;
+    text-align: center;
+    padding: var(--sp-10);
+    border: 1px solid var(--gold);
+    border-radius: 4px;
+  }
+  
+  .form-success.visible {
+    display: block;
+  }
+  
+  .form-success p {
+    color: var(--gold);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+  }
+  
+  
+  /*
+  ======================
+  Hero (Homepage)
+  ======================
+  */
+
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding-inline: var(--sp-10);
+    max-width: var(--max-width);
+    margin-inline: auto;
+    padding-block: var(--sp-20);
+  }
+  
+  .hero-eyebrow {
+    font-size: 0.7rem;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: var(--sp-5);
+  }
+  
+  .hero-title {
+    font-size: clamp(2.8rem, 7vw, 6rem);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--text);
+    max-width: 14ch;
+    margin-bottom: var(--sp-6);
+  }
+  
+  .hero-title span {
+    color: var(--gold);
+  }
+  
+  .hero-sub {
+    font-size: clamp(0.9rem, 1.5vw, 1.05rem);
+    color: var(--text-muted);
+    max-width: 44ch;
+    line-height: 1.8;
+    margin-bottom: var(--sp-8);
+  }
+  
+  .hero-cta {
+    display: flex;
+    gap: var(--sp-4);
+    flex-wrap: wrap;
+  }
+  
+  
+/*
+======================
+FIDS table (Status page)
+Centralised here so status.html can link to styles.css
+instead of duplicating inline styles.
+======================
+*/
+
+  
+  .fids-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .fids-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .fids-table th {
+    text-align: left;
+    color: var(--text-faint);
+    padding: var(--sp-4) var(--sp-4);
+    border-bottom: 2px solid var(--border);
+    font-size: 0.72rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  
+  .fids-table td {
+    padding: var(--sp-6) var(--sp-4);
+    border-bottom: 1px solid var(--surface);
+    font-size: 1.1rem;
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+  
+  .fids-table td.mono {
+    font-family: var(--font-mono);
+  }
+  
+  .fids-table td.flight-id-cell {
+    font-family: var(--font-mono);
+    color: var(--gold);
+    font-weight: 700;
+    letter-spacing: 2px;
+  }
+  
+  .fids-table tbody tr:hover {
+    background: var(--surface);
+  }
+  
+  
+/*
+======================
+Tab bar (Status page + any tabbed section)
+======================
+*/
+  
+  .tab-bar {
+    display: flex;
+    gap: var(--sp-3);
+    margin-block: var(--sp-5);
+  }
+  
+  .tab {
+    padding: 11px 36px;
+    cursor: pointer;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    font-weight: 700;
+    font-size: 0.78rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: var(--transition);
+    border-radius: 2px;
+  }
+  
+  .tab:hover {
+    color: var(--gold);
+    border-color: var(--gold-dim);
+  }
+  
+  .tab.active {
+    background: var(--gold);
+    color: #000;
+    border-color: var(--gold);
+  }
+  
+  
+/*
+======================
+Search input bar (used in status.html + search.html)
+======================
+  */
+  
+  .search-bar {
+    width: 100%;
+    padding: 14px 16px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--gold);
+    font-size: 1rem;
+    font-family: var(--font-mono);
+    letter-spacing: 1px;
+    border-radius: 4px;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color var(--transition-fast);
+  }
+  
+  .search-bar:focus {
+    border-color: var(--gold);
+  }
+  
+  .search-bar::placeholder {
+    color: var(--text-faint);
+    letter-spacing: 2px;
+  }
+  
+  
+/*
+======================
+Footer
+======================
+*/
+  
+  .footer {
+    border-top: 1px solid var(--border);
+    padding-block: var(--sp-10);
+    margin-top: var(--sp-16);
+  }
+  
+  .footer-inner {
+    max-width: var(--max-width);
+    margin-inline: auto;
+    padding-inline: var(--sp-10);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-6);
+  }
+  
+  .footer-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: var(--sp-6);
+  }
+  
+  .footer-logo {
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  
+  .footer-tagline {
+    font-size: 0.78rem;
+    color: var(--text-faint);
+    letter-spacing: 1px;
+    margin-top: var(--sp-2);
+  }
+  
+  .footer-links {
+    display: flex;
+    gap: var(--sp-6);
+    flex-wrap: wrap;
+  }
+  
+  .footer-link {
+    font-size: 0.72rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    transition: color var(--transition-fast);
+  }
+  
+  .footer-link:hover {
+    color: var(--gold);
+  }
+  
+  .footer-bottom {
+    border-top: 1px solid var(--border);
+    padding-top: var(--sp-5);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--sp-3);
+  }
+  
+  .footer-credit {
+    font-size: 0.72rem;
+    color: var(--text-faint);
+    letter-spacing: 1px;
+  }
+  
+  .footer-credit a {
+    color: var(--gold-dim);
+    transition: color var(--transition-fast);
+  }
+  
+  .footer-credit a:hover {
+    color: var(--gold);
+  }
+  
+  
+/*
+======================
+System status badge (top-right "SYSTEM ONLINE" strip)
+======================
+*/
+  
+  .system-status {
+    font-size: 0.72rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--status-ontime);
+  }
+  
+  .system-status::before {
+    content: "● ";
+  }
+  
+  
+/*
+======================
+Utility classes
+======================
+*/
+  
+  .text-gold    { color: var(--gold); }
+  .text-muted   { color: var(--text-muted); }
+  .text-mono    { font-family: var(--font-mono); }
+  .text-upper   { text-transform: uppercase; letter-spacing: 2px; }
+  .text-sm      { font-size: 0.82rem; }
+  .text-xs      { font-size: 0.72rem; }
+  
+  .mt-auto      { margin-top: auto; }
+  .ml-auto      { margin-left: auto; }
+  
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    white-space: nowrap;
+  }
+  
+  
+/*
+======================
+Animations
+======================
+*/
+  
+  /* BOARDING status blink — urgency signal */
+  @keyframes blink {
+    50% { opacity: 0; }
+  }
+  
+  /* Fade + rise on entry — used by JS to reveal rows/cards */
+  @keyframes fadeUp {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .animate-fade-up {
+    animation: fadeUp 0.4s ease forwards;
+  }
+  
+  /* Stagger delay helpers (apply to nth children via JS or manually) */
+  .delay-1 { animation-delay: 0.05s; }
+  .delay-2 { animation-delay: 0.10s; }
+  .delay-3 { animation-delay: 0.15s; }
+  .delay-4 { animation-delay: 0.20s; }
+  .delay-5 { animation-delay: 0.25s; }
+  .delay-6 { animation-delay: 0.30s; }
+  
+  /* Shimmer loading placeholder */
+  @keyframes shimmer {
+    0%   { background-position: -600px 0; }
+    100% { background-position: 600px 0; }
+  }
+  
+  .skeleton {
+    background: linear-gradient(90deg, var(--surface) 25%, var(--surface-2) 50%, var(--surface) 75%);
+    background-size: 600px 100%;
+    animation: shimmer 1.4s infinite linear;
+    border-radius: 2px;
+    color: transparent;
+    pointer-events: none;
+    user-select: none;
+  }
+  
+  
+/*
+======================
+Responsive overrides
+======================
+ */
+  
+  @media (max-width: 1024px) {
+    .container,
+    .nav-bar,
+    .footer-inner {
+      padding-inline: var(--sp-6);
+    }
+  
+    .hero {
+      padding-inline: var(--sp-6);
+    }
+  }
+  
+  @media (max-width: 640px) {
+    .hero-title {
+      font-size: 2.4rem;
+      letter-spacing: 1px;
+    }
+  
+    .hero-cta {
+      flex-direction: column;
+      width: 100%;
+    }
+  
+    .hero-cta .btn {
+      width: 100%;
+      justify-content: center;
+    }
+  
+    .tab-bar {
+      flex-wrap: wrap;
+    }
+  
+    .tab {
+      padding: 10px 20px;
+      flex: 1;
+      text-align: center;
+    }
+  
+    .footer-top {
+      flex-direction: column;
+    }
+  
+    .footer-bottom {
+      flex-direction: column;
+      text-align: center;
+    }
+  }

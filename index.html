@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SkyTrace — Live Flight Tracker</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    /* ── Index-specific styles only ── */
+
+    /* Hero layout: two columns */
+    .hero-layout {
+      min-height: calc(100vh - var(--nav-height));
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: var(--sp-12);
+      padding-inline: var(--sp-10);
+      max-width: var(--max-width);
+      margin-inline: auto;
+      padding-block: var(--sp-16);
+    }
+
+    /* Live ticker panel (right column) */
+    .ticker-panel {
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .ticker-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--sp-4) var(--sp-5);
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+    }
+
+    .ticker-header-label {
+      font-size: 0.68rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .ticker-clock {
+      font-family: var(--font-mono);
+      font-size: 0.95rem;
+      color: var(--gold);
+      letter-spacing: 2px;
+    }
+
+    .ticker-row {
+      display: grid;
+      grid-template-columns: 70px 90px 1fr auto;
+      align-items: center;
+      gap: var(--sp-3);
+      padding: var(--sp-4) var(--sp-5);
+      border-bottom: 1px solid var(--surface);
+      transition: background var(--transition-fast);
+      opacity: 0;
+      animation: fadeUp 0.4s ease forwards;
+    }
+
+    .ticker-row:hover { background: var(--surface-2); }
+    .ticker-row:last-child { border-bottom: none; }
+
+    .ticker-time {
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .ticker-flight {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--gold);
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .ticker-route {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .ticker-footer {
+      padding: var(--sp-3) var(--sp-5);
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      text-align: right;
+    }
+
+    .ticker-footer a {
+      font-size: 0.68rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold-dim);
+      transition: color var(--transition-fast);
+    }
+
+    .ticker-footer a:hover { color: var(--gold); }
+
+    /* Stats strip */
+    .stats-strip {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding-block: var(--sp-6);
+    }
+
+    .stats-inner {
+      max-width: var(--max-width);
+      margin-inline: auto;
+      padding-inline: var(--sp-10);
+      display: flex;
+      justify-content: center;
+      gap: var(--sp-16);
+      flex-wrap: wrap;
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-item .num {
+      font-family: var(--font-mono);
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: var(--gold);
+      line-height: 1;
+      display: block;
+    }
+
+    .stat-item .lbl {
+      font-size: 0.65rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-top: var(--sp-2);
+      display: block;
+    }
+
+    /* Quick search section */
+    .search-section {
+      max-width: var(--max-width);
+      margin-inline: auto;
+      padding-inline: var(--sp-10);
+      padding-block: var(--sp-12);
+    }
+
+    .search-section-label {
+      font-size: 0.68rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: var(--sp-4);
+    }
+
+    .search-widget {
+      display: grid;
+      grid-template-columns: 1fr 1fr auto;
+      gap: var(--sp-3);
+      align-items: end;
+      max-width: 720px;
+    }
+
+    .search-error {
+      font-size: 0.72rem;
+      color: var(--status-cancelled);
+      letter-spacing: 1px;
+      margin-top: var(--sp-2);
+      display: none;
+    }
+
+    .search-error.visible { display: block; }
+
+    /* Hubs section */
+    .hubs-section {
+      max-width: var(--max-width);
+      margin-inline: auto;
+      padding-inline: var(--sp-10);
+      padding-bottom: var(--sp-16);
+    }
+
+    .hubs-section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: var(--sp-6);
+    }
+
+    .view-all {
+      font-size: 0.68rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold-dim);
+      transition: color var(--transition-fast);
+    }
+
+    .view-all:hover { color: var(--gold); }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .hero-layout {
+        grid-template-columns: 1fr;
+        padding-block: var(--sp-12);
+      }
+
+      .ticker-panel { display: none; }
+    }
+
+    @media (max-width: 640px) {
+      .hero-layout,
+      .stats-inner,
+      .search-section,
+      .hubs-section {
+        padding-inline: var(--sp-5);
+      }
+
+      .search-widget {
+        grid-template-columns: 1fr;
+      }
+
+      .stats-inner {
+        gap: var(--sp-8);
+      }
+
+      .hubs-section-head {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--sp-3);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── NAVIGATION ── -->
+  <nav class="nav-bar">
+    <span class="nav-logo">SkyTrace</span>
+    <div class="nav-links">
+      <a href="index.html"        class="nav-link active">Home</a>
+      <a href="search.html"       class="nav-link">Search</a>
+      <a href="hubs.html"         class="nav-link">Hubs</a>
+      <a href="status.html"       class="nav-link">Live Board</a>
+      <a href="destinations.html" class="nav-link">Destinations</a>
+      <a href="about.html"        class="nav-link">About</a>
+      <a href="contact.html"      class="nav-link">Contact</a>
+    </div>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- Mobile nav menu -->
+  <div class="nav-menu" id="navMenu">
+    <a href="index.html"        class="nav-link active">Home</a>
+    <a href="search.html"       class="nav-link">Search</a>
+    <a href="hubs.html"         class="nav-link">Hubs</a>
+    <a href="status.html"       class="nav-link">Live Board</a>
+    <a href="destinations.html" class="nav-link">Destinations</a>
+    <a href="about.html"        class="nav-link">About</a>
+    <a href="contact.html"      class="nav-link">Contact</a>
+  </div>
+
+  <!-- ── HERO ── -->
+  <section>
+    <div class="hero-layout">
+
+      <!-- Left: copy + CTAs -->
+      <div class="hero-left">
+        <p class="hero-eyebrow">Live Flight Tracker</p>
+        <h1 class="hero-title">
+          Track any flight.<br><span>Anywhere.</span>
+        </h1>
+        <p class="hero-sub">
+          Gate changes, delays, arrivals — all in one place.
+          Built for travellers who can't afford to miss a thing.
+        </p>
+        <div class="hero-cta">
+          <a href="search.html" class="btn btn-primary">Search Flights</a>
+          <a href="hubs.html"   class="btn btn-secondary">View Live Board</a>
+        </div>
+      </div>
+
+      <!-- Right: live ticker -->
+      <div class="ticker-panel" id="tickerPanel">
+        <div class="ticker-header">
+          <span class="ticker-header-label">Live Departures</span>
+          <span class="ticker-clock" id="tickerClock">--:--:--</span>
+        </div>
+        <div id="tickerBody">
+          <!-- Rows injected by JS -->
+        </div>
+        <div class="ticker-footer">
+          <a href="hubs.html">Full board →</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── STATS STRIP ── -->
+  <div class="stats-strip">
+    <div class="stats-inner">
+      <div class="stat-item">
+        <span class="num" data-target="12" id="stat0">0</span>
+        <span class="lbl">Airports Tracked</span>
+      </div>
+      <div class="stat-item">
+        <span class="num" data-target="72" id="stat1">0</span>
+        <span class="lbl">Flights in Database</span>
+      </div>
+      <div class="stat-item">
+        <span class="num" data-target="6" id="stat2">0</span>
+        <span class="lbl">Airlines</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── QUICK SEARCH ── -->
+  <div class="search-section">
+    <p class="search-section-label">Quick Search</p>
+    <form class="search-widget" id="searchForm" autocomplete="off">
+      <div class="form-group">
+        <label class="form-label" for="fromSelect">From</label>
+        <select class="form-input" id="fromSelect">
+          <option value="">Select origin</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="toSelect">To</label>
+        <select class="form-input" id="toSelect">
+          <option value="">Select destination</option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary">Search →</button>
+    </form>
+    <p class="search-error" id="searchError">Origin and destination cannot be the same.</p>
+  </div>
+
+  <!-- ── FEATURED HUBS ── -->
+  <div class="hubs-section">
+    <div class="hubs-section-head">
+      <div>
+        <p class="section-label">Airport Network</p>
+        <h2 class="section-title" style="margin-bottom:0;">Select Your Hub</h2>
+      </div>
+      <a href="hubs.html" class="view-all">View all 12 hubs →</a>
+    </div>
+    <div class="grid-auto" id="featuredHubs">
+      <!-- 6 hub cards injected by JS -->
+    </div>
+  </div>
+
+  <!-- ── FOOTER ── -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div>
+          <div class="footer-logo">SkyTrace</div>
+          <p class="footer-tagline">Track any flight. Anywhere.</p>
+        </div>
+        <nav class="footer-links">
+          <a href="index.html"        class="footer-link">Home</a>
+          <a href="search.html"       class="footer-link">Search</a>
+          <a href="hubs.html"         class="footer-link">Hubs</a>
+          <a href="status.html"       class="footer-link">Live Board</a>
+          <a href="destinations.html" class="footer-link">Destinations</a>
+          <a href="about.html"        class="footer-link">About</a>
+          <a href="contact.html"      class="footer-link">Contact</a>
+        </nav>
+      </div>
+      <div class="footer-bottom">
+        <span class="footer-credit">
+          B.Tech CSE · User Interface Design · Amrita Vishwa Vidyapeetham
+        </span>
+        <span class="footer-credit">
+          <a href="https://github.com/9Zaun/skytrace" target="_blank" rel="noopener noreferrer">
+            GitHub Repository ↗
+          </a>
+        </span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    /* ── DATA ── */
+    const HUBS = [
+      { country: "Qatar",          city: "Doha",       code: "DOH" },
+      { country: "India",          city: "Delhi",      code: "DEL" },
+      { country: "United Kingdom", city: "London",     code: "LHR" },
+      { country: "United States",  city: "New York",   code: "JFK" },
+      { country: "UAE",            city: "Dubai",      code: "DXB" },
+      { country: "Japan",          city: "Tokyo",      code: "HND" },
+      { country: "France",         city: "Paris",      code: "CDG" },
+      { country: "Singapore",      city: "Singapore",  code: "SIN" },
+      { country: "Germany",        city: "Frankfurt",  code: "FRA" },
+      { country: "Australia",      city: "Sydney",     code: "SYD" },
+      { country: "Canada",         city: "Toronto",    code: "YYZ" },
+      { country: "Turkey",         city: "Istanbul",   code: "IST" }
+    ];
+
+    /* Sample flights for the live ticker — matches status.html data shape */
+    const TICKER_FLIGHTS = [
+      { id: "QR 001", from: "DOH", to: "London",    sch: "08:00", status: "ON-TIME"      },
+      { id: "AI 101", from: "DEL", to: "Mumbai",    sch: "01:15", status: "ON-TIME"      },
+      { id: "EK 201", from: "DXB", to: "New York",  sch: "08:30", status: "ON-TIME"      },
+      { id: "QR 701", from: "DOH", to: "New York",  sch: "09:30", status: "CANCELLED"    },
+      { id: "BA 217", from: "LHR", to: "New York",  sch: "11:15", status: "ON-TIME"      },
+      { id: "6E 502", from: "DEL", to: "Dubai",     sch: "02:30", status: "DELAYED"      },
+      { id: "AI 102", from: "DEL", to: "Doha",      sch: "16:45", status: "BOARDING"     },
+      { id: "EK 512", from: "DXB", to: "Delhi",     sch: "10:20", status: "ARRIVED"      }
+    ];
+
+    /* Status → CSS class mapping */
+    const STATUS_CLASS = {
+      "ON-TIME":      "st-on-time",
+      "DELAYED":      "st-delayed",
+      "BOARDING":     "st-boarding",
+      "CANCELLED":    "st-cancelled",
+      "ARRIVED":      "st-arrived",
+      "BAGGAGE CLAIM":"st-baggage-claim",
+      "IMMIGRATION":  "st-immigration",
+      "SCHEDULED":    "st-scheduled"
+    };
+
+    /* ── CLOCK ── */
+    function startClock() {
+      const el = document.getElementById('tickerClock');
+      function tick() {
+        el.textContent = new Date().toLocaleTimeString('en-GB');
+      }
+      tick();
+      setInterval(tick, 1000);
+    }
+
+    /* ── LIVE TICKER ── */
+    function buildTicker() {
+      const body = document.getElementById('tickerBody');
+      body.innerHTML = '';
+      TICKER_FLIGHTS.forEach((f, i) => {
+        const cls  = STATUS_CLASS[f.status] || 'st-scheduled';
+        const row  = document.createElement('div');
+        row.className = 'ticker-row';
+        row.style.animationDelay = (i * 0.06) + 's';
+        row.innerHTML = `
+          <span class="ticker-time">${f.sch}</span>
+          <span class="ticker-flight">${f.id}</span>
+          <span class="ticker-route">${f.to.toUpperCase()}</span>
+          <span class="st ${cls}">${f.status}</span>`;
+        body.appendChild(row);
+      });
+    }
+
+    /* ── STATS COUNTERS ── */
+    function animateCounter(el, target, duration) {
+      let start = null;
+      function step(ts) {
+        if (!start) start = ts;
+        const progress = Math.min((ts - start) / duration, 1);
+        el.textContent = Math.floor(progress * target);
+        if (progress < 1) requestAnimationFrame(step);
+        else el.textContent = target + (target === 72 ? '+' : '');
+      }
+      requestAnimationFrame(step);
+    }
+
+    function initCounters() {
+      const targets = [
+        { id: 'stat0', val: 12 },
+        { id: 'stat1', val: 72 },
+        { id: 'stat2', val: 6  }
+      ];
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            targets.forEach(t => {
+              animateCounter(document.getElementById(t.id), t.val, 1200);
+            });
+            observer.disconnect();
+          }
+        });
+      }, { threshold: 0.5 });
+      observer.observe(document.querySelector('.stats-strip'));
+    }
+
+    /* ── QUICK SEARCH DROPDOWNS ── */
+    function buildDropdowns() {
+      const from = document.getElementById('fromSelect');
+      const to   = document.getElementById('toSelect');
+      HUBS.forEach(h => {
+        const opt1 = new Option(`${h.city} (${h.code})`, h.code);
+        const opt2 = new Option(`${h.city} (${h.code})`, h.code);
+        from.appendChild(opt1);
+        to.appendChild(opt2);
+      });
+    }
+
+    document.getElementById('searchForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const from = document.getElementById('fromSelect').value;
+      const to   = document.getElementById('toSelect').value;
+      const err  = document.getElementById('searchError');
+
+      if (!from || !to) {
+        err.textContent = 'Please select both origin and destination.';
+        err.classList.add('visible');
+        return;
+      }
+      if (from === to) {
+        err.textContent = 'Origin and destination cannot be the same.';
+        err.classList.add('visible');
+        return;
+      }
+      err.classList.remove('visible');
+      window.location.href = `search.html?from=${from}&to=${to}`;
+    });
+
+    /* ── FEATURED HUBS (first 6) ── */
+    function buildFeaturedHubs() {
+      const grid = document.getElementById('featuredHubs');
+      HUBS.slice(0, 6).forEach((h, i) => {
+        const a = document.createElement('a');
+        a.href      = `status.html?origin=${h.code}`;
+        a.className = 'hub-card animate-fade-up';
+        a.style.animationDelay = (i * 0.07) + 's';
+        a.innerHTML = `
+          <span class="country-label">${h.country}</span>
+          <h2 class="city-name">${h.city}</h2>
+          <div class="airport-code">${h.code}</div>`;
+        grid.appendChild(a);
+      });
+    }
+
+    /* ── MOBILE NAV ── */
+    document.getElementById('navToggle').addEventListener('click', function() {
+      document.getElementById('navMenu').classList.toggle('open');
+    });
+
+    /* ── INIT ── */
+    window.addEventListener('DOMContentLoaded', () => {
+      startClock();
+      buildTicker();
+      buildDropdowns();
+      buildFeaturedHubs();
+      initCounters();
+    });
+  </script>
+
+</body>
+</html>
