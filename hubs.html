@@ -2,62 +2,768 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>SkyTrace- Global Network Hubs</title>
-    <style>
-        :root { --gold: --gold; --maroon: --maroon }
-        body { background: black; color: white; font-family: 'Segoe UI', sans-serif; margin: 0; }
-        .nav-bar { background: black; padding: 15px 40px; border-bottom: 1px solid #222; display: flex; gap: 20px; }
-        .nav-link { color: var(--gold); text-decoration: none; font-size: 0.8rem; letter-spacing: 2px; font-weight: bold; }
-        .hero { height: 30vh; display: flex; flex-direction: column; justify-content: center; align-items: center; border-bottom: 2px solid var(--gold); }
-        .hero h1 { font-size: 3.5rem; letter-spacing: 10px; margin: 0; color: var(--gold); text-transform: uppercase; }
-        .container { max-width: 1400px; margin: 40px auto; padding: 0 40px; }
-        .hub-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
-        .hub-card { 
-            background: black; border: 1px solid #222; padding: 25px; border-radius: 4px; 
-            text-decoration: none; color: inherit; transition: 0.3s;
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SkyTrace Global Aviation Hub Network — Explore major international airport hubs, operational metadata, and live flight status boards.">
+    <title>SkyTrace | Global Aviation Hub Network</title>
+
+    <!-- Primary custom stylesheet -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- AOS scroll-animation library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN — Preflight disabled to protect existing styles -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            corePlugins: {
+                preflight: false
+            }
         }
-        .hub-card:hover { border-color: var(--gold); background: #161616; transform: translateY(-5px); }
-        .country-label { color: var(--gold); font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; }
-        .city-name { font-size: 1.8rem; margin: 10px 0; }
-        .airport-code { color: slategray; font-family: monospace; }
+    </script>
+
+    <style>
+        /* ─────────────────────────────────────────────
+           GLOBAL DESIGN TOKENS
+        ───────────────────────────────────────────── */
+        :root {
+            --gold:    #c39d63;
+            --gold-dim: rgba(195, 157, 99, 0.12);
+            --maroon:  #81202e;
+            --bg:      #000000;
+            --surface: #0d0d0d;
+            --border:  #1f1f1f;
+            --text:    #f0f0f0;
+            --muted:   #6b7280;
+            --online:  #22d3a0;
+            --radius:  4px;
+            --font:    'Segoe UI', system-ui, sans-serif;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: var(--font);
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        /* ─────────────────────────────────────────────
+           NAVIGATION
+        ───────────────────────────────────────────── */
+        nav.site-nav {
+            background: var(--bg);
+            border-bottom: 2px solid var(--gold);
+        }
+
+        nav.site-nav .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text);
+            text-decoration: none;
+            letter-spacing: 4px;
+        }
+
+        nav.site-nav .nav-links a {
+            color: var(--text);
+            text-decoration: none;
+            font-size: 0.8rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            padding: 6px 10px;
+            transition: color 0.3s;
+        }
+
+        nav.site-nav .nav-links a:hover {
+            color: var(--gold);
+        }
+
+        nav.site-nav .nav-links a.active-link {
+            color: var(--gold);
+        }
+
+        /* ─────────────────────────────────────────────
+           SYSTEM STATUS BAR
+        ───────────────────────────────────────────── */
+        .system-bar {
+            background: #070707;
+            border-bottom: 1px solid #191919;
+            font-family: 'Courier New', monospace;
+        }
+
+        .system-bar .sys-item {
+            color: var(--muted);
+            font-size: 0.65rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .sys-item .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--online);
+            animation: pulse-dot 2s ease-in-out infinite;
+            flex-shrink: 0;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; }
+            50%       { opacity: 0.35; }
+        }
+
+        /* ─────────────────────────────────────────────
+           HERO / COMMAND HEADER
+        ───────────────────────────────────────────── */
+        .command-header {
+            position: relative;
+            background:
+                linear-gradient(180deg, rgba(0,0,0,0.60) 0%, rgba(0,0,0,0.97) 100%),
+                repeating-linear-gradient(
+                    90deg,
+                    transparent,
+                    transparent 60px,
+                    rgba(195,157,99,0.03) 60px,
+                    rgba(195,157,99,0.03) 61px
+                ),
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 60px,
+                    rgba(195,157,99,0.03) 60px,
+                    rgba(195,157,99,0.03) 61px
+                );
+            border-bottom: 1px solid #1a1a1a;
+        }
+
+        .command-header::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(195,157,99,0.06) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .badge-system {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(195,157,99,0.08);
+            border: 1px solid rgba(195,157,99,0.25);
+            color: var(--gold);
+            font-size: 0.65rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 5px 14px;
+            border-radius: 2px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .badge-system .live-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--online);
+            animation: pulse-dot 1.5s ease-in-out infinite;
+        }
+
+        .hero-title {
+            font-size: clamp(2.4rem, 5vw, 4rem);
+            font-weight: 800;
+            letter-spacing: 3px;
+            line-height: 1.1;
+            color: var(--text);
+        }
+
+        .hero-title .accent {
+            color: var(--gold);
+        }
+
+        /* ─────────────────────────────────────────────
+           NETWORK STATISTICS
+        ───────────────────────────────────────────── */
+        .network-stat {
+            background: rgba(13,13,13,0.8);
+            border: 1px solid var(--border);
+            border-top: 2px solid var(--gold);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .network-stat:hover {
+            transform: translateY(-4px);
+            border-color: #333;
+            border-top-color: var(--gold);
+        }
+
+        .stat-number {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: var(--text);
+            font-family: 'Courier New', monospace;
+            line-height: 1;
+        }
+
+        .stat-label {
+            color: var(--muted);
+            font-size: 0.65rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-top: 6px;
+        }
+
+        /* ─────────────────────────────────────────────
+           SECTION HEADER DIVIDER
+        ───────────────────────────────────────────── */
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .section-header .line {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(to right, var(--border), transparent);
+        }
+
+        .section-header .label {
+            color: var(--muted);
+            font-size: 0.65rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            font-family: 'Courier New', monospace;
+            white-space: nowrap;
+        }
+
+        /* ─────────────────────────────────────────────
+           HUB CARDS — AIRPORT OPERATIONS
+        ───────────────────────────────────────────── */
+        .hub-card {
+            display: block;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            text-decoration: none;
+            color: var(--text);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.35s cubic-bezier(.4,0,.2,1),
+                        border-color 0.35s ease,
+                        box-shadow 0.35s ease;
+        }
+
+        /* Left accent bar */
+        .hub-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--gold), transparent);
+            opacity: 0;
+            transition: opacity 0.35s ease;
+        }
+
+        /* Top scan-line shimmer on hover */
+        .hub-card::after {
+            content: '';
+            position: absolute;
+            top: -100%;
+            left: 0;
+            right: 0;
+            height: 40%;
+            background: linear-gradient(180deg, rgba(195,157,99,0.04) 0%, transparent 100%);
+            transition: top 0.5s ease;
+            pointer-events: none;
+        }
+
+        .hub-card:hover {
+            border-color: rgba(195,157,99,0.4);
+            transform: translateY(-6px);
+            box-shadow: 0 16px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(195,157,99,0.08);
+        }
+
+        .hub-card:hover::before { opacity: 1; }
+        .hub-card:hover::after  { top: 0; }
+
+        /* IATA code */
+        .iata-code {
+            font-size: 3rem;
+            font-weight: 900;
+            font-family: 'Courier New', monospace;
+            color: var(--gold);
+            letter-spacing: 4px;
+            line-height: 1;
+        }
+
+        /* Status pill */
+        .status-pill-hub {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.6rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 2px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .status-online {
+            color: var(--online);
+            background: rgba(34,211,160,0.08);
+            border: 1px solid rgba(34,211,160,0.25);
+        }
+
+        .status-online .dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--online);
+            animation: pulse-dot 1.5s ease-in-out infinite;
+        }
+
+        /* Airport name */
+        .airport-name {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text);
+            letter-spacing: 0.5px;
+            line-height: 1.3;
+        }
+
+        /* Location line */
+        .airport-location {
+            color: var(--muted);
+            font-size: 0.72rem;
+            letter-spacing: 1px;
+            font-family: 'Courier New', monospace;
+            text-transform: uppercase;
+        }
+
+        /* Divider within card */
+        .card-divider {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 0;
+        }
+
+        /* Metadata row items */
+        .meta-item {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .meta-value {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text);
+            font-family: 'Courier New', monospace;
+        }
+
+        .meta-key {
+            font-size: 0.55rem;
+            color: var(--muted);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        /* Hub ownership label */
+        .hub-owner {
+            font-size: 0.65rem;
+            color: var(--gold);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* CTA in card */
+        .card-cta {
+            color: var(--muted);
+            font-size: 0.65rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.3s, gap 0.3s;
+            font-family: 'Courier New', monospace;
+        }
+
+        .hub-card:hover .card-cta {
+            color: var(--gold);
+            gap: 12px;
+        }
+
+        /* Region tag */
+        .region-tag {
+            font-size: 0.58rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--muted);
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border);
+            padding: 3px 8px;
+            border-radius: 2px;
+            font-family: 'Courier New', monospace;
+        }
     </style>
 </head>
 <body>
-    <nav class="nav-bar">
-        <a href="hubs.html" class="nav-link"> HOME</a>
-        <a href="#" class="nav-link" style="color: gray;">NETWORK MAP</a>
+
+    <!-- ─────────────────────────────────────────────
+         MAIN NAVIGATION
+    ───────────────────────────────────────────── -->
+    <nav class="site-nav flex flex-col md:flex-row justify-between items-center px-6 md:px-10 py-5">
+        <a href="index.html" class="logo mb-4 md:mb-0">SKYTRACE</a>
+        <div class="nav-links flex flex-wrap justify-center gap-2 md:gap-4">
+            <a href="index.html">Home</a>
+            <a href="search.html">Flights</a>
+            <a href="status.html">Status</a>
+            <a href="destinations.html">Explore</a>
+            <a href="hubs.html" class="active-link">Hubs</a>
+            <a href="about.html">About</a>
+        </div>
     </nav>
-    <div class="hero">
-        <h1>SKYTRACE</h1>
-        <p style="letter-spacing: 5px; color: grey;">GLOBAL AIRPORT TERMINALS</p>
+
+    <!-- ─────────────────────────────────────────────
+         LIVE SYSTEM STATUS BAR
+    ───────────────────────────────────────────── -->
+    <div class="system-bar py-2 px-6 md:px-10">
+        <div class="max-w-7xl mx-auto flex flex-wrap gap-6 md:gap-12 justify-start">
+            <div class="sys-item"><span class="dot"></span>SYSTEM ONLINE</div>
+            <div class="sys-item"><span class="dot"></span>12 ACTIVE HUBS</div>
+            <div class="sys-item"><span class="dot"></span>DATA FEED LIVE</div>
+            <div class="sys-item" id="sys-time">UTC 00:00:00</div>
+        </div>
     </div>
-    <div class="container">
-        <div class="hub-grid" id="hubGrid"></div>
-    </div>
+
+    <!-- ─────────────────────────────────────────────
+         COMMAND HEADER / HERO
+    ───────────────────────────────────────────── -->
+    <header class="command-header py-20 md:py-28 px-6 text-center">
+        <div class="max-w-5xl mx-auto" data-aos="fade-in" data-aos-duration="1000">
+            <div class="flex justify-center mb-6">
+                <span class="badge-system"><span class="live-dot"></span>LIVE OPERATIONS DASHBOARD</span>
+            </div>
+            <h1 class="hero-title mb-6">
+                Global Aviation<br>
+                <span class="accent">Hub Network</span>
+            </h1>
+            <p class="max-w-2xl mx-auto text-base md:text-lg leading-relaxed" style="color: var(--muted);">
+                Major international connectivity centers powering the SkyTrace global flight tracking network. 
+                Click any hub to access live departures, arrivals, gate assignments, and terminal status boards.
+            </p>
+        </div>
+    </header>
+
+    <!-- ─────────────────────────────────────────────
+         NETWORK STATISTICS
+    ───────────────────────────────────────────── -->
+    <section class="max-w-6xl mx-auto px-6 py-10">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6" data-aos="fade-up" data-aos-delay="150">
+            <div class="network-stat p-6 text-center">
+                <div class="stat-number">12</div>
+                <div class="stat-label">Global Hubs</div>
+            </div>
+            <div class="network-stat p-6 text-center">
+                <div class="stat-number">72+</div>
+                <div class="stat-label">Tracked Flights</div>
+            </div>
+            <div class="network-stat p-6 text-center">
+                <div class="stat-number">6</div>
+                <div class="stat-label">Regions Covered</div>
+            </div>
+            <div class="network-stat p-6 text-center">
+                <div class="stat-number" id="airlines-count">18+</div>
+                <div class="stat-label">Partner Airlines</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ─────────────────────────────────────────────
+         HUB GRID — MAIN CONTENT
+    ───────────────────────────────────────────── -->
+    <main class="max-w-7xl mx-auto px-6 pb-24">
+
+        <!-- Section Header -->
+        <div class="section-header mb-10" data-aos="fade-right" data-aos-delay="200">
+            <span class="label">Active Hub Registry</span>
+            <div class="line"></div>
+        </div>
+
+        <!-- Dynamically rendered hub cards -->
+        <div id="hubGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+
+    </main>
+
+    <!-- ─────────────────────────────────────────────
+         LIBRARIES
+    ───────────────────────────────────────────── -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
     <script>
-        const hubs = [
-            { country: "Qatar", city: "Doha", code: "DOH" },
-            { country: "India", city: "Delhi", code: "DEL" },
-            { country: "United Kingdom", city: "London", code: "LHR" },
-            { country: "United States", city: "New York", code: "JFK" },
-            { country: "UAE", city: "Dubai", code: "DXB" },
-            { country: "Japan", city: "Tokyo", code: "HND" },
-            { country: "France", city: "Paris", code: "CDG" },
-            { country: "Singapore", city: "Singapore", code: "SIN" },
-            { country: "Germany", city: "Frankfurt", code: "FRA" },
-            { country: "Australia", city: "Sydney", code: "SYD" },
-            { country: "Canada", city: "Toronto", code: "YYZ" },
-            { country: "Turkey", city: "Istanbul", code: "IST" }
+        // ─────────────────────────────────────────────
+        // AIRPORT HUB DATA — Operational Metadata
+        // Each hub carries airport identity, stats, and navigation context
+        // ─────────────────────────────────────────────
+        const HUBS = [
+            {
+                code:      "DOH",
+                name:      "Hamad International Airport",
+                city:      "Doha",
+                country:   "Qatar",
+                region:    "Middle East",
+                owner:     "Primary Qatar Airways Hub",
+                routes:    126,
+                daily:     410,
+                terminals: 1,
+                runways:   4,
+                rank:      "#1 ME"
+            },
+            {
+                code:      "DXB",
+                name:      "Dubai International Airport",
+                city:      "Dubai",
+                country:   "UAE",
+                region:    "Middle East",
+                owner:     "Primary Emirates Hub",
+                routes:    238,
+                daily:     1200,
+                terminals: 3,
+                runways:   2,
+                rank:      "#1 Global"
+            },
+            {
+                code:      "LHR",
+                name:      "Heathrow Airport",
+                city:      "London",
+                country:   "United Kingdom",
+                region:    "Europe",
+                owner:     "British Airways Hub",
+                routes:    216,
+                daily:     1350,
+                terminals: 5,
+                runways:   2,
+                rank:      "#1 Europe"
+            },
+            {
+                code:      "CDG",
+                name:      "Charles de Gaulle Airport",
+                city:      "Paris",
+                country:   "France",
+                region:    "Europe",
+                owner:     "Air France Hub",
+                routes:    192,
+                daily:     950,
+                terminals: 3,
+                runways:   4,
+                rank:      "#2 Europe"
+            },
+            {
+                code:      "FRA",
+                name:      "Frankfurt Airport",
+                city:      "Frankfurt",
+                country:   "Germany",
+                region:    "Europe",
+                owner:     "Lufthansa Hub",
+                routes:    174,
+                daily:     880,
+                terminals: 2,
+                runways:   4,
+                rank:      "#3 Europe"
+            },
+            {
+                code:      "IST",
+                name:      "Istanbul Airport",
+                city:      "Istanbul",
+                country:   "Turkey",
+                region:    "Europe",
+                owner:     "Turkish Airlines Hub",
+                routes:    312,
+                daily:     1500,
+                terminals: 1,
+                runways:   6,
+                rank:      "#4 Europe"
+            },
+            {
+                code:      "JFK",
+                name:      "John F. Kennedy Int'l Airport",
+                city:      "New York",
+                country:   "United States",
+                region:    "Americas",
+                owner:     "American / Delta Hub",
+                routes:    201,
+                daily:     1100,
+                terminals: 6,
+                runways:   4,
+                rank:      "#1 Americas"
+            },
+            {
+                code:      "YYZ",
+                name:      "Toronto Pearson Int'l Airport",
+                city:      "Toronto",
+                country:   "Canada",
+                region:    "Americas",
+                owner:     "Air Canada Hub",
+                routes:    128,
+                daily:     510,
+                terminals: 2,
+                runways:   5,
+                rank:      "#2 Americas"
+            },
+            {
+                code:      "DEL",
+                name:      "Indira Gandhi Int'l Airport",
+                city:      "Delhi",
+                country:   "India",
+                region:    "Asia",
+                owner:     "Air India Hub",
+                routes:    142,
+                daily:     720,
+                terminals: 3,
+                runways:   3,
+                rank:      "#1 South Asia"
+            },
+            {
+                code:      "SIN",
+                name:      "Singapore Changi Airport",
+                city:      "Singapore",
+                country:   "Singapore",
+                region:    "Asia",
+                owner:     "Singapore Airlines Hub",
+                routes:    198,
+                daily:     920,
+                terminals: 4,
+                runways:   2,
+                rank:      "#1 SE Asia"
+            },
+            {
+                code:      "HND",
+                name:      "Tokyo Haneda Airport",
+                city:      "Tokyo",
+                country:   "Japan",
+                region:    "Asia",
+                owner:     "JAL / ANA Hub",
+                routes:    156,
+                daily:     980,
+                terminals: 3,
+                runways:   4,
+                rank:      "#1 East Asia"
+            },
+            {
+                code:      "SYD",
+                name:      "Kingsford Smith Airport",
+                city:      "Sydney",
+                country:   "Australia",
+                region:    "Pacific",
+                owner:     "Qantas Hub",
+                routes:    98,
+                daily:     440,
+                terminals: 3,
+                runways:   3,
+                rank:      "#1 Pacific"
+            }
         ];
-        const grid = document.getElementById('hubGrid');
-        hubs.forEach(hub => {
-            grid.innerHTML += `
-                <a href="status.html?origin=${hub.code}" class="hub-card">
-                    <span class="country-label">${hub.country}</span>
-                    <h2 class="city-name">${hub.city}</h2>
-                    <div class="airport-code">${hub.code} </div>
-                </a>`;
-        });
+
+        // ─────────────────────────────────────────────
+        // RENDER HUB CARDS
+        // ─────────────────────────────────────────────
+        function renderHubs() {
+            const grid = document.getElementById('hubGrid');
+            grid.innerHTML = '';
+
+            HUBS.forEach((hub, idx) => {
+                const delay = (idx % 3) * 120; // Staggered AOS entry per column
+
+                grid.innerHTML += `
+                    <!-- Hub Card: ${hub.code} — Links to status.html with origin context -->
+                    <a href="status.html?origin=${hub.code}"
+                       class="hub-card p-7"
+                       data-aos="fade-up"
+                       data-aos-delay="${delay}">
+
+                        <!-- Top Row: IATA code + ACTIVE indicator -->
+                        <div class="flex justify-between items-start mb-5">
+                            <div class="iata-code">${hub.code}</div>
+                            <div class="flex flex-col items-end gap-2">
+                                <span class="status-pill-hub status-online"><span class="dot"></span>ACTIVE</span>
+                                <span class="region-tag">${hub.region}</span>
+                            </div>
+                        </div>
+
+                        <!-- Airport Identity -->
+                        <div class="mb-1 airport-name">${hub.name}</div>
+                        <div class="airport-location mb-5">${hub.code} &bull; ${hub.city}, ${hub.country}</div>
+
+                        <!-- Divider -->
+                        <hr class="card-divider mb-5">
+
+                        <!-- Operational Metadata Grid -->
+                        <div class="grid grid-cols-3 gap-4 mb-5">
+                            <div class="meta-item">
+                                <span class="meta-value">${hub.routes}</span>
+                                <span class="meta-key">Routes</span>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-value">${hub.daily}</span>
+                                <span class="meta-key">Daily Flights</span>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-value">${hub.terminals}</span>
+                                <span class="meta-key">Terminals</span>
+                            </div>
+                        </div>
+
+                        <!-- Airline Ownership + Connectivity Rank -->
+                        <div class="flex justify-between items-center mb-6">
+                            <span class="hub-owner">${hub.owner}</span>
+                            <span style="color: var(--muted); font-size: 0.6rem; letter-spacing: 1px; font-family: 'Courier New', monospace;">${hub.rank}</span>
+                        </div>
+
+                        <!-- Divider -->
+                        <hr class="card-divider mb-5">
+
+                        <!-- CTA Arrow -->
+                        <div class="card-cta">
+                            Open Operations Board &#8594;
+                        </div>
+
+                    </a>
+                `;
+            });
+
+            // Refresh AOS after DOM injection
+            setTimeout(() => AOS.refresh(), 100);
+        }
+
+        // ─────────────────────────────────────────────
+        // UTC CLOCK in system bar
+        // ─────────────────────────────────────────────
+        function updateClock() {
+            const now = new Date();
+            const h = String(now.getUTCHours()).padStart(2, '0');
+            const m = String(now.getUTCMinutes()).padStart(2, '0');
+            const s = String(now.getUTCSeconds()).padStart(2, '0');
+            const el = document.getElementById('sys-time');
+            if (el) el.textContent = `UTC ${h}:${m}:${s}`;
+        }
+
+        // ─────────────────────────────────────────────
+        // INIT
+        // ─────────────────────────────────────────────
+        AOS.init({ once: true, offset: 40, duration: 700 });
+        renderHubs();
+        updateClock();
+        setInterval(updateClock, 1000);
     </script>
+
 </body>
 </html>
