@@ -173,13 +173,18 @@
     .dot.yellow { background: #c39d63; }
     .dot.green  { background: #27ae60; }
 
-    .board-title {
-      font-size: 0.65rem;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      color: var(--text-faint);
-      margin-left: var(--sp-2);
-    }
+    .board-title{
+  font-size:0.72rem;
+  font-weight:700;
+
+  letter-spacing:3px;
+  text-transform:uppercase;
+
+  color:rgba(255,255,255,0.58);
+
+  margin-left:var(--sp-2);
+  opacity:.9;
+}
 
     .board-clock {
       font-size: 0.8rem;
@@ -231,12 +236,15 @@
       letter-spacing: 4px;
     }
 
-    .b-airline {
-      font-size: 0.72rem;
-      color: var(--text-faint);
-      letter-spacing: 2px;
-      text-transform: uppercase;
-    }
+    .b-airline{
+  font-size:0.82rem;
+  font-weight:600;
+
+  letter-spacing:2.2px;
+  text-transform:uppercase;
+
+  color:rgba(255,255,255,0.72);
+}
 
     /* Route row */
     .b-route {
@@ -333,26 +341,23 @@
 
     .b-cell:nth-last-child(-n+2) { border-bottom: none; }
 
-    .b-cell-label {
-  font-size: 0.74rem;
+    .b-cell-label{
+  font-size:0.64rem;
+  font-weight:700;
 
-  letter-spacing: 2px;
+  letter-spacing:2.4px;
+  text-transform:uppercase;
 
-  text-transform: uppercase;
-
-  color: rgba(255,255,255,0.72);
-
-  font-weight: 700;
+  color:rgba(255,255,255,0.42);
 }
 
-    .b-cell-value {
-  font-size: 1.12rem;
+    .b-cell-value{
+  font-size:1.02rem;
+  font-weight:700;
 
-  font-weight: 700;
+  letter-spacing:1.5px;
 
-  color: rgba(255,255,255,0.97);
-
-  letter-spacing: 1px;
+  color:rgba(255,255,255,0.92);
 }
 .b-alert {
   display: none;
@@ -461,19 +466,31 @@
       gap: 4px;
     }
 
-    .b-weather-airport {
-      font-size: 0.6rem;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      color: var(--text-faint);
-    }
+    .b-weather-airport{
+  font-size:0.64rem;
+  font-weight:700;
 
-    .b-weather-val {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      letter-spacing: 1px;
-    }
+  letter-spacing:2.4px;
+  text-transform:uppercase;
 
+  color:rgba(255,255,255,0.5);
+}
+
+    .b-weather-val{
+  font-size:0.9rem;
+  font-weight:600;
+
+  letter-spacing:0.6px;
+
+  color:rgba(255,255,255,0.82);
+
+  margin-top:2px;
+}
+.b-weather-cell{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
     /* Messages / notices */
     .b-messages { display: flex; flex-direction: column; gap: 6px; }
 
