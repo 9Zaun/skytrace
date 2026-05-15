@@ -28,7 +28,7 @@
   position: relative;
 }
     .dash-wrap {
-      min-height: calc(100vh - var(--nav-height));
+       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -562,33 +562,6 @@
 </head>
 <body>
 
-  <!-- ── NAV ── -->
-  <nav class="nav-bar">
-    <span class="nav-logo">SkyTrace</span>
-    <div class="nav-links">
-      <a href="index.html"        class="nav-link">Home</a>
-      <a href="search.html"       class="nav-link">Search</a>
-      <a href="hubs.html"         class="nav-link">Hubs</a>
-      <a href="status.html"       class="nav-link">Live Board</a>
-      <a href="destinations.html" class="nav-link">Destinations</a>
-      <a href="about.html"        class="nav-link">About</a>
-      <a href="contact.html"      class="nav-link">Contact</a>
-    </div>
-    <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
-      <span></span><span></span><span></span>
-    </button>
-  </nav>
-
-  <div class="nav-menu" id="navMenu">
-    <a href="index.html"        class="nav-link">Home</a>
-    <a href="search.html"       class="nav-link">Search</a>
-    <a href="hubs.html"         class="nav-link">Hubs</a>
-    <a href="status.html"       class="nav-link">Live Board</a>
-    <a href="destinations.html" class="nav-link">Destinations</a>
-    <a href="about.html"        class="nav-link">About</a>
-    <a href="contact.html"      class="nav-link">Contact</a>
-  </div>
-
   <!-- ── MAIN ── -->
   <main class="dash-wrap" id="dashWrap">
     <!-- Filled by JS: either empty state or live board -->
@@ -859,10 +832,7 @@
     }
 
     /* ── MOBILE NAV ── */
-    document.getElementById('navToggle').addEventListener('click', () => {
-      document.getElementById('navMenu').classList.toggle('open');
-    });
-
+   
     /* ── INIT ── */
     window.addEventListener('DOMContentLoaded', () => {
       if (savedFlight) renderBoard(savedFlight);
