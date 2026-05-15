@@ -5,141 +5,183 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SkyTrace | Live Operations</title>
-
-    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
     <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
         :root {
             --gold: #c39d63;
-            --bg: #050505;
-            --surface: #111111;
-            --border: #1f1f1f;
+            --gold-dim: #8a6e42;
+            --bg: #111111;
+            --surface: #161616;
+            --border: #252525;
             --text: #f5f5f5;
             --muted: #6b7280;
+            --text-faint: #444444;
             --online: #22d3a0;
             --delay: #f59e0b;
+            --font-mono: 'JetBrains Mono', 'Courier New', monospace;
         }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
 
         body {
             background: var(--bg);
             color: var(--text);
-            font-family: 'Segoe UI', sans-serif;
+            font-family: 'Inter', 'Segoe UI', sans-serif;
             margin: 0;
+            -webkit-font-smoothing: antialiased;
         }
 
-        nav {
-            border-bottom: 1px solid rgba(195, 157, 99, 0.2);
-            background: black;
+        /* ── Page Entry Animation ── */
+        .st-page-entry {
+            opacity: 0;
+            transform: translateY(40px);
+            animation: pageSlideUp 600ms cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
         }
 
-        .gold {
-            color: var(--gold);
+        @keyframes pageSlideUp {
+            to { opacity: 1; transform: translateY(0); }
         }
+
+        .st-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            background: #000;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 500ms ease;
+        }
+
+        .st-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        /* ── Nav ── */
+        nav.status-nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(195,157,99,0.08);
+            background: rgba(17,17,17,0.96);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        nav.status-nav .nav-logo {
+            font-size: 1.05rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        nav.status-nav a {
+            text-decoration: none;
+            color: rgba(255,255,255,0.35);
+            font-size: 0.68rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 600;
+            transition: color 0.15s;
+        }
+
+        nav.status-nav a:hover { color: #fff; }
+        nav.status-nav a.active { color: #fff; }
+
+        .gold { color: var(--gold); }
 
         .status-container {
             background: var(--surface);
             border: 1px solid var(--border);
+            border-radius: 8px;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+        table { width: 100%; border-collapse: collapse; }
 
         th {
             color: var(--gold);
-            font-size: 0.75rem;
+            font-size: 0.72rem;
             text-transform: uppercase;
             letter-spacing: 2px;
             padding: 18px;
             border-bottom: 1px solid var(--border);
             text-align: left;
+            font-family: var(--font-mono);
         }
 
         td {
             padding: 18px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
             color: #ddd;
+            font-size: 0.95rem;
         }
 
-        tr:hover {
-            background: rgba(195, 157, 99, 0.03);
-        }
+        tr:hover { background: rgba(255,255,255,0.02); }
 
         .status-badge {
             padding: 5px 12px;
-            border-radius: 4px;
+            border-radius: 2px;
             font-size: 0.72rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1px;
+            font-family: var(--font-mono);
         }
 
-        .active {
-            background: rgba(34, 211, 160, 0.12);
-            color: var(--online);
-        }
+        .status-active { color: var(--online); border: 1px solid var(--online); }
+        .status-delayed { color: var(--delay); border: 1px solid var(--delay); }
+        .status-landed { background: #fff; color: #000; }
+        .status-cancelled { background: #f44336; color: #fff; }
 
-        .delayed {
-            background: rgba(245, 158, 11, 0.12);
-            color: var(--delay);
-        }
     </style>
 
 </head>
 
 <body>
 
-    <!-- NAV -->
+    <!-- ── Transition Overlay ── -->
+    <div class="st-overlay" id="stOverlay"></div>
 
-    <nav class="flex justify-between items-center px-8 py-5">
+    <div class="st-page-entry" id="pageContent">
 
-        <h1 class="text-2xl font-bold gold tracking-widest">
-            SKYTRACE
-        </h1>
-
+    <!-- ── NAV ── -->
+    <nav class="status-nav flex justify-between items-center px-10 py-4">
+        <a href="index.html" class="nav-logo" onclick="navigateBack(event)">SkyTrace</a>
         <div class="flex gap-6 text-sm uppercase tracking-wider">
-
-            <a href="index.html">Home</a>
+            <a href="index.html" onclick="navigateBack(event)">Home</a>
             <a href="dashboard.html">Dashboard</a>
-            <a href="search.html">Search</a>
-            <a href="hubs.html">Hubs</a>
-
+            <a href="search.html">Flights</a>
+            <a href="status.html" class="active">Airports</a>
+            <a href="contact.html">Contact</a>
         </div>
-
     </nav>
 
-    <!-- HEADER -->
-
+    <!-- ── HEADER ── -->
     <section class="text-center py-16 px-6">
-
-        <p class="gold text-sm tracking-[4px] uppercase mb-4">
+        <p class="gold text-sm tracking-[4px] uppercase mb-4" style="font-size:0.68rem;letter-spacing:4px;">
             Live Flight Operations
         </p>
-
-        <h1 class="text-5xl font-bold mb-6">
+        <h1 class="text-5xl font-bold mb-6" style="letter-spacing:2px;">
             Airport Status Board
         </h1>
-
-        <p class="max-w-3xl mx-auto text-gray-400 leading-relaxed">
+        <p class="max-w-3xl mx-auto leading-relaxed" style="color:var(--muted);font-size:0.95rem;">
             Real-time departures, arrivals, gate activity,
             and operational aviation updates powered by AviationStack.
         </p>
-
     </section>
 
-    <!-- TABLE -->
-
+    <!-- ── TABLE ── -->
     <main class="max-w-7xl mx-auto px-6 pb-20">
-
-        <div class="status-container rounded-xl overflow-hidden">
-
+        <div class="status-container overflow-hidden">
             <table>
-
                 <thead>
-
                     <tr>
                         <th>Flight</th>
                         <th>Departure</th>
@@ -147,16 +189,53 @@
                         <th>Scheduled</th>
                         <th>Status</th>
                     </tr>
-
                 </thead>
-
                 <tbody id="flightTable"></tbody>
-
             </table>
-
         </div>
-
     </main>
+
+    <!-- ── FOOTER ── -->
+    <footer style="border-top:1px solid rgba(195,157,99,0.06);padding:32px 40px;max-width:1200px;margin:0 auto;">
+        <div class="flex justify-between items-center flex-wrap gap-4">
+            <span style="font-size:0.85rem;font-weight:700;letter-spacing:1.5px;">SkyTrace</span>
+            <span style="color:var(--text-faint);font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;">&copy;2026 SKYTRACE</span>
+            <div class="flex gap-5">
+                <a href="about.html" style="font-size:0.68rem;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.35);text-decoration:none;">About</a>
+                <a href="contact.html" style="font-size:0.68rem;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.35);text-decoration:none;">Contact</a>
+            </div>
+        </div>
+    </footer>
+
+    </div><!-- end .st-page-entry -->
+
+    <script>
+        /* ── Page transition ── */
+        function navigateBack(e) {
+            e.preventDefault();
+            var overlay = document.getElementById('stOverlay');
+            sessionStorage.setItem('st_transition', '1');
+            overlay.classList.add('active');
+            setTimeout(function() {
+                window.location.href = e.currentTarget.href || 'index.html';
+            }, 420);
+        }
+
+        (function() {
+            if (sessionStorage.getItem('st_transition') === '1') {
+                sessionStorage.removeItem('st_transition');
+                var overlay = document.getElementById('stOverlay');
+                overlay.style.transition = 'none';
+                overlay.classList.add('active');
+                requestAnimationFrame(function() {
+                    requestAnimationFrame(function() {
+                        overlay.style.transition = 'opacity 500ms ease';
+                        overlay.classList.remove('active');
+                    });
+                });
+            }
+        })();
+    </script>
 
     <script src="api.js"></script>
     <script src="status.js"></script>

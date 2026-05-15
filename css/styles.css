@@ -12,10 +12,10 @@ Design tokens
     --maroon:        #81202e;
   
     /* Surfaces */
-    --bg:            #000000;
-    --surface:       #0d0d0d;
-    --surface-2:     #161616;
-    --border:        #222222;
+    --bg:            #111111;
+    --surface:       #161616;
+    --surface-2:     #1c1c1c;
+    --border:        #252525;
     --border-hover:  var(--gold);
   
     /* Text */
@@ -195,10 +195,10 @@ Navigation
     top: 0;
     z-index: 100;
     height: var(--nav-height);
-    background: rgba(0, 0, 0, 0.92);
+    background: rgba(17, 17, 17, 0.95);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid rgba(195, 157, 99, 0.08);
     display: flex;
     align-items: center;
     padding-inline: var(--sp-10);

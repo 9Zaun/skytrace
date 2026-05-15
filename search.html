@@ -5,8 +5,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>SkyTrace — Flight Search</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-    <!-- Tailwind CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -16,100 +18,168 @@
                         gold: '#c39d63',
                         'gold-dim': '#8a6e42',
                         maroon: '#81202e',
-                        surface: '#0d0d0d',
-                        's2': '#161616',
+                        surface: '#161616',
+                        's2': '#1c1c1c',
                     },
                     fontFamily: {
-                        ui: ['"Segoe UI"', 'system-ui', 'sans-serif'],
-                        mono: ['"Courier New"', 'Courier', 'monospace'],
+                        ui: ['"Inter"', '"Segoe UI"', 'system-ui', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', '"Courier New"', 'Courier', 'monospace'],
                     },
-                    backdropBlur: {
-                        xs: '2px',
-                    }
                 }
             }
         }
     </script>
 
     <style>
-        /* ── Design tokens (kept for JS / shared stylesheet compatibility) ── */
         :root {
             --gold: #c39d63;
             --gold-dim: #8a6e42;
             --gold-subtle: rgba(195, 157, 99, 0.08);
             --maroon: #81202e;
-            --bg: #0a0a0a;
-            --surface: #0d0d0d;
-            --surface-2: #161616;
-            --border: #222222;
+            --bg: #111111;
+            --surface: #161616;
+            --surface-2: #1c1c1c;
+            --border: #252525;
             --text: #ffffff;
             --text-muted: #888888;
             --text-faint: #444444;
             --status-ontime: #00c853;
             --status-delayed: #ffd600;
             --status-cancelled: #f44336;
-            --font-mono: 'Courier New', Courier, monospace;
+            --font-mono: 'JetBrains Mono', 'Courier New', Courier, monospace;
         }
 
-        /* ── Base ── */
-        *,
-        *::before,
-        *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
 
         body {
             background: var(--bg);
             color: var(--text);
-            font-family: 'Segoe UI', system-ui, sans-serif;
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
             min-height: 100vh;
             overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* ── Matte wall background ── */
-        body::before {
-            content: '';
+        /* ── Page Entry Animation ── */
+        .st-page-entry {
+            opacity: 0;
+            transform: translateY(40px);
+            animation: pageSlideUp 600ms cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+
+        @keyframes pageSlideUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .st-overlay {
             position: fixed;
             inset: 0;
-            background:
-                radial-gradient(ellipse 80% 60% at 50% -10%, rgba(195, 157, 99, 0.06) 0%, transparent 70%),
-                radial-gradient(ellipse 60% 50% at 100% 100%, rgba(129, 32, 46, 0.04) 0%, transparent 60%);
+            z-index: 200;
+            background: #000;
             pointer-events: none;
-            z-index: 0;
+            opacity: 0;
+            transition: opacity 500ms ease;
         }
 
-        /* ── Liquid-glass panel mixin ── */
-        .glass {
-            background: linear-gradient(135deg,
-                    rgba(255, 255, 255, 0.045) 0%,
-                    rgba(255, 255, 255, 0.018) 50%,
-                    rgba(0, 0, 0, 0.25) 100%);
-            backdrop-filter: blur(18px) saturate(1.4);
-            -webkit-backdrop-filter: blur(18px) saturate(1.4);
-            border: 1px solid rgba(195, 157, 99, 0.18);
-            box-shadow:
-                0 1px 0 rgba(255, 255, 255, 0.06) inset,
-                0 -1px 0 rgba(0, 0, 0, 0.4) inset,
-                0 8px 32px rgba(0, 0, 0, 0.5),
-                0 2px 8px rgba(0, 0, 0, 0.3);
-            border-radius: 6px;
+        .st-overlay.active {
+            opacity: 1;
+            pointer-events: all;
         }
 
-        /* Slightly lighter glass for nested elements */
-        .glass-inner {
-            background: linear-gradient(135deg,
-                    rgba(255, 255, 255, 0.04) 0%,
-                    rgba(0, 0, 0, 0.2) 100%);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            border: 1px solid rgba(195, 157, 99, 0.12);
-            border-radius: 4px;
+        /* ── Hero Section ── */
+        .page-hero {
+            position: relative;
+            height: 100vh;
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background: #111111;
+        }
+
+        .page-hero-grid {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }
+
+        .page-hero-grid .grid-v {
+            position: absolute;
+            top: 0; bottom: 0;
+            width: 1px;
+            background: rgba(195,157,99,0.035);
+        }
+
+        .page-hero-grid .grid-v:nth-child(1) { left: 20%; }
+        .page-hero-grid .grid-v:nth-child(2) { left: 50%; }
+        .page-hero-grid .grid-v:nth-child(3) { left: 80%; }
+
+        .page-hero-grid .grid-h {
+            position: absolute;
+            left: 0; right: 0;
+            height: 1px;
+            background: rgba(195,157,99,0.035);
+            top: 60%;
+        }
+
+        .page-hero-inner {
+            position: relative;
+            z-index: 2;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .page-hero-label {
+            position: absolute;
+            top: 32px; left: 40px;
+            font-size: 0.58rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: rgba(195,157,99,0.2);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .page-hero-icon {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-top: 20px;
+        }
+
+        .page-hero-icon svg {
+            width: clamp(320px, 52vw, 620px);
+            height: auto;
+        }
+
+        .page-hero-text {
+            padding: 0 40px 48px;
+        }
+
+        .page-hero-title {
+            font-size: clamp(2.8rem, 8vw, 7rem);
+            font-weight: 300;
+            letter-spacing: clamp(4px, 1.2vw, 14px);
+            text-transform: uppercase;
+            color: #fff;
+            line-height: 0.92;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .page-hero-sub {
+            font-size: 0.68rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.25);
+            margin-top: 16px;
+            font-weight: 400;
+        }
+
+        .page-hero-geo {
+            position: absolute;
+            bottom: 48px; right: 40px;
         }
 
         /* ── Nav ── */
@@ -117,11 +187,11 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            height: 64px;
-            background: rgba(10, 10, 10, 0.88);
-            backdrop-filter: blur(20px) saturate(1.5);
-            -webkit-backdrop-filter: blur(20px) saturate(1.5);
-            border-bottom: 1px solid rgba(195, 157, 99, 0.15);
+            height: 56px;
+            background: rgba(17, 17, 17, 0.96);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(195,157,99,0.08);
             display: flex;
             align-items: center;
             padding-inline: 40px;
@@ -131,25 +201,21 @@
         .nav-logo {
             font-size: 1.05rem;
             font-weight: 700;
-            letter-spacing: 6px;
-            text-transform: uppercase;
-            color: var(--gold);
+            letter-spacing: 1.5px;
+            color: #fff;
         }
 
         .nav-link {
-            font-size: 0.72rem;
+            font-size: 0.68rem;
             letter-spacing: 2px;
             text-transform: uppercase;
-            color: var(--text-muted);
+            color: rgba(255,255,255,0.35);
             font-weight: 600;
             transition: color 0.15s ease;
             text-decoration: none;
         }
 
-        .nav-link:hover,
-        .nav-link.active {
-            color: var(--gold);
-        }
+        .nav-link:hover, .nav-link.active { color: #fff; }
 
         /* ── Page heading area ── */
         .page-eyebrow {
@@ -171,7 +237,7 @@
             padding: 11px 36px;
             cursor: pointer;
             background: transparent;
-            border: 1px solid rgba(195, 157, 99, 0.2);
+            border: 1px solid rgba(255,255,255,0.08);
             color: var(--text-muted);
             font-weight: 700;
             font-size: 0.75rem;
@@ -185,7 +251,6 @@
         .tab:hover {
             color: var(--gold);
             border-color: var(--gold-dim);
-            background: rgba(195, 157, 99, 0.06);
         }
 
         .tab.active {
@@ -199,19 +264,18 @@
             width: 100%;
             padding: 14px 16px;
             background: rgba(0, 0, 0, 0.45);
-            border: 1px solid rgba(195, 157, 99, 0.2);
+            border: 1px solid rgba(255,255,255,0.08);
             color: var(--gold);
             font-size: 0.95rem;
             font-family: var(--font-mono);
             letter-spacing: 1px;
-            border-radius: 3px;
+            border-radius: 6px;
             outline: none;
-            transition: border-color 0.15s ease, box-shadow 0.15s ease;
+            transition: border-color 0.15s ease;
         }
 
         .search-input:focus {
             border-color: var(--gold);
-            box-shadow: 0 0 0 2px rgba(195, 157, 99, 0.12);
         }
 
         .search-input::placeholder {
@@ -236,19 +300,25 @@
             letter-spacing: 2px;
             text-transform: uppercase;
             border: 1px solid var(--gold);
-            border-radius: 3px;
+            border-radius: 6px;
             height: 50px;
             padding: 0 36px;
             cursor: pointer;
             transition: all 0.2s ease;
             white-space: nowrap;
             font-family: inherit;
-            box-shadow: 0 2px 12px rgba(195, 157, 99, 0.2);
         }
 
         .search-btn:hover {
             background: transparent;
             color: var(--gold);
+        }
+
+        /* ── Glass panel ── */
+        .glass {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 8px;
         }
 
         /* ── Status badges ── */
@@ -265,62 +335,24 @@
             font-family: var(--font-mono);
         }
 
-        .st-on-time {
-            color: var(--status-ontime);
-            border: 1px solid var(--status-ontime);
-        }
+        .st-on-time { color: var(--status-ontime); border: 1px solid var(--status-ontime); }
+        .st-delayed { color: var(--status-delayed); border: 1px solid var(--status-delayed); }
+        .st-boarding { background: var(--maroon); color: #fff; border: 1px solid var(--maroon); animation: blink 1s step-start infinite; }
+        .st-cancelled { background: var(--status-cancelled); color: #fff; border: 1px solid var(--status-cancelled); }
+        .st-arrived { background: #fff; color: #000; border: 1px solid #fff; }
+        .st-scheduled { color: var(--text-muted); border: 1px solid var(--text-faint); }
+        .st-departing { color: #3b82f6; border: 1px solid #3b82f6; }
 
-        .st-delayed {
-            color: var(--status-delayed);
-            border: 1px solid var(--status-delayed);
-        }
-
-        .st-boarding {
-            background: var(--maroon);
-            color: #fff;
-            border: 1px solid var(--maroon);
-            animation: blink 1s step-start infinite;
-        }
-
-        .st-cancelled {
-            background: var(--status-cancelled);
-            color: #fff;
-            border: 1px solid var(--status-cancelled);
-        }
-
-        .st-arrived {
-            background: #fff;
-            color: #000;
-            border: 1px solid #fff;
-        }
-
-        .st-scheduled {
-            color: var(--text-muted);
-            border: 1px solid var(--text-faint);
-        }
-
-        .st-departing {
-            color: #3b82f6;
-            border: 1px solid #3b82f6;
-        }
-
-        @keyframes blink {
-            50% {
-                opacity: 0;
-            }
-        }
+        @keyframes blink { 50% { opacity: 0; } }
 
         /* ── Results table ── */
-        .results-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+        .results-table { width: 100%; border-collapse: collapse; }
 
         .results-table th {
             text-align: left;
             color: var(--text-faint);
             padding: 14px 16px;
-            border-bottom: 1px solid rgba(195, 157, 99, 0.15);
+            border-bottom: 1px solid rgba(255,255,255,0.06);
             font-size: 0.65rem;
             letter-spacing: 3px;
             text-transform: uppercase;
@@ -329,7 +361,7 @@
 
         .results-table td {
             padding: 20px 16px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            border-bottom: 1px solid rgba(255,255,255,0.03);
             font-size: 0.95rem;
             vertical-align: middle;
             white-space: nowrap;
@@ -341,13 +373,7 @@
             cursor: pointer;
         }
 
-        .results-table tbody tr:hover {
-            background: rgba(195, 157, 99, 0.04);
-        }
-
-        .results-table tbody tr:hover td {
-            border-bottom-color: rgba(195, 157, 99, 0.1);
-        }
+        .results-table tbody tr:hover { background: rgba(255,255,255,0.02); }
 
         .flight-id-cell {
             font-family: var(--font-mono);
@@ -356,152 +382,113 @@
             letter-spacing: 2px;
         }
 
-        /* ── Fade-up animation ── */
         @keyframes fadeUp {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .animate-in {
-            animation: fadeUp 0.35s ease forwards;
-            opacity: 0;
+        .animate-in { animation: fadeUp 0.35s ease forwards; opacity: 0; }
+
+        .empty-state { text-align: center; padding: 60px 20px; color: var(--text-faint); }
+        .empty-icon { font-size: 2.5rem; margin-bottom: 16px; opacity: 0.3; }
+        .empty-label { font-size: 0.72rem; letter-spacing: 3px; text-transform: uppercase; }
+
+        .filter-chip {
+            padding: 5px 14px;
+            font-size: 0.65rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 700;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 2px;
+            color: var(--text-muted);
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            font-family: inherit;
         }
 
-        /* ── Ticker / scan line decoration ── */
-        .scan-line {
-            position: absolute;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent 0%, rgba(195, 157, 99, 0.3) 50%, transparent 100%);
-            animation: scan 3s ease-in-out infinite;
-            pointer-events: none;
-        }
+        .filter-chip:hover { border-color: var(--gold); color: var(--gold); }
+        .filter-chip.active { background: var(--gold); color: #000; border-color: var(--gold); }
 
-        @keyframes scan {
-
-            0%,
-            100% {
-                top: 0;
-                opacity: 0;
-            }
-
-            10% {
-                opacity: 1;
-            }
-
-            90% {
-                opacity: 1;
-            }
-
-            50% {
-                top: 100%;
-            }
-        }
-
-        /* ── Mobile hamburger ── */
         @media (max-width: 768px) {
-            .nav-links-desktop {
-                display: none;
-            }
-
-            .nav-bar {
-                padding-inline: 20px;
-            }
+            .nav-links-desktop { display: none; }
+            .nav-bar { padding-inline: 20px; }
+            .page-hero-text { padding: 0 20px 40px; }
+            .page-hero-label { left: 20px; }
+            .page-hero-geo { right: 20px; }
+            .page-hero-icon svg { width: clamp(240px, 72vw, 360px); }
         }
 
         @media (max-width: 640px) {
-            .form-grid {
-                grid-template-columns: 1fr !important;
-            }
-
+            .form-grid { grid-template-columns: 1fr !important; }
             .results-table th:nth-child(3),
-            .results-table td:nth-child(3) {
-                display: none;
-            }
-        }
-
-        /* ── System status dot ── */
-        .sys-dot {
-            display: inline-block;
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            background: var(--status-ontime);
-            box-shadow: 0 0 6px var(--status-ontime);
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-
-            0%,
-            100% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0.4;
-            }
-        }
-
-        /* ── Empty state ── */
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: var(--text-faint);
-        }
-
-        .empty-icon {
-            font-size: 2.5rem;
-            margin-bottom: 16px;
-            opacity: 0.3;
-        }
-
-        .empty-label {
-            font-size: 0.72rem;
-            letter-spacing: 3px;
-            text-transform: uppercase;
+            .results-table td:nth-child(3) { display: none; }
         }
     </style>
 </head>
 
 <body>
 
-    <!-- ═══════════════════════════════ NAV ═══════════════════════════════ -->
-    <nav class="nav-bar">
-        <a href="index.html" class="nav-logo">Sky<span style="color:#888;font-weight:400">Trace</span></a>
+    <!-- ── Transition Overlay ── -->
+    <div class="st-overlay" id="stOverlay"></div>
 
-        <!-- Tailwind: hidden on mobile, flex on md+ -->
-        <div class="nav-links-desktop ml-auto flex items-center gap-6">
-            <a href="index.html" class="nav-link">Overview</a>
-            <a href="dashboard.html" class="nav-link">Dashboard</a>
-            <a href="search.html" class="nav-link active">Search</a>
-            <a href="status.html" class="nav-link">Status</a>
-            <a href="about.html" class="nav-link">About</a>
-            <a href="contact.html" class="nav-link">Contact</a>
+    <div class="st-page-entry" id="pageContent">
+
+    <!-- ── Hero Section ── -->
+    <section class="page-hero">
+        <div class="page-hero-grid">
+            <div class="grid-v"></div>
+            <div class="grid-v"></div>
+            <div class="grid-v"></div>
+            <div class="grid-h"></div>
         </div>
+        <div class="page-hero-inner">
+            <div class="page-hero-label">SEC.02 // FLT_SEARCH</div>
+            <div class="page-hero-icon">
+                <svg viewBox="0 0 320 220" fill="none">
+                    <circle cx="50" cy="160" r="10" stroke="rgba(255,255,255,0.22)" stroke-width="1.5"/>
+                    <circle cx="270" cy="160" r="10" stroke="rgba(255,255,255,0.22)" stroke-width="1.5"/>
+                    <path d="M50 160 Q160 15 270 160" stroke="rgba(255,255,255,0.12)" stroke-width="1.5" stroke-dasharray="8 5"/>
+                    <path d="M155 58 L160 48 L165 58 Z" fill="rgba(255,255,255,0.35)"/>
+                    <line x1="160" y1="58" x2="160" y2="160" stroke="rgba(255,255,255,0.05)" stroke-width="1" stroke-dasharray="4 6"/>
+                    <text x="35" y="192" fill="rgba(255,255,255,0.15)" font-size="11" font-family="'JetBrains Mono', monospace" letter-spacing="2">DEP</text>
+                    <text x="255" y="192" fill="rgba(255,255,255,0.15)" font-size="11" font-family="'JetBrains Mono', monospace" letter-spacing="2">ARR</text>
+                </svg>
+            </div>
+            <div class="page-hero-text">
+                <h1 class="page-hero-title">FLIGHTS</h1>
+                <p class="page-hero-sub">Search for flights</p>
+            </div>
+            <div class="page-hero-geo">
+                <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
+                    <rect x="1" y="1" width="20" height="20" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                    <rect x="31" y="1" width="20" height="20" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                    <rect x="1" y="31" width="20" height="20" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                    <rect x="31" y="31" width="20" height="20" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                </svg>
+            </div>
+        </div>
+    </section>
 
-        <!-- System status -->
-        <div class="hidden md:flex items-center gap-2 ml-6">
-            <span class="sys-dot"></span>
-            <span class="text-xs font-mono tracking-widest"
-                style="color:var(--status-ontime);font-size:0.62rem;">LIVE</span>
+    <!-- ── NAV ── -->
+    <nav class="nav-bar">
+        <a href="index.html" class="nav-logo" onclick="navigateBack(event)">SkyTrace</a>
+
+        <div class="nav-links-desktop ml-auto flex items-center gap-6">
+            <a href="index.html" class="nav-link" onclick="navigateBack(event)">Overview</a>
+            <a href="dashboard.html" class="nav-link">Dashboard</a>
+            <a href="search.html" class="nav-link active">Flights</a>
+            <a href="status.html" class="nav-link">Airports</a>
+            <a href="contact.html" class="nav-link">Contact</a>
         </div>
     </nav>
 
-    <!-- ═══════════════════════════════ MAIN ═══════════════════════════════ -->
+    <!-- ── MAIN ── -->
     <main class="relative z-10" style="max-width:1200px; margin:0 auto; padding: 48px 40px 80px;">
 
-        <!-- Page header -->
         <div class="mb-10 animate-in" style="animation-delay:0s;">
-            <p class="page-eyebrow mb-2">SkyTrace · Flight Discovery</p>
+            <p class="page-eyebrow mb-2">SkyTrace &middot; Flight Discovery</p>
             <h1 class="page-title">
                 Flight <span style="color:var(--gold)">Search</span>
             </h1>
@@ -510,39 +497,29 @@
             </p>
         </div>
 
-        <!-- ── Search panel (liquid-glass card) ── -->
+        <!-- ── Search panel ── -->
         <div class="glass relative overflow-hidden p-6 mb-8 animate-in" style="animation-delay:0.08s;">
-            <div class="scan-line"></div>
 
-            <!-- Tabs — Tailwind flex + gap -->
             <div class="flex gap-3 mb-6">
                 <button id="modeDep" class="tab active" onclick="setSearchMode('DEP')">Departing From</button>
                 <button id="modeArr" class="tab" onclick="setSearchMode('ARR')">Arriving To</button>
                 <button id="modeId" class="tab" onclick="setSearchMode('ID')">Flight Number</button>
             </div>
 
-            <!-- Input grid — Tailwind grid -->
             <div class="form-grid grid gap-4" style="grid-template-columns: 1fr 1fr auto; align-items: end;">
-
-                <!-- Primary input -->
                 <div class="flex flex-col gap-2">
                     <label id="primaryLabel" class="form-label">Origin Airport / City</label>
                     <input type="text" id="primaryInput" class="search-input" placeholder="e.g. Delhi or DEL"
-                        oninput="runSearch()" autocomplete="off" />
+                        autocomplete="off" />
                 </div>
-
-                <!-- Secondary input (always shown for flexibility) -->
                 <div class="flex flex-col gap-2">
                     <label id="secondaryLabel" class="form-label">Destination (optional)</label>
                     <input type="text" id="secondaryInput" class="search-input" placeholder="e.g. Mumbai or BOM"
-                        oninput="runSearch()" autocomplete="off" />
+                        autocomplete="off" />
                 </div>
-
-                <!-- Search button -->
-                <button class="search-btn" onclick="runSearch()">Search ›</button>
+                <button class="search-btn" onclick="runSearch()">Search &rsaquo;</button>
             </div>
 
-            <!-- Filter chips (Tailwind: flex wrap gap) -->
             <div class="flex flex-wrap gap-2 mt-5">
                 <span class="text-xs tracking-widest uppercase"
                     style="color:var(--text-faint);align-self:center;margin-right:4px;font-size:0.6rem;">Quick
@@ -558,13 +535,12 @@
         <!-- ── Results area ── -->
         <div id="resultsArea" class="glass animate-in" style="animation-delay:0.16s; min-height: 300px;">
 
-            <!-- Results count header -->
             <div class="flex items-center justify-between px-6 py-4"
-                style="border-bottom:1px solid rgba(195,157,99,0.12);">
+                style="border-bottom:1px solid rgba(255,255,255,0.04);">
                 <div class="flex items-center gap-3">
                     <span class="form-label">Results</span>
                     <span id="resultCount" class="text-xs font-mono px-2 py-0.5 rounded"
-                        style="background:rgba(195,157,99,0.1);color:var(--gold);letter-spacing:1px;font-size:0.68rem;">—</span>
+                        style="background:rgba(195,157,99,0.1);color:var(--gold);letter-spacing:1px;font-size:0.68rem;">&mdash;</span>
                     <span id="sourceBadge"
                         style="display:none;font-size:0.62rem;font-family:var(--font-mono);letter-spacing:2px;padding:3px 8px;border:1px solid;border-radius:2px;"></span>
                 </div>
@@ -573,7 +549,6 @@
                     QUERY</span>
             </div>
 
-            <!-- Loading state -->
             <div id="loadingState" class="empty-state" style="display:none;">
                 <div style="margin-bottom:16px;">
                     <svg width="32" height="32" viewBox="0 0 32 32"
@@ -583,34 +558,22 @@
                     </svg>
                 </div>
                 <p class="empty-label" style="color:var(--gold)">Querying AviationStack</p>
-                <p class="mt-2 text-xs" style="color:var(--text-faint);letter-spacing:1px;">Fetching live flight data…
-                </p>
+                <p class="mt-2 text-xs" style="color:var(--text-faint);letter-spacing:1px;">Fetching live flight data&hellip;</p>
             </div>
-            <style>
-                @keyframes spin {
-                    to {
-                        transform: rotate(360deg);
-                    }
-                }
-            </style>
+            <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
 
-            <!-- Empty state (default) -->
             <div id="emptyState" class="empty-state">
-                <div class="empty-icon">✈</div>
+                <div class="empty-icon">&#9992;</div>
                 <p class="empty-label">Enter an origin or destination to search flights</p>
-                <p class="mt-2 text-xs" style="color:var(--text-faint);letter-spacing:1px;">Try "Delhi", "DEL", or "QR
-                    001"</p>
+                <p class="mt-2 text-xs" style="color:var(--text-faint);letter-spacing:1px;">Try &ldquo;Delhi&rdquo;, &ldquo;DEL&rdquo;, or &ldquo;QR 001&rdquo;</p>
             </div>
 
-            <!-- No results state -->
             <div id="noResults" class="empty-state" style="display:none;">
-                <div class="empty-icon">◌</div>
+                <div class="empty-icon">&#9676;</div>
                 <p class="empty-label">No flights found</p>
-                <p class="mt-2 text-xs" style="color:var(--text-faint);letter-spacing:1px;">Try a different origin or
-                    destination</p>
+                <p class="mt-2 text-xs" style="color:var(--text-faint);letter-spacing:1px;">Try a different origin or destination</p>
             </div>
 
-            <!-- Table -->
             <div id="tableWrap" class="overflow-x-auto" style="display:none;">
                 <table class="results-table">
                     <thead>
@@ -627,18 +590,15 @@
                     <tbody id="searchBody"></tbody>
                 </table>
             </div>
-
         </div>
-
     </main>
 
-    <!-- ═══════════════════════════════ FOOTER ═══════════════════════════════ -->
+    <!-- ── FOOTER ── -->
     <footer class="relative z-10"
-        style="border-top:1px solid var(--border);padding:32px 40px;max-width:1200px;margin:0 auto;">
+        style="border-top:1px solid rgba(195,157,99,0.06);padding:32px 40px;max-width:1200px;margin:0 auto;">
         <div class="flex justify-between items-center flex-wrap gap-4">
             <span class="nav-logo" style="font-size:0.85rem;">SkyTrace</span>
-            <span class="text-xs tracking-widest" style="color:var(--text-faint);font-size:0.65rem;">©2026 · UID PROJECT
-                · CSE SEM 2</span>
+            <span class="text-xs tracking-widest" style="color:var(--text-faint);font-size:0.65rem;">&copy;2026 SKYTRACE</span>
             <div class="flex gap-5">
                 <a href="about.html" class="nav-link">About</a>
                 <a href="contact.html" class="nav-link">Contact</a>
@@ -646,49 +606,40 @@
         </div>
     </footer>
 
-    <!-- ═══════════════════════════ STYLES for chips ═══════════════════════ -->
-    <style>
-        .filter-chip {
-            padding: 5px 14px;
-            font-size: 0.65rem;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            font-weight: 700;
-            border: 1px solid rgba(195, 157, 99, 0.2);
-            border-radius: 2px;
-            color: var(--text-muted);
-            background: transparent;
-            cursor: pointer;
-            transition: all 0.15s ease;
-            font-family: inherit;
-        }
+    </div><!-- end .st-page-entry -->
 
-        .filter-chip:hover {
-            border-color: var(--gold);
-            color: var(--gold);
-            background: rgba(195, 157, 99, 0.06);
-        }
-
-        .filter-chip.active {
-            background: var(--gold);
-            color: #000;
-            border-color: var(--gold);
-        }
-    </style>
-
-    <!-- ═══════════════════════════════ SCRIPT ═══════════════════════════════ -->
     <script>
-        /* ════════════════════════════════════════════════════════════════
-           AVIATIONSTACK API CONFIG
-           Free plan: HTTP only, 100 req/month, no dep/arr query params
-           → we fetch a batch and filter client-side (same as your teammate's approach)
-        ════════════════════════════════════════════════════════════════ */
-        const API_KEY = "fa82d9f862ff510e45ce55cd5fadf469";
-        // Free tier must use HTTP. Using a CORS proxy for browser support.
-        const API_BASE = "https://corsproxy.io/?http://api.aviationstack.com/v1";
+        /* ── Page transition helpers ── */
+        function navigateBack(e) {
+            e.preventDefault();
+            var overlay = document.getElementById('stOverlay');
+            sessionStorage.setItem('st_transition', '1');
+            overlay.classList.add('active');
+            setTimeout(function() {
+                window.location.href = e.currentTarget.href || 'index.html';
+            }, 420);
+        }
 
-        /* ── Fallback dataset (shown if API fails / quota exceeded) ── */
-        const FALLBACK_DATA = [
+        (function() {
+            if (sessionStorage.getItem('st_transition') === '1') {
+                sessionStorage.removeItem('st_transition');
+                var overlay = document.getElementById('stOverlay');
+                overlay.style.transition = 'none';
+                overlay.classList.add('active');
+                requestAnimationFrame(function() {
+                    requestAnimationFrame(function() {
+                        overlay.style.transition = 'opacity 500ms ease';
+                        overlay.classList.remove('active');
+                    });
+                });
+            }
+        })();
+
+        /* ── API CONFIG ── */
+        var API_KEY = "fa82d9f862ff510e45ce55cd5fadf469";
+        var API_BASE = "https://corsproxy.io/?http://api.aviationstack.com/v1";
+
+        var FALLBACK_DATA = [
             { id: "AI 101", from: "Indira Gandhi Intl", fromCode: "DEL", to: "Chhatrapati Shivaji Intl", toCode: "BOM", sch: "06:10", gate: "T3-12", dur: "2h 05m", status: "scheduled", airline: "Air India" },
             { id: "AI 102", from: "Chhatrapati Shivaji", fromCode: "BOM", to: "Indira Gandhi Intl", toCode: "DEL", sch: "08:45", gate: "1A", dur: "2h 00m", status: "active", airline: "Air India" },
             { id: "AI 201", from: "Indira Gandhi Intl", fromCode: "DEL", to: "Kempegowda Intl", toCode: "BLR", sch: "09:20", gate: "T3-04", dur: "2h 45m", status: "scheduled", airline: "Air India" },
@@ -705,173 +656,109 @@
             { id: "IX 612", from: "Cochin Intl", fromCode: "COK", to: "Chhatrapati Shivaji", toCode: "BOM", sch: "10:45", gate: "7", dur: "1h 50m", status: "scheduled", airline: "Air India X" },
         ];
 
-        /* ── State ── */
-        let searchMode = 'DEP';
-        let activeFilter = 'ALL';
-        let allMatches = [];
-        let usingLive = false;   // tracks whether we're showing live API data
+        var searchMode = 'DEP';
+        var activeFilter = 'ALL';
+        var allMatches = [];
+        var usingLive = false;
 
-        /* ══════════════════════════════════════════════════════════════
-           API LAYER
-        ══════════════════════════════════════════════════════════════ */
-
-        /**
-         * Fetch a page of flights from AviationStack.
-         * dep_iata / arr_iata are passed when supported; free tier ignores them
-         * but we still send them so a paid key would use them properly.
-         */
-        async function fetchFromAPI({ depIata = '', arrIata = '', flightIata = '', limit = 100 } = {}) {
-            const params = new URLSearchParams({
-                access_key: API_KEY,
-                limit,
-            });
-            if (depIata) params.set('dep_iata', depIata);
-            if (arrIata) params.set('arr_iata', arrIata);
-            if (flightIata) params.set('flight_iata', flightIata);
-
-            const url = `${API_BASE}/flights?${params.toString()}`;
-            const res = await fetch(url);
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
-            const json = await res.json();
+        async function fetchFromAPI(opts) {
+            opts = opts || {};
+            var params = new URLSearchParams({ access_key: API_KEY, limit: opts.limit || 100 });
+            if (opts.depIata) params.set('dep_iata', opts.depIata);
+            if (opts.arrIata) params.set('arr_iata', opts.arrIata);
+            if (opts.flightIata) params.set('flight_iata', opts.flightIata);
+            var res = await fetch(API_BASE + '/flights?' + params.toString());
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            var json = await res.json();
             if (json.error) throw new Error(json.error.message || 'API error');
             return json.data || [];
         }
 
-        /**
-         * Normalise a raw AviationStack flight object into the shape
-         * our renderer expects — same fields as the fallback dataset.
-         */
         function normalise(f) {
-            const depTime = f.departure?.scheduled || f.departure?.estimated || '';
-            const arrTime = f.arrival?.scheduled || f.arrival?.estimated || '';
-
-            // duration: compute from scheduled times if available
-            let dur = '—';
+            var depTime = (f.departure && f.departure.scheduled) || (f.departure && f.departure.estimated) || '';
+            var arrTime = (f.arrival && f.arrival.scheduled) || (f.arrival && f.arrival.estimated) || '';
+            var dur = '\u2014';
             if (depTime && arrTime) {
-                const mins = Math.round((new Date(arrTime) - new Date(depTime)) / 60000);
-                if (mins > 0) dur = `${Math.floor(mins / 60)}h ${mins % 60}m`;
+                var mins = Math.round((new Date(arrTime) - new Date(depTime)) / 60000);
+                if (mins > 0) dur = Math.floor(mins / 60) + 'h ' + (mins % 60) + 'm';
             }
-
-            // status normalisation: map API strings → our badge classes
-            const rawStatus = (f.flight_status || 'scheduled').toLowerCase();
-
             return {
-                id: f.flight?.iata || f.flight?.icao || '—',
-                from: f.departure?.airport || '—',
-                fromCode: f.departure?.iata || '—',
-                to: f.arrival?.airport || '—',
-                toCode: f.arrival?.iata || '—',
-                sch: depTime ? new Date(depTime).toTimeString().slice(0, 5) : '—',
-                gate: f.departure?.gate || '—',
-                dur,
-                status: rawStatus,
-                airline: f.airline?.name || '—',
+                id: (f.flight && f.flight.iata) || (f.flight && f.flight.icao) || '\u2014',
+                from: (f.departure && f.departure.airport) || '\u2014',
+                fromCode: (f.departure && f.departure.iata) || '\u2014',
+                to: (f.arrival && f.arrival.airport) || '\u2014',
+                toCode: (f.arrival && f.arrival.iata) || '\u2014',
+                sch: depTime ? new Date(depTime).toTimeString().slice(0, 5) : '\u2014',
+                gate: (f.departure && f.departure.gate) || '\u2014',
+                dur: dur,
+                status: (f.flight_status || 'scheduled').toLowerCase(),
+                airline: (f.airline && f.airline.name) || '\u2014',
             };
         }
 
-        /* ══════════════════════════════════════════════════════════════
-           SEARCH  — tries API first, falls back to static data
-        ══════════════════════════════════════════════════════════════ */
         async function runSearch() {
-            const pVal = document.getElementById('primaryInput').value.trim().toUpperCase();
-            const sVal = document.getElementById('secondaryInput').value.trim().toUpperCase();
-
-            if (!pVal && !sVal) {
-                showEmpty();
-                allMatches = [];
-                updateCount(null);
-                setDataSource(null);
-                return;
-            }
-
+            var pVal = document.getElementById('primaryInput').value.trim().toUpperCase();
+            var sVal = document.getElementById('secondaryInput').value.trim().toUpperCase();
+            if (!pVal && !sVal) { showEmpty(); allMatches = []; updateCount(null); setDataSource(null); return; }
             showLoading();
-
             try {
-                /* Build API params based on search mode */
-                const apiOpts = { limit: 100 };
+                var apiOpts = { limit: 100 };
                 if (searchMode === 'DEP' && pVal.length <= 4) apiOpts.depIata = pVal;
                 if (searchMode === 'ARR' && pVal.length <= 4) apiOpts.arrIata = pVal;
                 if (searchMode === 'ID') apiOpts.flightIata = pVal.replace(/\s/g, '');
-
-                const raw = await fetchFromAPI(apiOpts);
-                const normalised = raw.map(normalise);
-
-                /* Client-side filter (covers free-tier where query params are ignored) */
-                allMatches = filterFlights(normalised, pVal, sVal);
+                var raw = await fetchFromAPI(apiOpts);
+                allMatches = filterFlights(raw.map(normalise), pVal, sVal);
                 usingLive = true;
                 setDataSource('live');
-
             } catch (err) {
-                console.warn('AviationStack API failed, using fallback data:', err.message);
-                /* Fallback: filter the static dataset */
+                console.warn('API failed, using fallback:', err.message);
                 allMatches = filterFlights(FALLBACK_DATA, pVal, sVal);
                 usingLive = false;
                 setDataSource('fallback');
             }
-
             renderResults(allMatches);
         }
 
-        /* Client-side filter — works on both live and fallback data shapes */
         function filterFlights(data, pVal, sVal) {
-
-            return data.filter(f => {
-
-                const from = `${f.from} ${f.fromCode}`.toUpperCase();
-                const to = `${f.to} ${f.toCode}`.toUpperCase();
-                const id = `${f.id} ${f.airline}`.toUpperCase();
-
-                let primaryMatch = true;
-                let secondaryMatch = true;
-
+            return data.filter(function(f) {
+                var from = (f.from + ' ' + f.fromCode).toUpperCase();
+                var to = (f.to + ' ' + f.toCode).toUpperCase();
+                var id = (f.id + ' ' + f.airline).toUpperCase();
+                var pm = true, sm = true;
                 if (pVal) {
-                    if (searchMode === 'DEP') primaryMatch = from.includes(pVal);
-                    else if (searchMode === 'ARR') primaryMatch = to.includes(pVal);
-                    else primaryMatch = id.includes(pVal);
+                    if (searchMode === 'DEP') pm = from.includes(pVal);
+                    else if (searchMode === 'ARR') pm = to.includes(pVal);
+                    else pm = id.includes(pVal);
                 }
-
-                if (sVal) {
-                    secondaryMatch = from.includes(sVal) || to.includes(sVal) || id.includes(sVal);
-                }
-
-                return primaryMatch && secondaryMatch;
+                if (sVal) sm = from.includes(sVal) || to.includes(sVal) || id.includes(sVal);
+                return pm && sm;
             });
         }
 
-        /* ══════════════════════════════════════════════════════════════
-           MODE TOGGLE
-        ══════════════════════════════════════════════════════════════ */
         function setSearchMode(mode) {
             searchMode = mode;
-            ['modeDep', 'modeArr', 'modeId'].forEach(id => document.getElementById(id).classList.remove('active'));
-
-            const labels = {
+            ['modeDep', 'modeArr', 'modeId'].forEach(function(id) { document.getElementById(id).classList.remove('active'); });
+            var labels = {
                 DEP: { primary: 'Origin Airport / City', secondary: 'Destination (optional)' },
                 ARR: { primary: 'Destination Airport / City', secondary: 'Origin (optional)' },
                 ID: { primary: 'Flight Number / Airline', secondary: 'Airport / City (optional)' },
             };
-            const lbl = labels[mode];
+            var lbl = labels[mode];
             document.getElementById('primaryLabel').textContent = lbl.primary;
             document.getElementById('secondaryLabel').textContent = lbl.secondary;
-            document.getElementById('primaryInput').placeholder =
-                mode === 'ID' ? 'e.g. AI101 or EK or IndiGo' : 'e.g. Delhi or DEL';
-
-            document.getElementById(`mode${mode === 'DEP' ? 'Dep' : mode === 'ARR' ? 'Arr' : 'Id'}`).classList.add('active');
+            document.getElementById('primaryInput').placeholder = mode === 'ID' ? 'e.g. AI101 or EK or IndiGo' : 'e.g. Delhi or DEL';
+            document.getElementById('mode' + (mode === 'DEP' ? 'Dep' : mode === 'ARR' ? 'Arr' : 'Id')).classList.add('active');
             runSearch();
         }
 
-        /* ── Quick filter chips ── */
         function quickFilter(status) {
             activeFilter = status;
-            document.querySelectorAll('.filter-chip').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.filter-chip').forEach(function(el) { el.classList.remove('active'); });
             event.target.classList.add('active');
             renderResults(allMatches);
         }
 
-        /* ══════════════════════════════════════════════════════════════
-           STATUS MAP
-        ══════════════════════════════════════════════════════════════ */
-        const STATUS_MAP = {
+        var STATUS_MAP = {
             'scheduled': { label: 'SCHEDULED', cls: 'st-scheduled' },
             'active': { label: 'EN ROUTE', cls: 'st-on-time' },
             'landed': { label: 'ARRIVED', cls: 'st-arrived' },
@@ -886,78 +773,58 @@
         };
 
         function getBadge(rawStatus) {
-            const key = (rawStatus || '').toLowerCase().replace(/[\s_]+/g, '-');
+            var key = (rawStatus || '').toLowerCase().replace(/[\s_]+/g, '-');
             return STATUS_MAP[key] || { label: rawStatus.toUpperCase(), cls: 'st-scheduled' };
         }
 
-        /* ══════════════════════════════════════════════════════════════
-           RENDER
-        ══════════════════════════════════════════════════════════════ */
         function renderResults(matches) {
-            const CHIP_TO_STATUS = {
+            var CHIP_TO_STATUS = {
                 'ALL': null,
                 'ON-TIME': ['active', 'scheduled', 'on-time'],
                 'BOARDING': ['boarding'],
                 'DELAYED': ['delayed', 'diverted'],
                 'ARRIVED': ['landed', 'arrived'],
             };
-
-            const filterKeys = CHIP_TO_STATUS[activeFilter];
-            const filtered = filterKeys
-                ? matches.filter(f => filterKeys.includes((f.status || '').toLowerCase()))
-                : matches;
+            var filterKeys = CHIP_TO_STATUS[activeFilter];
+            var filtered = filterKeys ? matches.filter(function(f) { return filterKeys.includes((f.status || '').toLowerCase()); }) : matches;
 
             updateCount(filtered.length);
             updateTimestamp();
 
-            const body = document.getElementById('searchBody');
-            const tableWrap = document.getElementById('tableWrap');
-            const emptyState = document.getElementById('emptyState');
-            const noResults = document.getElementById('noResults');
-            const loading = document.getElementById('loadingState');
+            var body = document.getElementById('searchBody');
+            var tableWrap = document.getElementById('tableWrap');
+            var emptyState = document.getElementById('emptyState');
+            var noResults = document.getElementById('noResults');
+            var loading = document.getElementById('loadingState');
 
             emptyState.style.display = 'none';
             loading.style.display = 'none';
 
-            if (filtered.length === 0) {
-                tableWrap.style.display = 'none';
-                noResults.style.display = 'block';
-                return;
-            }
+            if (filtered.length === 0) { tableWrap.style.display = 'none'; noResults.style.display = 'block'; return; }
 
             noResults.style.display = 'none';
             tableWrap.style.display = 'block';
             body.innerHTML = '';
 
-            filtered.slice(0, 40).forEach((f, i) => {
-                const badge = getBadge(f.status);
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td style="color:var(--text-muted);font-family:var(--font-mono);font-size:0.88rem">${f.sch}</td>
-                    <td class="flight-id-cell">${f.id}</td>
-                    <td>
-                        <span style="font-size:0.7rem;color:var(--text-muted);letter-spacing:1px;font-family:var(--font-mono)">${f.fromCode}</span>
-                        <span style="margin-left:8px;font-size:0.88rem">${truncate(f.from, 22)}</span>
-                    </td>
-                    <td>
-                        <span style="font-size:0.7rem;color:var(--text-muted);letter-spacing:1px;font-family:var(--font-mono)">${f.toCode}</span>
-                        <span style="margin-left:8px;font-size:0.88rem">${truncate(f.to, 22)}</span>
-                    </td>
-                    <td style="color:var(--gold);font-family:var(--font-mono);font-size:0.88rem;letter-spacing:1px">${f.gate}</td>
-                    <td style="color:var(--text-muted);font-family:var(--font-mono);font-size:0.85rem">${f.dur}</td>
-                    <td><span class="st ${badge.cls}">${badge.label}</span></td>
-                `;
-                row.style.animationDelay = `${i * 0.03}s`;
+            filtered.slice(0, 40).forEach(function(f, i) {
+                var badge = getBadge(f.status);
+                var row = document.createElement('tr');
+                row.innerHTML =
+                    '<td style="color:var(--text-muted);font-family:var(--font-mono);font-size:0.88rem">' + f.sch + '</td>' +
+                    '<td class="flight-id-cell">' + f.id + '</td>' +
+                    '<td><span style="font-size:0.7rem;color:var(--text-muted);letter-spacing:1px;font-family:var(--font-mono)">' + f.fromCode + '</span><span style="margin-left:8px;font-size:0.88rem">' + truncate(f.from, 22) + '</span></td>' +
+                    '<td><span style="font-size:0.7rem;color:var(--text-muted);letter-spacing:1px;font-family:var(--font-mono)">' + f.toCode + '</span><span style="margin-left:8px;font-size:0.88rem">' + truncate(f.to, 22) + '</span></td>' +
+                    '<td style="color:var(--gold);font-family:var(--font-mono);font-size:0.88rem;letter-spacing:1px">' + f.gate + '</td>' +
+                    '<td style="color:var(--text-muted);font-family:var(--font-mono);font-size:0.85rem">' + f.dur + '</td>' +
+                    '<td><span class="st ' + badge.cls + '">' + badge.label + '</span></td>';
+                row.style.animationDelay = (i * 0.03) + 's';
                 row.classList.add('animate-in');
                 body.appendChild(row);
             });
         }
 
-        function truncate(str, n) {
-            return str && str.length > n ? str.slice(0, n) + '…' : str;
-        }
+        function truncate(str, n) { return str && str.length > n ? str.slice(0, n) + '\u2026' : str; }
 
-        /* ── UI state helpers ── */
         function showEmpty() {
             document.getElementById('emptyState').style.display = 'block';
             document.getElementById('noResults').style.display = 'none';
@@ -973,252 +840,41 @@
         }
 
         function updateCount(n) {
-            document.getElementById('resultCount').textContent =
-                n === null ? '—' : `${n} FLIGHT${n !== 1 ? 'S' : ''}`;
+            document.getElementById('resultCount').textContent = n === null ? '\u2014' : n + ' FLIGHT' + (n !== 1 ? 'S' : '');
         }
 
         function updateTimestamp() {
-            const now = new Date();
-            document.getElementById('lastUpdated').textContent =
-                `UPDATED ${now.toTimeString().slice(0, 8)} IST`;
+            var now = new Date();
+            document.getElementById('lastUpdated').textContent = 'UPDATED ' + now.toTimeString().slice(0, 8) + ' IST';
         }
 
         function setDataSource(mode) {
-            const badge = document.getElementById('sourceBadge');
+            var badge = document.getElementById('sourceBadge');
             if (!mode) { badge.style.display = 'none'; return; }
             badge.style.display = 'inline-flex';
             if (mode === 'live') {
-                badge.textContent = '● LIVE';
+                badge.textContent = '\u25CF LIVE';
                 badge.style.color = 'var(--status-ontime)';
                 badge.style.borderColor = 'var(--status-ontime)';
             } else {
-                badge.textContent = '◌ DEMO DATA';
+                badge.textContent = '\u25CC DEMO DATA';
                 badge.style.color = 'var(--gold-dim)';
                 badge.style.borderColor = 'rgba(195,157,99,0.3)';
             }
         }
 
-        /* ── Extra badge CSS ── */
-        const extraStyles = document.createElement('style');
-        extraStyles.textContent = `
-            .st-departing { color:#3b82f6; border:1px solid #3b82f6; }
-            .st-scheduled { color:var(--text-muted); border:1px solid var(--text-faint); }
-            @keyframes spin { to { transform: rotate(360deg); } }
-        `;
-        document.head.appendChild(extraStyles);
-
-        /* ── Keyboard shortcut: press / to focus search ── */
-        document.addEventListener('keydown', e => {
+        document.addEventListener('keydown', function(e) {
             if (e.key === '/' && document.activeElement.tagName !== 'INPUT') {
                 e.preventDefault();
                 document.getElementById('primaryInput').focus();
             }
         });
 
-        /* ── Debounce oninput ── */
-        let debounceTimer;
-        function debouncedSearch() {
-            clearTimeout(debounceTimer);
-            debounceTimer = setTimeout(runSearch, 600);
-        }
+        var debounceTimer;
+        function debouncedSearch() { clearTimeout(debounceTimer); debounceTimer = setTimeout(runSearch, 600); }
         document.getElementById('primaryInput').oninput = debouncedSearch;
         document.getElementById('secondaryInput').oninput = debouncedSearch;
-
     </script>
-</body>
-
-</html>
-
-
-
-/* ══════════════════════════════════════════════════════════════
-MODE TOGGLE
-══════════════════════════════════════════════════════════════ */
-function setSearchMode(mode) {
-searchMode = mode;
-['modeDep', 'modeArr', 'modeId'].forEach(id => document.getElementById(id).classList.remove('active'));
-
-const labels = {
-DEP: { primary: 'Origin Airport / City', secondary: 'Destination (optional)' },
-ARR: { primary: 'Destination Airport / City', secondary: 'Origin (optional)' },
-ID: { primary: 'Flight Number / Airline', secondary: 'Airport / City (optional)' },
-};
-const lbl = labels[mode];
-document.getElementById('primaryLabel').textContent = lbl.primary;
-document.getElementById('secondaryLabel').textContent = lbl.secondary;
-document.getElementById('primaryInput').placeholder =
-mode === 'ID' ? 'e.g. AI101 or EK or IndiGo' : 'e.g. Delhi or DEL';
-
-document.getElementById(`mode${mode === 'DEP' ? 'Dep' : mode === 'ARR' ? 'Arr' : 'Id'}`).classList.add('active');
-runSearch();
-}
-
-/* ── Quick filter chips ── */
-function quickFilter(status) {
-activeFilter = status;
-document.querySelectorAll('.filter-chip').forEach(el => el.classList.remove('active'));
-event.target.classList.add('active');
-renderResults(allMatches);
-}
-
-/* ══════════════════════════════════════════════════════════════
-RENDER
-══════════════════════════════════════════════════════════════ */
-
-/* Map AviationStack status strings → our CSS badge classes */
-const STATUS_MAP = {
-'scheduled': { label: 'SCHEDULED', cls: 'st-scheduled' },
-'active': { label: 'EN ROUTE', cls: 'st-on-time' },
-'landed': { label: 'ARRIVED', cls: 'st-arrived' },
-'cancelled': { label: 'CANCELLED', cls: 'st-cancelled' },
-'incident': { label: 'INCIDENT', cls: 'st-cancelled' },
-'diverted': { label: 'DIVERTED', cls: 'st-delayed' },
-'delayed': { label: 'DELAYED', cls: 'st-delayed' },
-'boarding': { label: 'BOARDING', cls: 'st-boarding' },
-'on-time': { label: 'ON-TIME', cls: 'st-on-time' },
-'arrived': { label: 'ARRIVED', cls: 'st-arrived' },
-'departed': { label: 'DEPARTED', cls: 'st-departed' },
-};
-
-function getBadge(rawStatus) {
-const key = (rawStatus || '').toLowerCase().replace(/[\s_]+/g, '-');
-return STATUS_MAP[key] || { label: rawStatus.toUpperCase(), cls: 'st-scheduled' };
-}
-
-function renderResults(matches) {
-/* Apply status chip filter — map chip labels back to raw statuses */
-const CHIP_TO_STATUS = {
-'ALL': null,
-'ON-TIME': ['active', 'scheduled', 'on-time'],
-'BOARDING': ['boarding'],
-'DELAYED': ['delayed', 'diverted'],
-'ARRIVED': ['landed', 'arrived'],
-};
-
-const filterKeys = CHIP_TO_STATUS[activeFilter];
-const filtered = filterKeys
-? matches.filter(f => filterKeys.includes((f.status || '').toLowerCase()))
-: matches;
-
-updateCount(filtered.length);
-updateTimestamp();
-
-const body = document.getElementById('searchBody');
-const tableWrap = document.getElementById('tableWrap');
-const emptyState = document.getElementById('emptyState');
-const noResults = document.getElementById('noResults');
-const loading = document.getElementById('loadingState');
-
-emptyState.style.display = 'none';
-loading.style.display = 'none';
-
-if (filtered.length === 0) {
-tableWrap.style.display = 'none';
-noResults.style.display = 'block';
-return;
-}
-
-noResults.style.display = 'none';
-tableWrap.style.display = 'block';
-body.innerHTML = '';
-
-filtered.slice(0, 40).forEach((f, i) => {
-const badge = getBadge(f.status);
-const row = document.createElement('tr');
-row.innerHTML = `
-<td style="color:var(--text-muted);font-family:var(--font-mono);font-size:0.88rem">${f.sch}</td>
-<td class="flight-id-cell">${f.id}</td>
-<td>
-    <span
-        style="font-size:0.7rem;color:var(--text-muted);letter-spacing:1px;font-family:var(--font-mono)">${f.fromCode}</span>
-    <span style="margin-left:8px;font-size:0.88rem">${truncate(f.from, 22)}</span>
-</td>
-<td>
-    <span
-        style="font-size:0.7rem;color:var(--text-muted);letter-spacing:1px;font-family:var(--font-mono)">${f.toCode}</span>
-    <span style="margin-left:8px;font-size:0.88rem">${truncate(f.to, 22)}</span>
-</td>
-<td style="color:var(--gold);font-family:var(--font-mono);font-size:0.88rem;letter-spacing:1px">${f.gate}</td>
-<td style="color:var(--text-muted);font-family:var(--font-mono);font-size:0.85rem">${f.dur}</td>
-<td><span class="st ${badge.cls}">${badge.label}</span></td>
-`;
-row.style.animationDelay = `${i * 0.03}s`;
-row.classList.add('animate-in');
-body.appendChild(row);
-});
-}
-
-function truncate(str, n) {
-return str && str.length > n ? str.slice(0, n) + '…' : str;
-}
-
-/* ── UI state helpers ── */
-function showEmpty() {
-document.getElementById('emptyState').style.display = 'block';
-document.getElementById('noResults').style.display = 'none';
-document.getElementById('tableWrap').style.display = 'none';
-document.getElementById('loadingState').style.display = 'none';
-}
-
-function showLoading() {
-document.getElementById('loadingState').style.display = 'block';
-document.getElementById('emptyState').style.display = 'none';
-document.getElementById('noResults').style.display = 'none';
-document.getElementById('tableWrap').style.display = 'none';
-}
-
-function updateCount(n) {
-const el = document.getElementById('resultCount');
-el.textContent = n === null ? '—' : `${n} FLIGHT${n !== 1 ? 'S' : ''}`;
-}
-
-function updateTimestamp() {
-const now = new Date();
-document.getElementById('lastUpdated').textContent =
-`UPDATED ${now.toTimeString().slice(0, 8)} IST`;
-}
-
-function setDataSource(mode) {
-const badge = document.getElementById('sourceBadge');
-if (!mode) { badge.style.display = 'none'; return; }
-badge.style.display = 'inline-flex';
-if (mode === 'live') {
-badge.textContent = '● LIVE';
-badge.style.color = 'var(--status-ontime)';
-badge.style.borderColor = 'var(--status-ontime)';
-} else {
-badge.textContent = '◌ DEMO DATA';
-badge.style.color = 'var(--gold-dim)';
-badge.style.borderColor = 'rgba(195,157,99,0.3)';
-}
-}
-
-/* ── Extra status badge CSS (for statuses beyond the shared stylesheet) ── */
-const extraStyles = document.createElement('style');
-extraStyles.textContent = `
-.st-departed { color:#3b82f6; border:1px solid #3b82f6; }
-.st-scheduled { color:var(--text-muted); border:1px solid var(--text-faint); }
-`;
-document.head.appendChild(extraStyles);
-
-/* ── Keyboard shortcut: press / to focus search ── */
-document.addEventListener('keydown', e => {
-if (e.key === '/' && document.activeElement.tagName !== 'INPUT') {
-e.preventDefault();
-document.getElementById('primaryInput').focus();
-}
-});
-
-/* ── Debounce oninput so we don't fire an API call every keystroke ── */
-let debounceTimer;
-function debouncedSearch() {
-clearTimeout(debounceTimer);
-debounceTimer = setTimeout(runSearch, 600);
-}
-/* Wire debounce to inputs after DOM ready */
-document.getElementById('primaryInput').oninput = debouncedSearch;
-document.getElementById('secondaryInput').oninput = debouncedSearch;
-</script>
 </body>
 
 </html>

@@ -4,554 +4,655 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SkyTrace — Live Flight Tracker</title>
-  <link rel="stylesheet" href="css/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
-    /* ── Index-specific styles only ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    /* Hero layout: two columns */
-    .hero-layout {
-      min-height: calc(100vh - var(--nav-height));
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      align-items: center;
-      gap: var(--sp-12);
-      padding-inline: var(--sp-10);
-      max-width: var(--max-width);
-      margin-inline: auto;
-      padding-block: var(--sp-16);
-    }
-
-    /* Live ticker panel (right column) */
-    .ticker-panel {
-      border: 1px solid var(--border);
-      border-radius: 4px;
+    html, body {
+      height: 100%;
       overflow: hidden;
+      font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+      background: #111111;
+      color: #fff;
+      -webkit-font-smoothing: antialiased;
     }
 
-    .ticker-header {
+    a { color: inherit; text-decoration: none; }
+
+    /* ── Navigation ── */
+    .st-nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      height: 56px;
       display: flex;
+      align-items: center;
       justify-content: space-between;
-      align-items: center;
-      padding: var(--sp-4) var(--sp-5);
-      border-bottom: 1px solid var(--border);
-      background: var(--surface);
+      padding: 0 40px;
+      border-bottom: 1px solid rgba(241,194,125,0.18);
+      background: rgba(17,17,17,0.96);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
     }
 
-    .ticker-header-label {
-      font-size: 0.68rem;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      color: var(--text-muted);
-    }
-
-    .ticker-clock {
-      font-family: var(--font-mono);
-      font-size: 0.95rem;
-      color: var(--gold);
-      letter-spacing: 2px;
-    }
-
-    .ticker-row {
-      display: grid;
-      grid-template-columns: 70px 90px 1fr auto;
-      align-items: center;
-      gap: var(--sp-3);
-      padding: var(--sp-4) var(--sp-5);
-      border-bottom: 1px solid var(--surface);
-      transition: background var(--transition-fast);
-      opacity: 0;
-      animation: fadeUp 0.4s ease forwards;
-    }
-
-    .ticker-row:hover { background: var(--surface-2); }
-    .ticker-row:last-child { border-bottom: none; }
-
-    .ticker-time {
-      font-family: var(--font-mono);
-      font-size: 0.9rem;
-      color: var(--text-muted);
-    }
-
-    .ticker-flight {
-      font-family: var(--font-mono);
-      font-size: 0.85rem;
-      color: var(--gold);
-      font-weight: 700;
-      letter-spacing: 1px;
-    }
-
-    .ticker-route {
-      font-size: 0.85rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--text);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .ticker-footer {
-      padding: var(--sp-3) var(--sp-5);
-      background: var(--surface);
-      border-top: 1px solid var(--border);
-      text-align: right;
-    }
-
-    .ticker-footer a {
-      font-size: 0.68rem;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--gold-dim);
-      transition: color var(--transition-fast);
-    }
-
-    .ticker-footer a:hover { color: var(--gold); }
-
-    /* Stats strip */
-    .stats-strip {
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      padding-block: var(--sp-6);
-    }
-
-    .stats-inner {
-      max-width: var(--max-width);
-      margin-inline: auto;
-      padding-inline: var(--sp-10);
+    .st-nav-left {
       display: flex;
-      justify-content: center;
-      gap: var(--sp-16);
-      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 12px;
     }
 
-    .stat-item {
-      text-align: center;
-    }
-
-    .stat-item .num {
-      font-family: var(--font-mono);
-      font-size: 2.4rem;
+    .st-logo {
+      font-size: 1.05rem;
       font-weight: 700;
-      color: var(--gold);
-      line-height: 1;
-      display: block;
+      letter-spacing: 1.5px;
+      color: #fff;
     }
 
-    .stat-item .lbl {
-      font-size: 0.65rem;
-      letter-spacing: 3px;
+    .st-nav-index {
+      font-size: 0.62rem;
+      letter-spacing: 2px;
+      color: rgba(255,255,255,0.25);
+      font-weight: 400;
       text-transform: uppercase;
-      color: var(--text-muted);
-      margin-top: var(--sp-2);
-      display: block;
     }
 
-    /* Quick search section */
-    .search-section {
-      max-width: var(--max-width);
-      margin-inline: auto;
-      padding-inline: var(--sp-10);
-      padding-block: var(--sp-12);
+    .st-nav-center {
+      display: flex;
+      align-items: center;
+      gap: 48px;
     }
 
-    .search-section-label {
-      font-size: 0.68rem;
-      letter-spacing: 4px;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: var(--sp-4);
-    }
-
-    .search-widget {
-      display: grid;
-      grid-template-columns: 1fr 1fr auto;
-      gap: var(--sp-3);
-      align-items: end;
-      max-width: 720px;
-    }
-
-    .search-error {
+    .st-nav-link {
       font-size: 0.72rem;
-      color: var(--status-cancelled);
-      letter-spacing: 1px;
-      margin-top: var(--sp-2);
-      display: none;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      cursor: pointer;
+      transition: color 0.3s ease;
+      user-select: none;
     }
 
-    .search-error.visible { display: block; }
+    .st-nav-link:hover { color: rgba(255,255,255,0.6); }
+    .st-nav-link.active { color: #f1c27d; }
 
-    /* Hubs section */
-    .hubs-section {
-      max-width: var(--max-width);
-      margin-inline: auto;
-      padding-inline: var(--sp-10);
-      padding-bottom: var(--sp-16);
-    }
-
-    .hubs-section-head {
+    .st-nav-right {
       display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      margin-bottom: var(--sp-6);
+      align-items: center;
+      gap: 28px;
     }
 
-    .view-all {
+    .st-nav-about {
       font-size: 0.68rem;
       letter-spacing: 2px;
       text-transform: uppercase;
-      color: var(--gold-dim);
-      transition: color var(--transition-fast);
+      color: rgba(255,255,255,0.25);
+      transition: color 0.2s ease;
     }
 
-    .view-all:hover { color: var(--gold); }
+    .st-nav-about:hover { color: rgba(255,255,255,0.6); }
 
-    /* Responsive */
-    @media (max-width: 900px) {
-      .hero-layout {
-        grid-template-columns: 1fr;
-        padding-block: var(--sp-12);
-      }
-
-      .ticker-panel { display: none; }
+    .st-nav-time {
+      font-family: 'JetBrains Mono', 'Courier New', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 1.5px;
+      color: rgba(255,255,255,0.35);
     }
 
-    @media (max-width: 640px) {
-      .hero-layout,
-      .stats-inner,
-      .search-section,
-      .hubs-section {
-        padding-inline: var(--sp-5);
+    /* ── Sections Viewport ── */
+    .st-viewport {
+      position: fixed;
+      top: 56px; left: 0; right: 0;
+      bottom: 40px;
+    }
+
+    /* ── Section ── */
+    .st-section {
+      position: absolute;
+      inset: 0;
+      background: #111111;
+      overflow: hidden;
+      will-change: transform;
+      transition: transform 700ms cubic-bezier(0.65, 0, 0.35, 1);
+    }
+
+    .st-section[data-index="0"] { z-index: 1; }
+    .st-section[data-index="1"] { z-index: 2; }
+    .st-section[data-index="2"] { z-index: 3; }
+
+    .st-section.ahead { transform: translateX(100%); }
+    .st-section.behind { transform: translateX(-25%); }
+
+    /* ── Grid Lines ── */
+    .st-grid {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .st-grid-v {
+      position: absolute;
+      top: 0; bottom: 0;
+      width: 1px;
+      background: rgba(241,194,125,0.13);
+    }
+
+    .st-grid-v:nth-child(1) { left: 20%; }
+    .st-grid-v:nth-child(2) { left: 50%; }
+    .st-grid-v:nth-child(3) { left: 80%; }
+
+    .st-grid-h {
+      position: absolute;
+      left: 0; right: 0;
+      height: 1px;
+      background: rgba(241,194,125,0.13);
+    }
+
+    .st-grid-h.mid { top: 60%; }
+
+    /* ── Section Inner Layout ── */
+    .st-section-inner {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .st-section-label {
+      position: absolute;
+      top: 32px; left: 40px;
+      font-size: 0.58rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(241,194,125,0.45);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* ── Icon Area ── */
+    .st-icon-area {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-top: 20px;
+    }
+
+    .st-icon-area svg {
+      width: clamp(220px, 32vw, 420px);
+      height: auto;
+    }
+
+    .st-icon-area--flights svg {
+      width: clamp(320px, 52vw, 620px);
+      height: auto;
+    }
+
+    /* ── Title Area ── */
+    .st-title-area {
+      padding: 0 40px 56px;
+    }
+
+    .st-section-title {
+      font-size: clamp(2.8rem, 8vw, 7rem);
+      font-weight: 300;
+      letter-spacing: clamp(4px, 1.2vw, 14px);
+      text-transform: uppercase;
+      color: #fff;
+      line-height: 0.92;
+      margin: 0;
+      cursor: pointer;
+      transition: opacity 0.2s ease;
+    }
+
+    .st-section-title:hover { opacity: 0.7; }
+
+    .st-section-sub {
+      font-size: 0.68rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      margin-top: 16px;
+      font-weight: 400;
+    }
+
+    /* ── Geometric Decoration ── */
+    .st-geo {
+      position: absolute;
+      bottom: 56px; right: 40px;
+      z-index: 2;
+    }
+
+    /* ── Footer ── */
+    .st-footer {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      z-index: 50;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      border-top: 1px solid rgba(241,194,125,0.18);
+      background: rgba(17,17,17,0.96);
+      backdrop-filter: blur(12px);
+    }
+
+    .st-footer span {
+      font-size: 0.58rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.2);
+    }
+
+    .st-footer a {
+      color: rgba(255,255,255,0.2);
+      transition: color 0.2s ease;
+    }
+
+    .st-footer a:hover { color: rgba(255,255,255,0.5); }
+
+    /* ── Section Progress Dots ── */
+    .st-dots {
+      position: fixed;
+      right: 40px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 60;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .st-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: rgba(241,194,125,0.25);
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.3s ease;
+    }
+
+    .st-dot.active {
+      background: #f1c27d;
+      transform: scale(1.4);
+    }
+
+    /* ── Transition Overlay ── */
+    .st-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      background: #000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 400ms ease;
+    }
+
+    .st-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .st-nav {
+        padding: 0 20px;
+        height: 48px;
       }
 
-      .search-widget {
-        grid-template-columns: 1fr;
+      .st-nav-center { gap: 24px; }
+      .st-nav-link { font-size: 0.6rem; letter-spacing: 2px; }
+      .st-nav-about { display: none; }
+      .st-nav-index { display: none; }
+      .st-viewport { top: 48px; }
+
+      .st-section-label { left: 20px; top: 20px; font-size: 0.52rem; }
+      .st-title-area { padding: 0 20px 48px; }
+
+      .st-section-title {
+        font-size: clamp(2rem, 12vw, 3.5rem);
+        letter-spacing: 3px;
       }
 
-      .stats-inner {
-        gap: var(--sp-8);
+      .st-section-sub { font-size: 0.6rem; letter-spacing: 2px; }
+      .st-geo { bottom: 48px; right: 20px; }
+
+      .st-footer { padding: 0 20px; height: 36px; }
+      .st-footer span { font-size: 0.52rem; }
+
+      .st-grid-v:nth-child(1) { left: 10%; }
+      .st-grid-v:nth-child(3) { left: 90%; }
+
+      .st-dots { right: 16px; }
+
+      .st-icon-area svg {
+        width: clamp(180px, 55vw, 280px);
       }
 
-      .hubs-section-head {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: var(--sp-3);
+      .st-icon-area--flights svg {
+        width: clamp(240px, 72vw, 360px);
       }
+    }
+
+    @media (max-width: 480px) {
+      .st-nav-center { gap: 16px; }
+      .st-nav-link { font-size: 0.55rem; letter-spacing: 1.5px; }
+      .st-nav-time { font-size: 0.6rem; }
+      .st-dots { display: none; }
     }
   </style>
 </head>
 <body>
 
-  <!-- ── NAVIGATION ── -->
-  <nav class="nav-bar">
-    <span class="nav-logo">SkyTrace</span>
-    <div class="nav-links">
-      <a href="index.html"        class="nav-link active">Home</a>
-      <a href="search.html"       class="nav-link">Search</a>
-      <a href="hubs.html"         class="nav-link">Hubs</a>
-      <a href="status.html"       class="nav-link">Live Board</a>
-      <a href="destinations.html" class="nav-link">Destinations</a>
-      <a href="about.html"        class="nav-link">About</a>
-      <a href="contact.html"      class="nav-link">Contact</a>
+  <!-- ── Navigation ── -->
+  <nav class="st-nav">
+    <div class="st-nav-left">
+      <span class="st-logo">SkyTrace</span>
+      <span class="st-nav-index">INDEX (03)</span>
     </div>
-    <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
-      <span></span><span></span><span></span>
-    </button>
+    <div class="st-nav-center">
+      <a class="st-nav-link active" data-section="0">DASHBOARD</a>
+      <a class="st-nav-link" data-section="1">FLIGHTS</a>
+      <a class="st-nav-link" data-section="2">AIRPORTS</a>
+    </div>
+    <div class="st-nav-right">
+      <a href="about.html" class="st-nav-about">About</a>
+      <span class="st-nav-time" id="navTime">--:-- ---</span>
+    </div>
   </nav>
 
-  <!-- Mobile nav menu -->
-  <div class="nav-menu" id="navMenu">
-    <a href="index.html"        class="nav-link active">Home</a>
-    <a href="search.html"       class="nav-link">Search</a>
-    <a href="hubs.html"         class="nav-link">Hubs</a>
-    <a href="status.html"       class="nav-link">Live Board</a>
-    <a href="destinations.html" class="nav-link">Destinations</a>
-    <a href="about.html"        class="nav-link">About</a>
-    <a href="contact.html"      class="nav-link">Contact</a>
+  <!-- ── Sections Viewport ── -->
+  <div class="st-viewport" id="viewport">
+
+    <!-- Section 0: DASHBOARD -->
+    <section class="st-section" data-index="0">
+      <div class="st-grid">
+        <div class="st-grid-v"></div>
+        <div class="st-grid-v"></div>
+        <div class="st-grid-v"></div>
+        <div class="st-grid-h mid"></div>
+      </div>
+      <div class="st-section-inner">
+        <div class="st-section-label">SEC.01 // CMD_CENTER</div>
+        <div class="st-icon-area">
+          <svg viewBox="0 0 340 240" fill="none">
+            <rect x="2" y="2" width="336" height="236" rx="12" stroke="rgba(255,255,255,0.34)" stroke-width="1.5"/>
+            <line x1="2" y1="48" x2="338" y2="48" stroke="rgba(255,255,255,0.22)" stroke-width="1"/>
+            <circle cx="28" cy="25" r="7" stroke="rgba(255,255,255,0.48)" stroke-width="1.5"/>
+            <circle cx="50" cy="25" r="7" stroke="rgba(255,255,255,0.48)" stroke-width="1.5"/>
+            <circle cx="72" cy="25" r="7" stroke="rgba(255,255,255,0.48)" stroke-width="1.5"/>
+            <line x1="100" y1="48" x2="100" y2="238" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+            <line x1="130" y1="86" x2="300" y2="86" stroke="rgba(255,255,255,0.32)" stroke-width="2"/>
+            <line x1="130" y1="120" x2="255" y2="120" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+            <line x1="130" y1="154" x2="275" y2="154" stroke="rgba(255,255,255,0.16)" stroke-width="2"/>
+          </svg>
+        </div>
+        <div class="st-title-area">
+          <h1 class="st-section-title" data-page="dashboard.html">DASHBOARD</h1>
+          <p class="st-section-sub">Find your flight details</p>
+        </div>
+        <div class="st-geo">
+          <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
+            <rect x="1" y="1" width="20" height="20" stroke="rgba(241,194,125,0.24)" stroke-width="1"/>
+            <rect x="31" y="1" width="20" height="20" stroke="rgba(241,194,125,0.24)" stroke-width="1"/>
+            <rect x="1" y="31" width="20" height="20" stroke="rgba(241,194,125,0.24)" stroke-width="1"/>
+            <rect x="31" y="31" width="20" height="20" stroke="rgba(241,194,125,0.24)" stroke-width="1"/>
+            <rect x="9" y="9" width="4" height="4" fill="rgba(241,194,125,0.16)"/>
+            <rect x="39" y="9" width="4" height="4" fill="rgba(241,194,125,0.16)"/>
+            <rect x="9" y="39" width="4" height="4" fill="rgba(241,194,125,0.16)"/>
+            <rect x="39" y="39" width="4" height="4" fill="rgba(241,194,125,0.16)"/>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 1: FLIGHTS -->
+    <section class="st-section ahead" data-index="1">
+      <div class="st-grid">
+        <div class="st-grid-v"></div>
+        <div class="st-grid-v"></div>
+        <div class="st-grid-v"></div>
+        <div class="st-grid-h mid"></div>
+      </div>
+      <div class="st-section-inner">
+        <div class="st-section-label">SEC.02 // FLT_SEARCH</div>
+        <div class="st-icon-area st-icon-area--flights">
+          <svg viewBox="0 0 320 220" fill="none">
+            <circle cx="50" cy="160" r="10" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+            <circle cx="270" cy="160" r="10" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+            <path d="M50 160 Q160 15 270 160" stroke="rgba(255,255,255,0.28)" stroke-width="1.5" stroke-dasharray="8 5"/>
+            <path d="M155 58 L160 48 L165 58 Z" fill="rgba(255,255,255,0.6)"/>
+            <line x1="160" y1="58" x2="160" y2="160" stroke="rgba(255,255,255,0.14)" stroke-width="1" stroke-dasharray="4 6"/>
+            <text x="35" y="192" fill="rgba(255,255,255,0.3)" font-size="11" font-family="'JetBrains Mono', monospace" letter-spacing="2">DEP</text>
+            <text x="255" y="192" fill="rgba(255,255,255,0.3)" font-size="11" font-family="'JetBrains Mono', monospace" letter-spacing="2">ARR</text>
+            <line x1="80" y1="160" x2="240" y2="160" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+          </svg>
+        </div>
+        <div class="st-title-area">
+          <h1 class="st-section-title" data-page="search.html">FLIGHTS</h1>
+          <p class="st-section-sub">Search for flights</p>
+        </div>
+        <div class="st-geo">
+          <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
+            <rect x="1" y="1" width="20" height="20" stroke="rgba(241,194,125,0.24)" stroke-width="1"/>
+            <rect x="31" y="1" width="20" height="20" stroke="rgba(241,194,125,0.24)" stroke-width="1"/>
+            <rect x="1" y="31" width="20" height="20" stroke="rgba(241,194,125,0.24)" stroke-width="1"/>
+            <rect x="31" y="31" width="20" height="20" stroke="rgba(241,194,125,0.24)" stroke-width="1"/>
+            <rect x="9" y="9" width="4" height="4" fill="rgba(241,194,125,0.16)"/>
+            <rect x="39" y="9" width="4" height="4" fill="rgba(241,194,125,0.16)"/>
+            <rect x="9" y="39" width="4" height="4" fill="rgba(241,194,125,0.16)"/>
+            <rect x="39" y="39" width="4" height="4" fill="rgba(241,194,125,0.16)"/>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: AIRPORTS -->
+    <section class="st-section ahead" data-index="2">
+      <div class="st-grid">
+        <div class="st-grid-v"></div>
+        <div class="st-grid-v"></div>
+        <div class="st-grid-v"></div>
+        <div class="st-grid-h mid"></div>
+      </div>
+      <div class="st-section-inner">
+        <div class="st-section-label">SEC.03 // APT_STATUS</div>
+        <div class="st-icon-area">
+          <svg viewBox="0 0 320 220" fill="none">
+            <rect x="50" y="65" width="220" height="115" stroke="rgba(255,255,255,0.34)" stroke-width="1.5"/>
+            <rect x="135" y="28" width="50" height="37" stroke="rgba(255,255,255,0.28)" stroke-width="1.5"/>
+            <line x1="160" y1="10" x2="160" y2="28" stroke="rgba(255,255,255,0.22)" stroke-width="1.5"/>
+            <circle cx="160" cy="8" r="3" fill="rgba(255,255,255,0.22)"/>
+            <rect x="75" y="95" width="35" height="45" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+            <rect x="142" y="95" width="35" height="45" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+            <rect x="210" y="95" width="35" height="45" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+            <text x="82" y="155" fill="rgba(255,255,255,0.2)" font-size="8" font-family="'JetBrains Mono', monospace" letter-spacing="1">A1</text>
+            <text x="149" y="155" fill="rgba(255,255,255,0.2)" font-size="8" font-family="'JetBrains Mono', monospace" letter-spacing="1">B2</text>
+            <text x="216" y="155" fill="rgba(255,255,255,0.2)" font-size="8" font-family="'JetBrains Mono', monospace" letter-spacing="1">C3</text>
+            <line x1="25" y1="180" x2="295" y2="180" stroke="rgba(255,255,255,0.16)" stroke-width="1"/>
+            <line x1="25" y1="184" x2="295" y2="184" stroke="rgba(255,255,255,0.1)" stroke-width="1" stroke-dasharray="10 5"/>
+          </svg>
+        </div>
+        <div class="st-title-area">
+          <h1 class="st-section-title" data-page="hubs.html">AIRPORTS</h1>
+          <p class="st-section-sub">Find airport-based flight statuses</p>
+        </div>
+        <div class="st-geo">
+          <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
+            <rect x="1" y="1" width="20" height="20" stroke="rgba(241,194,125,0.24)" stroke-width="1"/>
+            <rect x="31" y="1" width="20" height="20" stroke="rgba(241,194,125,0.24)" stroke-width="1"/>
+            <rect x="1" y="31" width="20" height="20" stroke="rgba(241,194,125,0.24)" stroke-width="1"/>
+            <rect x="31" y="31" width="20" height="20" stroke="rgba(241,194,125,0.24)" stroke-width="1"/>
+            <rect x="9" y="9" width="4" height="4" fill="rgba(241,194,125,0.16)"/>
+            <rect x="39" y="9" width="4" height="4" fill="rgba(241,194,125,0.16)"/>
+            <rect x="9" y="39" width="4" height="4" fill="rgba(241,194,125,0.16)"/>
+            <rect x="39" y="39" width="4" height="4" fill="rgba(241,194,125,0.16)"/>
+          </svg>
+        </div>
+      </div>
+    </section>
+
   </div>
 
-  <!-- ── HERO ── -->
-  <section>
-    <div class="hero-layout">
-
-      <!-- Left: copy + CTAs -->
-      <div class="hero-left">
-        <p class="hero-eyebrow">Live Flight Tracker</p>
-        <h1 class="hero-title">
-          Track any flight.<br><span>Anywhere.</span>
-        </h1>
-        <p class="hero-sub">
-          Gate changes, delays, arrivals — all in one place.
-          Built for travellers who can't afford to miss a thing.
-        </p>
-        <div class="hero-cta">
-          <a href="search.html" class="btn btn-primary">Search Flights</a>
-          <a href="hubs.html"   class="btn btn-secondary">View Live Board</a>
-        </div>
-      </div>
-
-      <!-- Right: live ticker -->
-      <div class="ticker-panel" id="tickerPanel">
-        <div class="ticker-header">
-          <span class="ticker-header-label">Live Departures</span>
-          <span class="ticker-clock" id="tickerClock">--:--:--</span>
-        </div>
-        <div id="tickerBody">
-          <!-- Rows injected by JS -->
-        </div>
-        <div class="ticker-footer">
-          <a href="hubs.html">Full board →</a>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ── STATS STRIP ── -->
-  <div class="stats-strip">
-    <div class="stats-inner">
-      <div class="stat-item">
-        <span class="num" data-target="12" id="stat0">0</span>
-        <span class="lbl">Airports Tracked</span>
-      </div>
-      <div class="stat-item">
-        <span class="num" data-target="72" id="stat1">0</span>
-        <span class="lbl">Flights in Database</span>
-      </div>
-      <div class="stat-item">
-        <span class="num" data-target="6" id="stat2">0</span>
-        <span class="lbl">Airlines</span>
-      </div>
-    </div>
+  <!-- ── Progress Dots ── -->
+  <div class="st-dots" id="dots">
+    <div class="st-dot active" data-section="0"></div>
+    <div class="st-dot" data-section="1"></div>
+    <div class="st-dot" data-section="2"></div>
   </div>
 
-  <!-- ── QUICK SEARCH ── -->
-  <div class="search-section">
-    <p class="search-section-label">Quick Search</p>
-    <form class="search-widget" id="searchForm" autocomplete="off">
-      <div class="form-group">
-        <label class="form-label" for="fromSelect">From</label>
-        <select class="form-input" id="fromSelect">
-          <option value="">Select origin</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label class="form-label" for="toSelect">To</label>
-        <select class="form-input" id="toSelect">
-          <option value="">Select destination</option>
-        </select>
-      </div>
-      <button type="submit" class="btn btn-primary">Search →</button>
-    </form>
-    <p class="search-error" id="searchError">Origin and destination cannot be the same.</p>
-  </div>
-
-  <!-- ── FEATURED HUBS ── -->
-  <div class="hubs-section">
-    <div class="hubs-section-head">
-      <div>
-        <p class="section-label">Airport Network</p>
-        <h2 class="section-title" style="margin-bottom:0;">Select Your Hub</h2>
-      </div>
-      <a href="hubs.html" class="view-all">View all 12 hubs →</a>
-    </div>
-    <div class="grid-auto" id="featuredHubs">
-      <!-- 6 hub cards injected by JS -->
-    </div>
-  </div>
-
-  <!-- ── FOOTER ── -->
-  <footer class="footer">
-    <div class="footer-inner">
-      <div class="footer-top">
-        <div>
-          <div class="footer-logo">SkyTrace</div>
-          <p class="footer-tagline">Track any flight. Anywhere.</p>
-        </div>
-        <nav class="footer-links">
-          <a href="index.html"        class="footer-link">Home</a>
-          <a href="search.html"       class="footer-link">Search</a>
-          <a href="hubs.html"         class="footer-link">Hubs</a>
-          <a href="status.html"       class="footer-link">Live Board</a>
-          <a href="destinations.html" class="footer-link">Destinations</a>
-          <a href="about.html"        class="footer-link">About</a>
-          <a href="contact.html"      class="footer-link">Contact</a>
-        </nav>
-      </div>
-      <div class="footer-bottom">
-        <span class="footer-credit">
-          B.Tech CSE · User Interface Design · Amrita Vishwa Vidyapeetham
-        </span>
-        <span class="footer-credit">
-          <a href="https://github.com/9Zaun/skytrace" target="_blank" rel="noopener noreferrer">
-            GitHub Repository ↗
-          </a>
-        </span>
-      </div>
-    </div>
+  <!-- ── Footer ── -->
+  <footer class="st-footer">
+    <span>&copy;2026 SKYTRACE</span>
+    <span><a href="contact.html">CONTACT</a></span>
   </footer>
 
+  <!-- ── Transition Overlay ── -->
+  <div class="st-overlay" id="overlay"></div>
+
   <script>
-    /* ── DATA ── */
-    const HUBS = [
-      { country: "Qatar",          city: "Doha",       code: "DOH" },
-      { country: "India",          city: "Delhi",      code: "DEL" },
-      { country: "United Kingdom", city: "London",     code: "LHR" },
-      { country: "United States",  city: "New York",   code: "JFK" },
-      { country: "UAE",            city: "Dubai",      code: "DXB" },
-      { country: "Japan",          city: "Tokyo",      code: "HND" },
-      { country: "France",         city: "Paris",      code: "CDG" },
-      { country: "Singapore",      city: "Singapore",  code: "SIN" },
-      { country: "Germany",        city: "Frankfurt",  code: "FRA" },
-      { country: "Australia",      city: "Sydney",     code: "SYD" },
-      { country: "Canada",         city: "Toronto",    code: "YYZ" },
-      { country: "Turkey",         city: "Istanbul",   code: "IST" }
-    ];
+    (function() {
+      var currentSection = 0;
+      var totalSections = 3;
+      var isTransitioning = false;
+      var DURATION = 700;
 
-    /* Sample flights for the live ticker — matches status.html data shape */
-    const TICKER_FLIGHTS = [
-      { id: "QR 001", from: "DOH", to: "London",    sch: "08:00", status: "ON-TIME"      },
-      { id: "AI 101", from: "DEL", to: "Mumbai",    sch: "01:15", status: "ON-TIME"      },
-      { id: "EK 201", from: "DXB", to: "New York",  sch: "08:30", status: "ON-TIME"      },
-      { id: "QR 701", from: "DOH", to: "New York",  sch: "09:30", status: "CANCELLED"    },
-      { id: "BA 217", from: "LHR", to: "New York",  sch: "11:15", status: "ON-TIME"      },
-      { id: "6E 502", from: "DEL", to: "Dubai",     sch: "02:30", status: "DELAYED"      },
-      { id: "AI 102", from: "DEL", to: "Doha",      sch: "16:45", status: "BOARDING"     },
-      { id: "EK 512", from: "DXB", to: "Delhi",     sch: "10:20", status: "ARRIVED"      }
-    ];
+      var sections = document.querySelectorAll('.st-section');
+      var navLinks = document.querySelectorAll('.st-nav-link[data-section]');
+      var dots = document.querySelectorAll('.st-dot');
+      var overlay = document.getElementById('overlay');
 
-    /* Status → CSS class mapping */
-    const STATUS_CLASS = {
-      "ON-TIME":      "st-on-time",
-      "DELAYED":      "st-delayed",
-      "BOARDING":     "st-boarding",
-      "CANCELLED":    "st-cancelled",
-      "ARRIVED":      "st-arrived",
-      "BAGGAGE CLAIM":"st-baggage-claim",
-      "IMMIGRATION":  "st-immigration",
-      "SCHEDULED":    "st-scheduled"
-    };
+      function goToSection(index) {
+        if (index === currentSection || isTransitioning) return;
+        if (index < 0 || index >= totalSections) return;
 
-    /* ── CLOCK ── */
-    function startClock() {
-      const el = document.getElementById('tickerClock');
-      function tick() {
-        el.textContent = new Date().toLocaleTimeString('en-GB');
-      }
-      tick();
-      setInterval(tick, 1000);
-    }
+        isTransitioning = true;
 
-    /* ── LIVE TICKER ── */
-    function buildTicker() {
-      const body = document.getElementById('tickerBody');
-      body.innerHTML = '';
-      TICKER_FLIGHTS.forEach((f, i) => {
-        const cls  = STATUS_CLASS[f.status] || 'st-scheduled';
-        const row  = document.createElement('div');
-        row.className = 'ticker-row';
-        row.style.animationDelay = (i * 0.06) + 's';
-        row.innerHTML = `
-          <span class="ticker-time">${f.sch}</span>
-          <span class="ticker-flight">${f.id}</span>
-          <span class="ticker-route">${f.to.toUpperCase()}</span>
-          <span class="st ${cls}">${f.status}</span>`;
-        body.appendChild(row);
-      });
-    }
-
-    /* ── STATS COUNTERS ── */
-    function animateCounter(el, target, duration) {
-      let start = null;
-      function step(ts) {
-        if (!start) start = ts;
-        const progress = Math.min((ts - start) / duration, 1);
-        el.textContent = Math.floor(progress * target);
-        if (progress < 1) requestAnimationFrame(step);
-        else el.textContent = target + (target === 72 ? '+' : '');
-      }
-      requestAnimationFrame(step);
-    }
-
-    function initCounters() {
-      const targets = [
-        { id: 'stat0', val: 12 },
-        { id: 'stat1', val: 72 },
-        { id: 'stat2', val: 6  }
-      ];
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            targets.forEach(t => {
-              animateCounter(document.getElementById(t.id), t.val, 1200);
-            });
-            observer.disconnect();
+        if (index > currentSection) {
+          for (var i = currentSection; i < index; i++) {
+            sections[i].classList.add('behind');
+            sections[i].classList.remove('ahead');
           }
+          sections[index].classList.remove('ahead');
+          sections[index].classList.remove('behind');
+        } else {
+          for (var i = currentSection; i > index; i--) {
+            sections[i].classList.add('ahead');
+            sections[i].classList.remove('behind');
+          }
+          sections[index].classList.remove('behind');
+          sections[index].classList.remove('ahead');
+        }
+
+        navLinks.forEach(function(l) { l.classList.remove('active'); });
+        navLinks[index].classList.add('active');
+        dots.forEach(function(d) { d.classList.remove('active'); });
+        dots[index].classList.add('active');
+
+        currentSection = index;
+
+        setTimeout(function() { isTransitioning = false; }, DURATION);
+      }
+
+      navLinks.forEach(function(link) {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          goToSection(parseInt(this.dataset.section));
         });
-      }, { threshold: 0.5 });
-      observer.observe(document.querySelector('.stats-strip'));
-    }
-
-    /* ── QUICK SEARCH DROPDOWNS ── */
-    function buildDropdowns() {
-      const from = document.getElementById('fromSelect');
-      const to   = document.getElementById('toSelect');
-      HUBS.forEach(h => {
-        const opt1 = new Option(`${h.city} (${h.code})`, h.code);
-        const opt2 = new Option(`${h.city} (${h.code})`, h.code);
-        from.appendChild(opt1);
-        to.appendChild(opt2);
       });
-    }
 
-    document.getElementById('searchForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const from = document.getElementById('fromSelect').value;
-      const to   = document.getElementById('toSelect').value;
-      const err  = document.getElementById('searchError');
-
-      if (!from || !to) {
-        err.textContent = 'Please select both origin and destination.';
-        err.classList.add('visible');
-        return;
-      }
-      if (from === to) {
-        err.textContent = 'Origin and destination cannot be the same.';
-        err.classList.add('visible');
-        return;
-      }
-      err.classList.remove('visible');
-      window.location.href = `search.html?from=${from}&to=${to}`;
-    });
-
-    /* ── FEATURED HUBS (first 6) ── */
-    function buildFeaturedHubs() {
-      const grid = document.getElementById('featuredHubs');
-      HUBS.slice(0, 6).forEach((h, i) => {
-        const a = document.createElement('a');
-        a.href      = `status.html?origin=${h.code}`;
-        a.className = 'hub-card animate-fade-up';
-        a.style.animationDelay = (i * 0.07) + 's';
-        a.innerHTML = `
-          <span class="country-label">${h.country}</span>
-          <h2 class="city-name">${h.city}</h2>
-          <div class="airport-code">${h.code}</div>`;
-        grid.appendChild(a);
+      dots.forEach(function(dot) {
+        dot.addEventListener('click', function() {
+          goToSection(parseInt(this.dataset.section));
+        });
       });
-    }
 
-    /* ── MOBILE NAV ── */
-    document.getElementById('navToggle').addEventListener('click', function() {
-      document.getElementById('navMenu').classList.toggle('open');
-    });
+      var wheelLock = false;
+      document.addEventListener('wheel', function(e) {
+        e.preventDefault();
+        if (wheelLock || isTransitioning) return;
+        wheelLock = true;
 
-    /* ── INIT ── */
-    window.addEventListener('DOMContentLoaded', () => {
-      startClock();
-      buildTicker();
-      buildDropdowns();
-      buildFeaturedHubs();
-      initCounters();
-    });
+        if (e.deltaY > 20) goToSection(currentSection + 1);
+        else if (e.deltaY < -20) goToSection(currentSection - 1);
+
+        setTimeout(function() { wheelLock = false; }, 900);
+      }, { passive: false });
+
+      var touchStartY = 0, touchStartX = 0;
+
+      document.addEventListener('touchstart', function(e) {
+        touchStartY = e.touches[0].clientY;
+        touchStartX = e.touches[0].clientX;
+      }, { passive: true });
+
+      document.addEventListener('touchend', function(e) {
+        if (isTransitioning) return;
+        var dy = touchStartY - e.changedTouches[0].clientY;
+        var dx = touchStartX - e.changedTouches[0].clientX;
+
+        if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+          if (dx > 0) goToSection(currentSection + 1);
+          else goToSection(currentSection - 1);
+        } else if (Math.abs(dy) > 50) {
+          if (dy > 0) goToSection(currentSection + 1);
+          else goToSection(currentSection - 1);
+        }
+      }, { passive: true });
+
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+          e.preventDefault();
+          goToSection(currentSection + 1);
+        } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+          e.preventDefault();
+          goToSection(currentSection - 1);
+        }
+      });
+
+      function navigateWithTransition(url) {
+        sessionStorage.setItem('st_transition', '1');
+        overlay.classList.add('active');
+        setTimeout(function() { window.location.href = url; }, 420);
+      }
+
+      document.querySelectorAll('.st-section-title[data-page]').forEach(function(title) {
+        title.addEventListener('click', function() {
+          navigateWithTransition(this.dataset.page);
+        });
+      });
+
+      function updateClock() {
+        var now = new Date();
+        var h = String(now.getHours()).padStart(2, '0');
+        var m = String(now.getMinutes()).padStart(2, '0');
+        var shortTz;
+        try {
+          shortTz = now.toLocaleTimeString('en-US', { timeZoneName: 'short' }).split(' ').pop();
+        } catch(e) {
+          shortTz = 'UTC';
+        }
+        document.getElementById('navTime').textContent = h + ':' + m + ' ' + shortTz;
+      }
+      updateClock();
+      setInterval(updateClock, 30000);
+
+      if (sessionStorage.getItem('st_transition') === '1') {
+        sessionStorage.removeItem('st_transition');
+        overlay.style.transition = 'none';
+        overlay.classList.add('active');
+        requestAnimationFrame(function() {
+          requestAnimationFrame(function() {
+            overlay.style.transition = 'opacity 500ms ease';
+            overlay.classList.remove('active');
+          });
+        });
+      }
+    })();
   </script>
 
 </body>

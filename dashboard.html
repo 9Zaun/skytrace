@@ -8,6 +8,29 @@
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
   <style>
+    /* ── Page Entry ── */
+    .st-page-entry {
+      opacity: 0;
+      transform: translateY(30px);
+      animation: pageSlideUp 500ms cubic-bezier(0.25, 0.46, 0.45, 0.94) 100ms forwards;
+    }
+    @keyframes pageSlideUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .st-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      background: #000;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 500ms ease;
+    }
+    .st-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
     /* ── Dashboard-specific ── */
     * { font-family: 'JetBrains Mono', 'Courier New', monospace; }
 
@@ -15,10 +38,10 @@
   background:
     linear-gradient(
       180deg,
-      #1a1a1a 0%,
-      #141414 35%,
-      #101010 70%,
-      #0c0c0c 100%
+      #1c1c1c 0%,
+      #171717 35%,
+      #131313 70%,
+      #111111 100%
     );
 
   min-height: 100vh;
@@ -101,9 +124,9 @@
   background:
     linear-gradient(
       180deg,
-      #0f0f0f 0%,
-      #050505 45%,
-      #000000 100%
+      #141414 0%,
+      #0e0e0e 45%,
+      #0a0a0a 100%
     );
 
   border:
@@ -562,10 +585,74 @@
 </head>
 <body>
 
+<<<<<<< HEAD
+=======
+  <!-- ── Transition Overlay ── -->
+  <div class="st-overlay" id="stOverlay"></div>
+
+  <div class="st-page-entry" id="pageContent">
+
+  <!-- ── NAV ── -->
+  <nav class="nav-bar">
+    <a href="index.html" class="nav-logo" style="text-decoration:none" onclick="navigateBack(event)">SkyTrace</a>
+    <div class="nav-links">
+      <a href="index.html"        class="nav-link">Home</a>
+      <a href="search.html"       class="nav-link">Search</a>
+      <a href="hubs.html"         class="nav-link">Hubs</a>
+      <a href="status.html"       class="nav-link">Live Board</a>
+      <a href="destinations.html" class="nav-link">Destinations</a>
+      <a href="about.html"        class="nav-link">About</a>
+      <a href="contact.html"      class="nav-link">Contact</a>
+    </div>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <div class="nav-menu" id="navMenu">
+    <a href="index.html"        class="nav-link">Home</a>
+    <a href="search.html"       class="nav-link">Search</a>
+    <a href="hubs.html"         class="nav-link">Hubs</a>
+    <a href="status.html"       class="nav-link">Live Board</a>
+    <a href="destinations.html" class="nav-link">Destinations</a>
+    <a href="about.html"        class="nav-link">About</a>
+    <a href="contact.html"      class="nav-link">Contact</a>
+  </div>
+
+>>>>>>> c7becf1 (added index.html, added hero sections to search.html, hubs.html)
   <!-- ── MAIN ── -->
   <main class="dash-wrap" id="dashWrap">
     <!-- Filled by JS: either empty state or live board -->
   </main>
+
+  </div><!-- end .st-page-entry -->
+
+  <script>
+    /* ── Page transition ── */
+    function navigateBack(e) {
+      e.preventDefault();
+      var overlay = document.getElementById('stOverlay');
+      sessionStorage.setItem('st_transition', '1');
+      overlay.classList.add('active');
+      setTimeout(function() {
+        window.location.href = e.currentTarget.href || 'index.html';
+      }, 420);
+    }
+    (function() {
+      if (sessionStorage.getItem('st_transition') === '1') {
+        sessionStorage.removeItem('st_transition');
+        var overlay = document.getElementById('stOverlay');
+        overlay.style.transition = 'none';
+        overlay.classList.add('active');
+        requestAnimationFrame(function() {
+          requestAnimationFrame(function() {
+            overlay.style.transition = 'opacity 500ms ease';
+            overlay.classList.remove('active');
+          });
+        });
+      }
+    })();
+  </script>
 
   <script>
     /* ── FLIGHT DATA ── */

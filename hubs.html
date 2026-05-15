@@ -12,6 +12,11 @@
     <!-- AOS scroll-animation library -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
     <!-- Tailwind CSS CDN — Preflight disabled to protect existing styles -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -24,15 +29,145 @@
 
     <style>
         /* ─────────────────────────────────────────────
+           PAGE ENTRY & TRANSITION
+        ───────────────────────────────────────────── */
+        .st-page-entry {
+            opacity: 0;
+            transform: translateY(40px);
+            animation: pageSlideUp 600ms cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+
+        @keyframes pageSlideUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .st-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            background: #000;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 500ms ease;
+        }
+
+        .st-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        /* ─────────────────────────────────────────────
+           HERO SECTION
+        ───────────────────────────────────────────── */
+        .page-hero {
+            position: relative;
+            height: 100vh;
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background: #111111;
+        }
+
+        .page-hero-grid {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }
+
+        .page-hero-grid .grid-v {
+            position: absolute;
+            top: 0; bottom: 0;
+            width: 1px;
+            background: rgba(195,157,99,0.035);
+        }
+
+        .page-hero-grid .grid-v:nth-child(1) { left: 20%; }
+        .page-hero-grid .grid-v:nth-child(2) { left: 50%; }
+        .page-hero-grid .grid-v:nth-child(3) { left: 80%; }
+
+        .page-hero-grid .grid-h {
+            position: absolute;
+            left: 0; right: 0;
+            height: 1px;
+            background: rgba(195,157,99,0.035);
+            top: 60%;
+        }
+
+        .page-hero-inner {
+            position: relative;
+            z-index: 2;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .page-hero-label {
+            position: absolute;
+            top: 32px; left: 40px;
+            font-size: 0.58rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: rgba(195,157,99,0.2);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .page-hero-icon {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-top: 20px;
+        }
+
+        .page-hero-icon svg {
+            width: clamp(200px, 30vw, 380px);
+            height: auto;
+        }
+
+        .page-hero-text {
+            padding: 0 40px 48px;
+        }
+
+        .page-hero-title {
+            font-size: clamp(2.8rem, 8vw, 7rem);
+            font-weight: 300;
+            letter-spacing: clamp(4px, 1.2vw, 14px);
+            text-transform: uppercase;
+            color: #fff;
+            line-height: 0.92;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .page-hero-sub {
+            font-size: 0.68rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.25);
+            margin-top: 16px;
+            font-weight: 400;
+        }
+
+        .page-hero-geo {
+            position: absolute;
+            bottom: 48px; right: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .page-hero-text { padding: 0 20px 40px; }
+            .page-hero-label { left: 20px; }
+            .page-hero-geo { right: 20px; }
+        }
+        /* ─────────────────────────────────────────────
            GLOBAL DESIGN TOKENS
         ───────────────────────────────────────────── */
         :root {
             --gold:    #c39d63;
             --gold-dim: rgba(195, 157, 99, 0.12);
             --maroon:  #81202e;
-            --bg:      #000000;
-            --surface: #0d0d0d;
-            --border:  #1f1f1f;
+            --bg:      #111111;
+            --surface: #161616;
+            --border:  #252525;
             --text:    #f0f0f0;
             --muted:   #6b7280;
             --online:  #22d3a0;
@@ -55,7 +190,7 @@
         ───────────────────────────────────────────── */
         nav.site-nav {
             background: var(--bg);
-            border-bottom: 2px solid var(--gold);
+            border-bottom: 1px solid rgba(195, 157, 99, 0.15);
         }
 
         nav.site-nav .logo {
@@ -88,8 +223,8 @@
            SYSTEM STATUS BAR
         ───────────────────────────────────────────── */
         .system-bar {
-            background: #070707;
-            border-bottom: 1px solid #191919;
+            background: #0d0d0d;
+            border-bottom: 1px solid #1f1f1f;
             font-family: 'Courier New', monospace;
         }
 
@@ -138,7 +273,7 @@
                     rgba(195,157,99,0.03) 60px,
                     rgba(195,157,99,0.03) 61px
                 );
-            border-bottom: 1px solid #1a1a1a;
+            border-bottom: 1px solid #252525;
         }
 
         .command-header::before {
@@ -418,11 +553,57 @@
 </head>
 <body>
 
+    <!-- ── Transition Overlay ── -->
+    <div class="st-overlay" id="stOverlay"></div>
+
+    <div class="st-page-entry" id="pageContent">
+
+    <!-- ── Hero Section ── -->
+    <section class="page-hero">
+        <div class="page-hero-grid">
+            <div class="grid-v"></div>
+            <div class="grid-v"></div>
+            <div class="grid-v"></div>
+            <div class="grid-h"></div>
+        </div>
+        <div class="page-hero-inner">
+            <div class="page-hero-label">SEC.03 // APT_STATUS</div>
+            <div class="page-hero-icon">
+                <svg viewBox="0 0 320 220" fill="none">
+                    <rect x="50" y="65" width="220" height="115" stroke="rgba(255,255,255,0.18)" stroke-width="1.5"/>
+                    <rect x="135" y="28" width="50" height="37" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+                    <line x1="160" y1="10" x2="160" y2="28" stroke="rgba(255,255,255,0.1)" stroke-width="1.5"/>
+                    <circle cx="160" cy="8" r="3" fill="rgba(255,255,255,0.1)"/>
+                    <rect x="75" y="95" width="35" height="45" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+                    <rect x="142" y="95" width="35" height="45" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+                    <rect x="210" y="95" width="35" height="45" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+                    <text x="82" y="155" fill="rgba(255,255,255,0.08)" font-size="8" font-family="'JetBrains Mono', monospace" letter-spacing="1">A1</text>
+                    <text x="149" y="155" fill="rgba(255,255,255,0.08)" font-size="8" font-family="'JetBrains Mono', monospace" letter-spacing="1">B2</text>
+                    <text x="216" y="155" fill="rgba(255,255,255,0.08)" font-size="8" font-family="'JetBrains Mono', monospace" letter-spacing="1">C3</text>
+                    <line x1="25" y1="180" x2="295" y2="180" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+                    <line x1="25" y1="184" x2="295" y2="184" stroke="rgba(255,255,255,0.03)" stroke-width="1" stroke-dasharray="10 5"/>
+                </svg>
+            </div>
+            <div class="page-hero-text">
+                <h1 class="page-hero-title">AIRPORTS</h1>
+                <p class="page-hero-sub">Find airport-based flight statuses</p>
+            </div>
+            <div class="page-hero-geo">
+                <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
+                    <rect x="1" y="1" width="20" height="20" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                    <rect x="31" y="1" width="20" height="20" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                    <rect x="1" y="31" width="20" height="20" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                    <rect x="31" y="31" width="20" height="20" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                </svg>
+            </div>
+        </div>
+    </section>
+
     <!-- ─────────────────────────────────────────────
          MAIN NAVIGATION
     ───────────────────────────────────────────── -->
     <nav class="site-nav flex flex-col md:flex-row justify-between items-center px-6 md:px-10 py-5">
-        <a href="index.html" class="logo mb-4 md:mb-0">SKYTRACE</a>
+        <a href="index.html" class="logo mb-4 md:mb-0" onclick="navigateBack(event)">SKYTRACE</a>
         <div class="nav-links flex flex-wrap justify-center gap-2 md:gap-4">
             <a href="index.html">Home</a>
             <a href="search.html">Flights</a>
@@ -763,7 +944,35 @@
         renderHubs();
         updateClock();
         setInterval(updateClock, 1000);
+
+        /* ── Page transition helpers ── */
+        function navigateBack(e) {
+            e.preventDefault();
+            var overlay = document.getElementById('stOverlay');
+            sessionStorage.setItem('st_transition', '1');
+            overlay.classList.add('active');
+            setTimeout(function() {
+                window.location.href = e.currentTarget.href || 'index.html';
+            }, 420);
+        }
+
+        (function() {
+            if (sessionStorage.getItem('st_transition') === '1') {
+                sessionStorage.removeItem('st_transition');
+                var overlay = document.getElementById('stOverlay');
+                overlay.style.transition = 'none';
+                overlay.classList.add('active');
+                requestAnimationFrame(function() {
+                    requestAnimationFrame(function() {
+                        overlay.style.transition = 'opacity 500ms ease';
+                        overlay.classList.remove('active');
+                    });
+                });
+            }
+        })();
     </script>
+
+    </div><!-- end .st-page-entry -->
 
 </body>
 </html>
