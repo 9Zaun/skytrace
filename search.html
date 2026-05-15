@@ -412,12 +412,12 @@
         .filter-chip.active { background: var(--gold); color: #000; border-color: var(--gold); }
 
         @media (max-width: 768px) {
-            .nav-links-desktop { display: none; }
-            .nav-bar { padding-inline: 20px; }
-            .page-hero-text { padding: 0 20px 40px; }
+            .nav-bar { display: none !important; }
+            .page-close-btn { display: block; }
+            .page-hero-text { padding: 0 20px 36px; }
             .page-hero-label { left: 20px; }
             .page-hero-geo { right: 20px; }
-            .page-hero-icon svg { width: clamp(240px, 72vw, 360px); }
+            .page-hero-icon svg { width: clamp(180px, 60vw, 300px); }
         }
 
         @media (max-width: 640px) {
@@ -425,6 +425,25 @@
             .results-table th:nth-child(3),
             .results-table td:nth-child(3) { display: none; }
         }
+
+        /* ── Mobile close button ── */
+        .page-close-btn {
+            display: none;
+            position: fixed;
+            top: 18px; right: 20px;
+            z-index: 150;
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.28);
+            font-size: 0.78rem;
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            letter-spacing: 1.5px;
+            cursor: pointer;
+            padding: 6px 10px;
+            transition: color 0.2s ease;
+            line-height: 1;
+        }
+        .page-close-btn:hover { color: rgba(241,194,125,0.75); }
     </style>
 </head>
 
@@ -434,6 +453,9 @@
     <div class="st-overlay" id="stOverlay"></div>
 
     <div class="st-page-entry" id="pageContent">
+
+    <!-- ── Mobile Close ── -->
+    <button class="page-close-btn" onclick="navigateBack(event)" aria-label="Return to index">&#x2715;&nbsp;INDEX</button>
 
     <!-- ── Hero Section ── -->
     <section class="page-hero">

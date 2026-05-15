@@ -140,6 +140,30 @@
         .status-landed { background: #fff; color: #000; }
         .status-cancelled { background: #f44336; color: #fff; }
 
+
+        /* ── Mobile close button ── */
+        .page-close-btn {
+            display: none;
+            position: fixed;
+            top: 18px; right: 20px;
+            z-index: 150;
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.28);
+            font-size: 0.78rem;
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            letter-spacing: 1.5px;
+            cursor: pointer;
+            padding: 6px 10px;
+            transition: color 0.2s ease;
+            line-height: 1;
+        }
+        .page-close-btn:hover { color: rgba(241,194,125,0.75); }
+
+        @media (max-width: 768px) {
+            .page-close-btn { display: block; }
+            nav.status-nav { display: none !important; }
+        }
     </style>
 
 </head>
@@ -150,6 +174,9 @@
     <div class="st-overlay" id="stOverlay"></div>
 
     <div class="st-page-entry" id="pageContent">
+
+    <!-- ── Mobile Close ── -->
+    <button class="page-close-btn" onclick="navigateBack(event)" aria-label="Return to index">&#x2715;&nbsp;INDEX</button>
 
     <!-- ── NAV ── -->
     <nav class="status-nav flex justify-between items-center px-10 py-4">
