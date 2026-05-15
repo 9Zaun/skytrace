@@ -31,6 +31,24 @@
       pointer-events: all;
     }
 
+    /* ── Close button ── */
+    .dash-close {
+      position: fixed;
+      top: 18px; right: 24px;
+      z-index: 150;
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.3);
+      font-size: 1rem;
+      font-family: 'JetBrains Mono', 'Courier New', monospace;
+      letter-spacing: 1px;
+      cursor: pointer;
+      padding: 6px 10px;
+      transition: color 0.2s ease;
+      line-height: 1;
+    }
+    .dash-close:hover { color: rgba(241,194,125,0.75); }
+
     /* ── Dashboard-specific ── */
     * { font-family: 'JetBrains Mono', 'Courier New', monospace; }
 
@@ -590,19 +608,8 @@
 
   <div class="st-page-entry" id="pageContent">
 
-  <!-- ── NAV ── -->
-  <nav class="nav-bar">
-    <a href="index.html" class="nav-logo" style="text-decoration:none" onclick="navigateBack(event)">SkyTrace</a>
-    <div class="nav-links">
-      <a href="index.html"        class="nav-link">Home</a>
-      <a href="search.html"       class="nav-link">Search</a>
-      <a href="hubs.html"         class="nav-link">Hubs</a>
-      <a href="status.html"       class="nav-link">Live Board</a>
-      <a href="destinations.html" class="nav-link">Destinations</a>
-      <a href="about.html"        class="nav-link">About</a>
-      <a href="contact.html"      class="nav-link">Contact</a>
-    </div>
-  </nav>
+  <!-- ── Close ── -->
+  <button class="dash-close" onclick="navigateBack()" aria-label="Return to index">&#x2715;&nbsp;INDEX</button>
 
   <!-- ── MAIN ── -->
   <main class="dash-wrap" id="dashWrap">
@@ -614,26 +621,28 @@
   <script>
     /* ── Page transition ── */
     function navigateBack(e) {
-      e.preventDefault();
+      if (e) e.preventDefault();
       var overlay = document.getElementById('stOverlay');
       sessionStorage.setItem('st_transition', '1');
       overlay.classList.add('active');
-      setTimeout(function() {
-        window.location.href = e.currentTarget.href || 'index.html';
-      }, 420);
+      setTimeout(function() { window.location.href = 'index.html'; }, 420);
     }
     (function() {
       if (sessionStorage.getItem('st_transition') === '1') {
         sessionStorage.removeItem('st_transition');
         var overlay = document.getElementById('stOverlay');
         overlay.style.transition = 'none';
-        overlay.classList.add('active');
-        requestAnimationFrame(function() {
-          requestAnimationFrame(function() {
-            overlay.style.transition = 'opacity 500ms ease';
-            overlay.classList.remove('active');
-          });
-        });
+        overlay.style.opacity = '1';
+        overlay.style.pointerEvents = 'none';
+        setTimeout(function() {
+          overlay.style.transition = 'opacity 500ms ease';
+          overlay.style.opacity = '0';
+          setTimeout(function() {
+            overlay.style.transition = '';
+            overlay.style.opacity = '';
+            overlay.style.pointerEvents = '';
+          }, 520);
+        }, 20);
       }
     })();
   </script>

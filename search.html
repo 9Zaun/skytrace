@@ -612,12 +612,11 @@
         /* ── Page transition helpers ── */
         function navigateBack(e) {
             e.preventDefault();
+            var dest = (e.currentTarget && e.currentTarget.href) ? e.currentTarget.href : 'index.html';
             var overlay = document.getElementById('stOverlay');
             sessionStorage.setItem('st_transition', '1');
             overlay.classList.add('active');
-            setTimeout(function() {
-                window.location.href = e.currentTarget.href || 'index.html';
-            }, 420);
+            setTimeout(function() { window.location.href = dest; }, 420);
         }
 
         (function() {
@@ -625,13 +624,17 @@
                 sessionStorage.removeItem('st_transition');
                 var overlay = document.getElementById('stOverlay');
                 overlay.style.transition = 'none';
-                overlay.classList.add('active');
-                requestAnimationFrame(function() {
-                    requestAnimationFrame(function() {
-                        overlay.style.transition = 'opacity 500ms ease';
-                        overlay.classList.remove('active');
-                    });
-                });
+                overlay.style.opacity = '1';
+                overlay.style.pointerEvents = 'none';
+                setTimeout(function() {
+                    overlay.style.transition = 'opacity 500ms ease';
+                    overlay.style.opacity = '0';
+                    setTimeout(function() {
+                        overlay.style.transition = '';
+                        overlay.style.opacity = '';
+                        overlay.style.pointerEvents = '';
+                    }, 520);
+                }, 20);
             }
         })();
 
