@@ -413,7 +413,6 @@
 
         @media (max-width: 768px) {
             .nav-bar { display: none !important; }
-            .page-close-btn { display: block; }
             .page-hero-text { padding: 0 20px 36px; }
             .page-hero-label { left: 20px; }
             .page-hero-geo { right: 20px; }
@@ -426,9 +425,9 @@
             .results-table td:nth-child(3) { display: none; }
         }
 
-        /* ── Mobile close button ── */
+        /* ── Close button (always visible) ── */
         .page-close-btn {
-            display: none;
+            display: block;
             position: fixed;
             top: 18px; right: 20px;
             z-index: 150;

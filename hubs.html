@@ -154,9 +154,9 @@
         }
 
 
-        /* ── Mobile close button ── */
+        /* ── Close button (always visible) ── */
         .page-close-btn {
-            display: none;
+            display: block;
             position: fixed;
             top: 18px; right: 20px;
             z-index: 150;
@@ -174,7 +174,6 @@
         .page-close-btn:hover { color: rgba(241,194,125,0.75); }
 
         @media (max-width: 768px) {
-            .page-close-btn { display: block; }
             nav.site-nav { display: none !important; }
             .page-hero-text { padding: 0 20px 36px; }
             .page-hero-label { left: 20px; }

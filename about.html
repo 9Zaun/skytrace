@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>About — SkyTrace</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:    #111111;
+      --gold:  #f1c27d;
+      --text:  rgba(255,255,255,0.42);
+      --label: rgba(241,194,125,0.55);
+    }
+
+    html, body {
+      width: 100%; height: 100%;
+      background: var(--bg);
+      color: #fff;
+      font-family: 'Inter', 'Segoe UI', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* ── Overlay & page entry ── */
+    .st-overlay {
+      position: fixed; inset: 0;
+      background: #111111;
+      z-index: 200;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 450ms ease;
+    }
+    .st-page-entry {
+      opacity: 0;
+      transform: translateY(-56px);
+      animation: aboutSlideIn 620ms cubic-bezier(0.25,0.46,0.45,0.94) forwards;
+      animation-delay: 60ms;
+      min-height: 100vh;
+    }
+    @keyframes aboutSlideIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Grid lines ── */
+    .st-grid {
+      position: fixed; inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      display: flex;
+    }
+    .st-grid-v {
+      flex: 1;
+      border-right: 1px solid rgba(241,194,125,0.09);
+    }
+    .st-grid-v:first-child { border-left: 1px solid rgba(241,194,125,0.09); }
+    .st-grid-h {
+      position: fixed; left: 0; right: 0; height: 1px;
+      background: rgba(241,194,125,0.09);
+    }
+    .st-grid-h.mid { top: 50%; }
+
+    /* ── Close button ── */
+    .st-close {
+      position: fixed;
+      top: 20px; right: 40px;
+      z-index: 100;
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.28);
+      font-size: 0.78rem;
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: 1.5px;
+      cursor: pointer;
+      padding: 6px 10px;
+      transition: color 0.2s ease;
+    }
+    .st-close:hover { color: var(--gold); }
+
+    /* ── Layout ── */
+    .page-wrap {
+      position: relative;
+      z-index: 1;
+      padding: 56px 40px 80px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .page-label {
+      font-size: 0.56rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--label);
+      font-family: 'JetBrains Mono', monospace;
+      margin-bottom: 0;
+    }
+
+    .page-title {
+      font-size: clamp(2.8rem, 8vw, 7rem);
+      font-weight: 300;
+      letter-spacing: clamp(4px, 1.2vw, 14px);
+      text-transform: uppercase;
+      color: #fff;
+      line-height: 0.92;
+      margin-top: 16px;
+    }
+
+    .page-sub {
+      font-size: 0.68rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.28);
+      margin-top: 16px;
+    }
+
+    .page-divider {
+      width: 100%;
+      height: 1px;
+      background: rgba(241,194,125,0.12);
+      margin: 48px 0;
+    }
+
+    .page-body {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px 72px;
+      flex: 1;
+    }
+
+    .col-label {
+      font-size: 0.56rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--label);
+      font-family: 'JetBrains Mono', monospace;
+      margin-bottom: 14px;
+    }
+
+    .col-text {
+      font-size: 0.88rem;
+      line-height: 1.9;
+      color: var(--text);
+      letter-spacing: 0.2px;
+    }
+
+    .page-geo {
+      align-self: flex-end;
+      margin-top: 48px;
+    }
+
+    @media (max-width: 768px) {
+      .page-wrap  { padding: 48px 20px 60px; }
+      .st-close   { right: 20px; top: 16px; }
+      .page-body  { grid-template-columns: 1fr; gap: 28px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="st-overlay" id="stOverlay"></div>
+
+  <div class="st-grid">
+    <div class="st-grid-v"></div>
+    <div class="st-grid-v"></div>
+    <div class="st-grid-v"></div>
+    <div class="st-grid-h mid"></div>
+  </div>
+
+  <button class="st-close" onclick="navigateBack(event)" aria-label="Return to index">&#x2715;&nbsp;INDEX</button>
+
+  <div class="st-page-entry" id="pageContent">
+    <div class="page-wrap">
+
+      <span class="page-label">SEC.00 // ABOUT</span>
+      <h1 class="page-title">ABOUT</h1>
+      <p class="page-sub">SkyTrace &mdash; Live Flight Intelligence</p>
+
+      <div class="page-divider"></div>
+
+      <div class="page-body">
+        <div>
+          <p class="col-label">WHAT IS SKYTRACE</p>
+          <p class="col-text">
+            SkyTrace is a readability-first flight operations platform. Built to present live aviation data through a minimal, editorial interface &mdash; designed for clarity over decoration.<br><br>
+            Departures, arrivals, gate activity, and airport status boards are organised as operational dashboards, not interactive maps or cluttered widgets.
+          </p>
+        </div>
+        <div>
+          <p class="col-label">DESIGN PHILOSOPHY</p>
+          <p class="col-text">
+            The interface draws from airport FIDS systems and aviation instrument design. Every element is functional. Every line has purpose.<br><br>
+            Typography is primary. Spacing is structural. The champagne-gold accent marks active states. Thin geometry provides context without decoration.
+          </p>
+        </div>
+        <div>
+          <p class="col-label">BUILT WITH</p>
+          <p class="col-text">HTML &middot; CSS &middot; JavaScript<br>AviationStack API</p>
+        </div>
+        <div>
+          <p class="col-label">VERSION</p>
+          <p class="col-text">SkyTrace v1.0 &mdash; 2026<br>Student project &middot; Operational concept</p>
+        </div>
+      </div>
+
+      <div class="page-geo">
+        <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
+          <rect x="1" y="1" width="20" height="20" stroke="rgba(241,194,125,0.24)" stroke-width="1"/>
+          <rect x="31" y="1" width="20" height="20" stroke="rgba(241,194,125,0.24)" stroke-width="1"/>
+          <rect x="1" y="31" width="20" height="20" stroke="rgba(241,194,125,0.24)" stroke-width="1"/>
+          <rect x="31" y="31" width="20" height="20" stroke="rgba(241,194,125,0.24)" stroke-width="1"/>
+          <rect x="9" y="9" width="4" height="4" fill="rgba(241,194,125,0.16)"/>
+          <rect x="39" y="9" width="4" height="4" fill="rgba(241,194,125,0.16)"/>
+          <rect x="9" y="39" width="4" height="4" fill="rgba(241,194,125,0.16)"/>
+          <rect x="39" y="39" width="4" height="4" fill="rgba(241,194,125,0.16)"/>
+        </svg>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    /* ── Page entry transition ── */
+    (function() {
+      var overlay = document.getElementById('stOverlay');
+      if (sessionStorage.getItem('st_transition') === '1') {
+        sessionStorage.removeItem('st_transition');
+        overlay.style.transition = 'none';
+        overlay.style.opacity    = '1';
+        overlay.style.pointerEvents = 'none';
+        setTimeout(function() {
+          overlay.style.transition = 'opacity 500ms ease';
+          overlay.style.opacity    = '0';
+          setTimeout(function() {
+            overlay.style.transition    = '';
+            overlay.style.opacity       = '';
+            overlay.style.pointerEvents = '';
+          }, 520);
+        }, 20);
+      }
+    })();
+
+    /* ── Navigate back to index with reverse transition ── */
+    function navigateBack(e) {
+      if (e) e.preventDefault();
+      var overlay = document.getElementById('stOverlay');
+      var content = document.getElementById('pageContent');
+
+      /* Slide content back upward */
+      content.style.transition = 'transform 480ms cubic-bezier(0.65,0,0.35,1), opacity 380ms ease';
+      content.style.transform  = 'translateY(-56px)';
+      content.style.opacity    = '0';
+
+      /* Fade overlay in */
+      overlay.style.transition    = 'opacity 420ms ease';
+      overlay.style.pointerEvents = 'all';
+      overlay.style.opacity       = '1';
+
+      setTimeout(function() {
+        sessionStorage.setItem('st_transition', '1');
+        window.location.href = 'index.html';
+      }, 440);
+    }
+  </script>
+
+</body>
+</html>

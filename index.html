@@ -344,9 +344,276 @@
       .st-nav-time { font-size: 0.6rem; }
       .st-dots { display: none; }
     }
+
+    /* ════════════════════════════════════════
+       OVERLAY PANELS (About + Contact)
+       ════════════════════════════════════════ */
+    .st-panel {
+      position: fixed;
+      inset: 0;
+      z-index: 180;
+      background: #111111;
+      overflow: hidden;
+      transition: transform 650ms cubic-bezier(0.65, 0, 0.35, 1);
+      will-change: transform;
+      display: flex;
+      flex-direction: column;
+    }
+    #aboutPanel   { transform: translateY(-100%); pointer-events: none; }
+    #contactPanel { transform: translateY(100%); pointer-events: none; }
+    /* Use ID+class to beat ID-only specificity (1-1-0 > 1-0-0) */
+    #aboutPanel.open, #contactPanel.open { transform: translateY(0); pointer-events: auto; }
+
+    .st-panel-inner {
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      padding: 56px 40px 56px;
+    }
+
+    .st-panel-close {
+      position: fixed;
+      top: 20px; right: 40px;
+      z-index: 5;
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.28);
+      font-size: 0.78rem;
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: 1.5px;
+      cursor: pointer;
+      padding: 6px 10px;
+      transition: color 0.2s ease;
+      line-height: 1;
+    }
+    .st-panel-close:hover { color: #f1c27d; }
+
+    .st-panel-title {
+      font-size: clamp(2.8rem, 8vw, 7rem);
+      font-weight: 300;
+      letter-spacing: clamp(4px, 1.2vw, 14px);
+      text-transform: uppercase;
+      color: #fff;
+      line-height: 0.92;
+      margin: 0;
+    }
+    .st-panel-sub {
+      font-size: 0.68rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.28);
+      margin-top: 16px;
+      font-weight: 400;
+    }
+
+    .st-panel-body {
+      margin-top: 52px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px 72px;
+    }
+    .st-panel-col-label {
+      font-size: 0.56rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(241,194,125,0.55);
+      font-family: 'JetBrains Mono', monospace;
+      margin-bottom: 14px;
+    }
+    .st-panel-col-text {
+      font-size: 0.85rem;
+      line-height: 1.9;
+      color: rgba(255,255,255,0.4);
+      letter-spacing: 0.2px;
+    }
+
+    /* ── Contact form ── */
+    .st-contact-form {
+      max-width: 520px;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+      margin-top: 44px;
+    }
+    .st-cfield { display: flex; flex-direction: column; gap: 8px; }
+    .st-clabel {
+      font-size: 0.56rem;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.28);
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .st-cinput, .st-ctextarea {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 0;
+      color: #fff;
+      font-family: 'Inter', 'Segoe UI', sans-serif;
+      font-size: 0.88rem;
+      padding: 13px 16px;
+      outline: none;
+      transition: border-color 0.2s ease;
+      width: 100%;
+      -webkit-appearance: none;
+    }
+    .st-cinput:focus, .st-ctextarea:focus {
+      border-color: rgba(241,194,125,0.32);
+    }
+    .st-ctextarea { resize: vertical; min-height: 108px; font-family: inherit; }
+    .st-cerror {
+      display: none;
+      font-size: 0.56rem;
+      letter-spacing: 1.5px;
+      color: rgba(255,80,80,0.6);
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .st-cerror.show { display: block; }
+    .st-csubmit {
+      align-self: flex-start;
+      padding: 12px 28px;
+      background: none;
+      border: 1px solid rgba(241,194,125,0.32);
+      color: rgba(241,194,125,0.65);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: border-color 0.2s ease, color 0.2s ease;
+    }
+    .st-csubmit:hover { border-color: #f1c27d; color: #f1c27d; }
+    .st-csuccess {
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 44px;
+    }
+    .st-csuccess-tag {
+      font-size: 0.56rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(241,194,125,0.55);
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .st-csuccess-msg {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.38);
+      line-height: 1.8;
+    }
+
+    /* ── Panel responsive ── */
+    @media (max-width: 768px) {
+      .st-panel-inner { padding: 48px 20px 48px; }
+      .st-panel-close { right: 20px; top: 16px; }
+      .st-panel-body  { grid-template-columns: 1fr; gap: 28px; }
+    }
   </style>
 </head>
 <body>
+
+  <!-- ════════════════════════════════════════
+       ABOUT PANEL (slides from top)
+       ════════════════════════════════════════ -->
+  <div id="aboutPanel" class="st-panel" role="dialog" aria-modal="true" aria-label="About SkyTrace">
+    <div class="st-grid">
+      <div class="st-grid-v"></div>
+      <div class="st-grid-v"></div>
+      <div class="st-grid-v"></div>
+      <div class="st-grid-h mid"></div>
+    </div>
+    <div class="st-panel-inner">
+      <div class="st-section-label">SEC.00 // ABOUT</div>
+      <button class="st-panel-close" onclick="closeAbout()" aria-label="Close">&#x2715;&nbsp;CLOSE</button>
+
+      <h1 class="st-panel-title">ABOUT</h1>
+      <p class="st-panel-sub">SkyTrace &mdash; Live Flight Intelligence</p>
+
+      <div class="st-panel-body">
+        <div>
+          <p class="st-panel-col-label">WHAT IS SKYTRACE</p>
+          <p class="st-panel-col-text">
+            SkyTrace is a readability-first flight operations platform. Built to present live aviation data through a minimal, editorial interface &mdash; designed for clarity over decoration.<br><br>
+            Departures, arrivals, gate activity, and airport status boards are organised as operational dashboards, not interactive maps or cluttered widgets.
+          </p>
+        </div>
+        <div>
+          <p class="st-panel-col-label">DESIGN PHILOSOPHY</p>
+          <p class="st-panel-col-text">
+            The interface draws from airport FIDS systems and aviation instrument design. Every element is functional. Every line has purpose.<br><br>
+            Typography is primary. Spacing is structural. The champagne-gold accent marks active states. Thin geometry provides context without decoration.
+          </p>
+        </div>
+        <div>
+          <p class="st-panel-col-label">BUILT WITH</p>
+          <p class="st-panel-col-text">HTML &middot; CSS &middot; JavaScript<br>AviationStack API</p>
+        </div>
+        <div>
+          <p class="st-panel-col-label">VERSION</p>
+          <p class="st-panel-col-text">SkyTrace v1.0 &mdash; 2026<br>Student project &middot; Operational concept</p>
+        </div>
+      </div>
+
+      <div class="st-geo" style="position:relative;bottom:auto;right:auto;align-self:flex-end;margin-top:40px;">
+        <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
+            <rect x="1" y="1" width="20" height="20" stroke="rgba(241,194,125,0.24)" stroke-width="1"/>
+            <rect x="31" y="1" width="20" height="20" stroke="rgba(241,194,125,0.24)" stroke-width="1"/>
+            <rect x="1" y="31" width="20" height="20" stroke="rgba(241,194,125,0.24)" stroke-width="1"/>
+            <rect x="31" y="31" width="20" height="20" stroke="rgba(241,194,125,0.24)" stroke-width="1"/>
+            <rect x="9" y="9" width="4" height="4" fill="rgba(241,194,125,0.16)"/>
+            <rect x="39" y="9" width="4" height="4" fill="rgba(241,194,125,0.16)"/>
+            <rect x="9" y="39" width="4" height="4" fill="rgba(241,194,125,0.16)"/>
+            <rect x="39" y="39" width="4" height="4" fill="rgba(241,194,125,0.16)"/>
+          </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════
+       CONTACT PANEL (slides from bottom)
+       ════════════════════════════════════════ -->
+  <div id="contactPanel" class="st-panel" role="dialog" aria-modal="true" aria-label="Contact SkyTrace">
+    <div class="st-grid">
+      <div class="st-grid-v"></div>
+      <div class="st-grid-v"></div>
+      <div class="st-grid-v"></div>
+      <div class="st-grid-h mid"></div>
+    </div>
+    <div class="st-panel-inner">
+      <div class="st-section-label">SEC.00 // CONTACT</div>
+      <button class="st-panel-close" onclick="closeContact()" aria-label="Close">&#x2715;&nbsp;CLOSE</button>
+
+      <h1 class="st-panel-title">CONTACT</h1>
+      <p class="st-panel-sub">Want to reach us? Drop a message.</p>
+
+      <form class="st-contact-form" id="contactForm" onsubmit="submitContact(event)" novalidate>
+        <div class="st-cfield">
+          <label class="st-clabel" for="cName">Full Name</label>
+          <input type="text" id="cName" class="st-cinput" placeholder="Your name" autocomplete="name"/>
+          <span class="st-cerror" id="errName">Name is required.</span>
+        </div>
+        <div class="st-cfield">
+          <label class="st-clabel" for="cEmail">Email Address</label>
+          <input type="email" id="cEmail" class="st-cinput" placeholder="you@example.com" autocomplete="email"/>
+          <span class="st-cerror" id="errEmail">A valid email address is required.</span>
+        </div>
+        <div class="st-cfield">
+          <label class="st-clabel" for="cMsg">Message</label>
+          <textarea id="cMsg" class="st-ctextarea" placeholder="Your message"></textarea>
+          <span class="st-cerror" id="errMsg">Message is required.</span>
+        </div>
+        <button type="submit" class="st-csubmit">SEND MESSAGE</button>
+      </form>
+
+      <div class="st-csuccess" id="contactSuccess">
+        <span class="st-csuccess-tag">MESSAGE SENT</span>
+        <p class="st-csuccess-msg">Thank you for reaching out. We&rsquo;ll be in touch shortly.</p>
+      </div>
+    </div>
+  </div>
 
   <!-- ── Navigation ── -->
   <nav class="st-nav">
@@ -360,7 +627,7 @@
       <a class="st-nav-link" data-section="2">AIRPORTS</a>
     </div>
     <div class="st-nav-right">
-      <a href="about.html" class="st-nav-about">About</a>
+      <a href="about.html" class="st-nav-about" onclick="openAbout(); return false;">About</a>
       <span class="st-nav-time" id="navTime">--:-- ---</span>
     </div>
   </nav>
@@ -508,7 +775,7 @@
   <!-- ── Footer ── -->
   <footer class="st-footer">
     <span>&copy;2026 SKYTRACE</span>
-    <span><a href="contact.html">CONTACT</a></span>
+    <span><a href="contact.html" onclick="openContact(); return false;">CONTACT</a></span>
   </footer>
 
   <!-- ── Transition Overlay ── -->
@@ -657,6 +924,61 @@
         }, 20);
       }
     })();
+
+    /* ════════════════════════════════════════
+       OVERLAY PANEL SYSTEM
+       ════════════════════════════════════════ */
+    function openAbout() {
+      document.getElementById('aboutPanel').classList.add('open');
+    }
+    function closeAbout() {
+      document.getElementById('aboutPanel').classList.remove('open');
+    }
+    function openContact() {
+      document.getElementById('contactPanel').classList.add('open');
+    }
+    function closeContact() {
+      document.getElementById('contactPanel').classList.remove('open');
+    }
+
+    /* Attach via addEventListener as belt-and-suspenders */
+    (function() {
+      var aboutLink = document.querySelector('.st-nav-about');
+      if (aboutLink) {
+        aboutLink.addEventListener('click', function(e) {
+          e.preventDefault();
+          openAbout();
+        });
+      }
+      var contactLink = document.querySelector('.st-footer a[href="contact.html"]');
+      if (contactLink) {
+        contactLink.addEventListener('click', function(e) {
+          e.preventDefault();
+          openContact();
+        });
+      }
+    })();
+
+    document.addEventListener('keydown', function(ev) {
+      if (ev.key === 'Escape') {
+        closeAbout();
+        closeContact();
+      }
+    });
+    function submitContact(ev) {
+      ev.preventDefault();
+      var name    = document.getElementById('cName').value.trim();
+      var email   = document.getElementById('cEmail').value.trim();
+      var msg     = document.getElementById('cMsg').value.trim();
+      var emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+      document.getElementById('errName').classList.toggle('show', !name);
+      document.getElementById('errEmail').classList.toggle('show', !(email && emailOk));
+      document.getElementById('errMsg').classList.toggle('show', !msg);
+      if (name && emailOk && msg) {
+        document.getElementById('contactForm').style.display = 'none';
+        document.getElementById('contactSuccess').style.display = 'flex';
+      }
+    }
   </script>
 
 </body>
