@@ -627,7 +627,7 @@
       <a class="st-nav-link" data-section="2">AIRPORTS</a>
     </div>
     <div class="st-nav-right">
-      <a href="about.html" class="st-nav-about" onclick="openAbout(); return false;">About</a>
+      <a href="about.html" id="aboutLink" class="st-nav-about" onclick="openAbout(); return false;">About</a>
       <span class="st-nav-time" id="navTime">--:-- ---</span>
     </div>
   </nav>
@@ -775,7 +775,7 @@
   <!-- ── Footer ── -->
   <footer class="st-footer">
     <span>&copy;2026 SKYTRACE</span>
-    <span><a href="contact.html" onclick="openContact(); return false;">CONTACT</a></span>
+    <span><a href="contact.html" id="contactLink" onclick="openContact(); return false;">CONTACT</a></span>
   </footer>
 
   <!-- ── Transition Overlay ── -->
@@ -941,16 +941,18 @@
       document.getElementById('contactPanel').classList.remove('open');
     }
 
-    /* Attach via addEventListener as belt-and-suspenders */
+    /* Attach via addEventListener — use getElementById so href-normalization
+       quirks in Chromium don't cause querySelector('[href="..."]') to return null
+       when the page is served from /index.html vs /  */
     (function() {
-      var aboutLink = document.querySelector('.st-nav-about');
+      var aboutLink = document.getElementById('aboutLink');
       if (aboutLink) {
         aboutLink.addEventListener('click', function(e) {
           e.preventDefault();
           openAbout();
         });
       }
-      var contactLink = document.querySelector('.st-footer a[href="contact.html"]');
+      var contactLink = document.getElementById('contactLink');
       if (contactLink) {
         contactLink.addEventListener('click', function(e) {
           e.preventDefault();
