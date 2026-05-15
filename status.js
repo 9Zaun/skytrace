@@ -1,8 +1,15 @@
+const params = new URLSearchParams(window.location.search);
+
+const selectedAirport =
+    params.get("origin") || "";
+
 async function loadFlights() {
 
-    const flights = await getFlights();
+    const flights =
+        await getFlights(selectedAirport);
 
-    const table = document.getElementById("flightTable");
+    const table =
+        document.getElementById("flightTable");
 
     table.innerHTML = "";
 
@@ -11,10 +18,22 @@ async function loadFlights() {
         table.innerHTML += `
             <tr>
                 <td>${flight.flight?.iata || "N/A"}</td>
-                <td>${flight.departure?.airport || "Unknown"}</td>
-                <td>${flight.arrival?.airport || "Unknown"}</td>
-                <td>${flight.departure?.scheduled || "N/A"}</td>
-                <td>${flight.flight_status || "Unknown"}</td>
+
+                <td>
+                    ${flight.departure?.airport || "Unknown"}
+                </td>
+
+                <td>
+                    ${flight.arrival?.airport || "Unknown"}
+                </td>
+
+                <td>
+                    ${flight.departure?.scheduled || "N/A"}
+                </td>
+
+                <td>
+                    ${flight.flight_status || "Unknown"}
+                </td>
             </tr>
         `;
 
