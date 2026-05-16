@@ -7,7 +7,9 @@
     <title>Live airport status board on SkyTrace</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
 
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -26,8 +28,17 @@
             --font-mono: 'JetBrains Mono', 'Courier New', monospace;
         }
 
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        html { scroll-behavior: smooth; }
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
 
         body {
             background: var(--bg);
@@ -45,7 +56,10 @@
         }
 
         @keyframes pageSlideUp {
-            to { opacity: 1; transform: translateY(0); }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .st-overlay {
@@ -68,8 +82,8 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            border-bottom: 1px solid rgba(195,157,99,0.08);
-            background: rgba(17,17,17,0.96);
+            border-bottom: 1px solid rgba(195, 157, 99, 0.08);
+            background: rgba(17, 17, 17, 0.96);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
         }
@@ -84,7 +98,7 @@
 
         nav.status-nav a {
             text-decoration: none;
-            color: rgba(255,255,255,0.35);
+            color: rgba(255, 255, 255, 0.35);
             font-size: 0.68rem;
             letter-spacing: 2px;
             text-transform: uppercase;
@@ -92,10 +106,17 @@
             transition: color 0.15s;
         }
 
-        nav.status-nav a:hover { color: #fff; }
-        nav.status-nav a.active { color: #fff; }
+        nav.status-nav a:hover {
+            color: #fff;
+        }
 
-        .gold { color: var(--gold); }
+        nav.status-nav a.active {
+            color: #fff;
+        }
+
+        .gold {
+            color: var(--gold);
+        }
 
         .status-container {
             background: var(--surface);
@@ -103,7 +124,10 @@
             border-radius: 8px;
         }
 
-        table { width: 100%; border-collapse: collapse; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
 
         th {
             color: var(--gold);
@@ -123,7 +147,9 @@
             font-size: 0.95rem;
         }
 
-        tr:hover { background: rgba(255,255,255,0.02); }
+        tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
 
         .status-badge {
             padding: 5px 12px;
@@ -135,21 +161,37 @@
             font-family: var(--font-mono);
         }
 
-        .status-active { color: var(--online); border: 1px solid var(--online); }
-        .status-delayed { color: var(--delay); border: 1px solid var(--delay); }
-        .status-landed { background: #fff; color: #000; }
-        .status-cancelled { background: #f44336; color: #fff; }
+        .status-active {
+            color: var(--online);
+            border: 1px solid var(--online);
+        }
+
+        .status-delayed {
+            color: var(--delay);
+            border: 1px solid var(--delay);
+        }
+
+        .status-landed {
+            background: #fff;
+            color: #000;
+        }
+
+        .status-cancelled {
+            background: #f44336;
+            color: #fff;
+        }
 
 
         /* ── Close button (always visible) ── */
         .page-close-btn {
             display: block;
             position: fixed;
-            top: 18px; right: 20px;
+            top: 18px;
+            right: 20px;
             z-index: 150;
             background: none;
             border: none;
-            color: rgba(255,255,255,0.28);
+            color: rgba(255, 255, 255, 0.28);
             font-size: 0.78rem;
             font-family: 'JetBrains Mono', 'Courier New', monospace;
             letter-spacing: 1.5px;
@@ -158,10 +200,15 @@
             transition: color 0.2s ease;
             line-height: 1;
         }
-        .page-close-btn:hover { color: rgba(241,194,125,0.75); }
+
+        .page-close-btn:hover {
+            color: rgba(241, 194, 125, 0.75);
+        }
 
         @media (max-width: 768px) {
-            nav.status-nav { display: none !important; }
+            nav.status-nav {
+                display: none !important;
+            }
         }
     </style>
 
@@ -174,64 +221,69 @@
 
     <div class="st-page-entry" id="pageContent">
 
-    <!-- ── Mobile Close ── -->
-    <button class="page-close-btn" onclick="navigateBack(event)" aria-label="Return to index">&#x2715;&nbsp;INDEX</button>
+        <!-- ── Mobile Close ── -->
+        <button class="page-close-btn" onclick="navigateBack(event)"
+            aria-label="Return to index">&#x2715;&nbsp;INDEX</button>
 
-    <!-- ── NAV ── -->
-    <nav class="status-nav flex justify-between items-center px-10 py-4">
-        <a href="index.html" class="nav-logo" onclick="navigateBack(event)">SkyTrace</a>
-        <div class="flex gap-6 text-sm uppercase tracking-wider">
-            <a href="index.html" onclick="navigateBack(event)">Home</a>
-            <a href="dashboard.html">Dashboard</a>
-            <a href="search.html">Flights</a>
-            <a href="status.html" class="active">Airports</a>
-            <a href="contact.html">Contact</a>
-        </div>
-    </nav>
-
-    <!-- ── HEADER ── -->
-    <section class="text-center py-16 px-6">
-        <p class="gold text-sm tracking-[4px] uppercase mb-4" style="font-size:0.68rem;letter-spacing:4px;">
-            Live Flight Operations
-        </p>
-        <h1 class="text-5xl font-bold mb-6" style="letter-spacing:2px;">
-            Airport Status Board
-        </h1>
-        <p class="max-w-3xl mx-auto leading-relaxed" style="color:var(--muted);font-size:0.95rem;">
-            Real-time departures, arrivals, gate activity,
-            and operational aviation updates powered by AviationStack.
-        </p>
-    </section>
-
-    <!-- ── TABLE ── -->
-    <main class="max-w-7xl mx-auto px-6 pb-20">
-        <div class="status-container overflow-hidden">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Flight</th>
-                        <th>Departure</th>
-                        <th>Arrival</th>
-                        <th>Scheduled</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody id="flightTable"></tbody>
-            </table>
-        </div>
-    </main>
-
-    <!-- ── FOOTER ── -->
-    <footer style="border-top:1px solid rgba(195,157,99,0.06);padding:32px 40px;max-width:1200px;margin:0 auto;">
-        <div class="flex justify-between items-center flex-wrap gap-4">
-            <span style="font-size:0.85rem;font-weight:700;letter-spacing:1.5px;">SkyTrace</span>
-            <span style="color:var(--text-faint);font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;">&copy;2026 SKYTRACE</span>
-            <div class="flex gap-5">
-                <a href="about.html" style="font-size:0.68rem;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.35);text-decoration:none;">About</a>
-                <a href="contact.html" style="font-size:0.68rem;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.35);text-decoration:none;">Contact</a>
+        <!-- ── NAV ── -->
+        <nav class="status-nav flex justify-between items-center px-10 py-4">
+            <a href="index.html" class="nav-logo" onclick="navigateBack(event)">SkyTrace</a>
+            <div class="flex gap-6 text-sm uppercase tracking-wider">
+                <a href="index.html" onclick="navigateBack(event)">Home</a>
+                <a href="dashboard.html">Dashboard</a>
+                <a href="search.html">Flights</a>
+                <a href="status.html" class="active">Airports</a>
+                <a href="contact.html">Contact</a>
             </div>
-        </div>
-    </footer>
+        </nav>
+
+        <!-- ── HEADER ── -->
+        <section class="text-center py-16 px-6">
+            <p class="gold text-sm tracking-[4px] uppercase mb-4" style="font-size:0.68rem;letter-spacing:4px;">
+                Live Flight Operations
+            </p>
+            <h1 class="text-5xl font-bold mb-6" style="letter-spacing:2px;">
+                Airport Status Board
+            </h1>
+            <p class="max-w-3xl mx-auto leading-relaxed" style="color:var(--muted);font-size:0.95rem;">
+                Real-time departures, arrivals, gate activity,
+                and operational aviation updates powered by AviationStack.
+            </p>
+        </section>
+
+        <!-- ── TABLE ── -->
+        <main class="max-w-7xl mx-auto px-6 pb-20">
+            <div class="status-container overflow-hidden">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Flight</th>
+                            <th>Departure</th>
+                            <th>Arrival</th>
+                            <th>Scheduled</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="flightTable"></tbody>
+                </table>
+            </div>
+        </main>
+
+        <!-- ── FOOTER ── -->
+        <footer style="border-top:1px solid rgba(195,157,99,0.06);padding:32px 40px;max-width:1200px;margin:0 auto;">
+            <div class="flex justify-between items-center flex-wrap gap-4">
+                <span style="font-size:0.85rem;font-weight:700;letter-spacing:1.5px;">SkyTrace</span>
+                <span
+                    style="color:var(--text-faint);font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;">&copy;2026
+                    SKYTRACE</span>
+                <div class="flex gap-5">
+                    <a href="about.html"
+                        style="font-size:0.68rem;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.35);text-decoration:none;">About</a>
+                    <a href="contact.html"
+                        style="font-size:0.68rem;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.35);text-decoration:none;">Contact</a>
+                </div>
+            </div>
+        </footer>
 
     </div><!-- end .st-page-entry -->
 
@@ -243,20 +295,20 @@
             var overlay = document.getElementById('stOverlay');
             sessionStorage.setItem('st_transition', '1');
             overlay.classList.add('active');
-            setTimeout(function() { window.location.href = dest; }, 420);
+            setTimeout(function () { window.location.href = dest; }, 420);
         }
 
-        (function() {
+        (function () {
             if (sessionStorage.getItem('st_transition') === '1') {
                 sessionStorage.removeItem('st_transition');
                 var overlay = document.getElementById('stOverlay');
                 overlay.style.transition = 'none';
                 overlay.style.opacity = '1';
                 overlay.style.pointerEvents = 'none';
-                setTimeout(function() {
+                setTimeout(function () {
                     overlay.style.transition = 'opacity 500ms ease';
                     overlay.style.opacity = '0';
-                    setTimeout(function() {
+                    setTimeout(function () {
                         overlay.style.transition = '';
                         overlay.style.opacity = '';
                         overlay.style.pointerEvents = '';
