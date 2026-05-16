@@ -844,8 +844,8 @@
         if (wheelLock || isTransitioning) return;
         wheelLock = true;
 
-        if (e.deltaY > 20) goToSection(currentSection + 1);
-        else if (e.deltaY < -20) goToSection(currentSection - 1);
+        if (e.deltaY > 6) goToSection(currentSection + 1);
+        else if (e.deltaY < -6) goToSection(currentSection - 1);
 
         setTimeout(function() { wheelLock = false; }, 900);
       }, { passive: false });
