@@ -1,4 +1,4 @@
-const API_KEY = "fa82d9f862ff510e45ce55cd5fadf469";
+const API_KEY = "74706835d8e8c58d536ae3daa63688fd";
 
 async function getFlights(origin = "") {
 
