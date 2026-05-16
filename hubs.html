@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="SkyTrace Global Aviation Hub Network — Explore major international airport hubs, operational metadata, and live flight status boards.">
-    <title>Find flights to and from major international airport hubs on SkyTrace</title>
+    <meta name="description"
+        content="SkyTrace Global Aviation Hub Network — Explore major international airport hubs, operational metadata, and live flight status boards.">
+    <title>SkyTrace | Global Aviation Hub Network</title>
 
     <!-- Primary custom stylesheet -->
     <link rel="stylesheet" href="style.css">
@@ -15,7 +17,10 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800&display=swap" rel="stylesheet">
 
     <!-- Tailwind CSS CDN — Preflight disabled to protect existing styles -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -38,7 +43,10 @@
         }
 
         @keyframes pageSlideUp {
-            to { opacity: 1; transform: translateY(0); }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .st-overlay {
@@ -77,20 +85,30 @@
 
         .page-hero-grid .grid-v {
             position: absolute;
-            top: 0; bottom: 0;
+            top: 0;
+            bottom: 0;
             width: 1px;
-            background: rgba(195,157,99,0.035);
+            background: rgba(195, 157, 99, 0.035);
         }
 
-        .page-hero-grid .grid-v:nth-child(1) { left: 20%; }
-        .page-hero-grid .grid-v:nth-child(2) { left: 50%; }
-        .page-hero-grid .grid-v:nth-child(3) { left: 80%; }
+        .page-hero-grid .grid-v:nth-child(1) {
+            left: 20%;
+        }
+
+        .page-hero-grid .grid-v:nth-child(2) {
+            left: 50%;
+        }
+
+        .page-hero-grid .grid-v:nth-child(3) {
+            left: 80%;
+        }
 
         .page-hero-grid .grid-h {
             position: absolute;
-            left: 0; right: 0;
+            left: 0;
+            right: 0;
             height: 1px;
-            background: rgba(195,157,99,0.035);
+            background: rgba(195, 157, 99, 0.035);
             top: 60%;
         }
 
@@ -104,11 +122,12 @@
 
         .page-hero-label {
             position: absolute;
-            top: 32px; left: 40px;
+            top: 32px;
+            left: 40px;
             font-size: 0.58rem;
             letter-spacing: 3px;
             text-transform: uppercase;
-            color: rgba(195,157,99,0.2);
+            color: rgba(195, 157, 99, 0.2);
             font-family: 'JetBrains Mono', monospace;
         }
 
@@ -143,14 +162,15 @@
             font-size: 0.68rem;
             letter-spacing: 3px;
             text-transform: uppercase;
-            color: rgba(255,255,255,0.25);
+            color: rgba(255, 255, 255, 0.25);
             margin-top: 16px;
             font-weight: 400;
         }
 
         .page-hero-geo {
             position: absolute;
-            bottom: 48px; right: 40px;
+            bottom: 48px;
+            right: 40px;
         }
 
 
@@ -158,11 +178,12 @@
         .page-close-btn {
             display: block;
             position: fixed;
-            top: 18px; right: 20px;
+            top: 18px;
+            right: 20px;
             z-index: 150;
             background: none;
             border: none;
-            color: rgba(255,255,255,0.28);
+            color: rgba(255, 255, 255, 0.28);
             font-size: 0.78rem;
             font-family: 'JetBrains Mono', 'Courier New', monospace;
             letter-spacing: 1.5px;
@@ -171,33 +192,53 @@
             transition: color 0.2s ease;
             line-height: 1;
         }
-        .page-close-btn:hover { color: rgba(241,194,125,0.75); }
+
+        .page-close-btn:hover {
+            color: rgba(241, 194, 125, 0.75);
+        }
 
         @media (max-width: 768px) {
-            nav.site-nav { display: none !important; }
-            .page-hero-text { padding: 0 20px 36px; }
-            .page-hero-label { left: 20px; }
-            .page-hero-geo { right: 20px; }
-            .page-hero-icon svg { width: clamp(180px, 60vw, 300px); }
+            nav.site-nav {
+                display: none !important;
+            }
+
+            .page-hero-text {
+                padding: 0 20px 36px;
+            }
+
+            .page-hero-label {
+                left: 20px;
+            }
+
+            .page-hero-geo {
+                right: 20px;
+            }
+
+            .page-hero-icon svg {
+                width: clamp(180px, 60vw, 300px);
+            }
         }
+
         /* ─────────────────────────────────────────────
            GLOBAL DESIGN TOKENS
         ───────────────────────────────────────────── */
         :root {
-            --gold:    #c39d63;
+            --gold: #c39d63;
             --gold-dim: rgba(195, 157, 99, 0.12);
-            --maroon:  #81202e;
-            --bg:      #111111;
+            --maroon: #81202e;
+            --bg: #111111;
             --surface: #161616;
-            --border:  #252525;
-            --text:    #f0f0f0;
-            --muted:   #6b7280;
-            --online:  #22d3a0;
-            --radius:  4px;
-            --font:    'Segoe UI', system-ui, sans-serif;
+            --border: #252525;
+            --text: #f0f0f0;
+            --muted: #6b7280;
+            --online: #22d3a0;
+            --radius: 4px;
+            --font: 'Segoe UI', system-ui, sans-serif;
         }
 
-        html { scroll-behavior: smooth; }
+        html {
+            scroll-behavior: smooth;
+        }
 
         body {
             background-color: var(--bg);
@@ -270,31 +311,38 @@
         }
 
         @keyframes pulse-dot {
-            0%, 100% { opacity: 1; }
-            50%       { opacity: 0.35; }
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.35;
+            }
         }
 
         /* ─────────────────────────────────────────────
            HERO / COMMAND HEADER
         ───────────────────────────────────────────── */
+        /* ─────────────────────────────────────────────
+           MAP BACKGROUND LAYER
+        ───────────────────────────────────────────── */
+        .dashboard-background {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background-image: url('assets/images/map-bg.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0.20;
+            pointer-events: none;
+        }
+
         .command-header {
             position: relative;
-            background:
-                linear-gradient(180deg, rgba(0,0,0,0.60) 0%, rgba(0,0,0,0.97) 100%),
-                repeating-linear-gradient(
-                    90deg,
-                    transparent,
-                    transparent 60px,
-                    rgba(195,157,99,0.03) 60px,
-                    rgba(195,157,99,0.03) 61px
-                ),
-                repeating-linear-gradient(
-                    0deg,
-                    transparent,
-                    transparent 60px,
-                    rgba(195,157,99,0.03) 60px,
-                    rgba(195,157,99,0.03) 61px
-                );
+            background: transparent;
             border-bottom: 1px solid #252525;
         }
 
@@ -302,7 +350,7 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(195,157,99,0.06) 0%, transparent 70%);
+            background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(195, 157, 99, 0.06) 0%, transparent 70%);
             pointer-events: none;
         }
 
@@ -310,8 +358,8 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            background: rgba(195,157,99,0.08);
-            border: 1px solid rgba(195,157,99,0.25);
+            background: rgba(195, 157, 99, 0.08);
+            border: 1px solid rgba(195, 157, 99, 0.25);
             color: var(--gold);
             font-size: 0.65rem;
             letter-spacing: 2px;
@@ -335,6 +383,10 @@
             letter-spacing: 3px;
             line-height: 1.1;
             color: var(--text);
+            font-family: 'Montserrat', sans-serif;
+            /* THIS IS THE NEW LINE */
+            text-transform: uppercase;
+            /* Optional: Looks great for aviation */
         }
 
         .hero-title .accent {
@@ -345,7 +397,7 @@
            NETWORK STATISTICS
         ───────────────────────────────────────────── */
         .network-stat {
-            background: rgba(13,13,13,0.8);
+            background: rgba(13, 13, 13, 0.8);
             border: 1px solid var(--border);
             border-top: 2px solid var(--gold);
             transition: transform 0.3s ease, border-color 0.3s ease;
@@ -408,9 +460,9 @@
             color: var(--text);
             position: relative;
             overflow: hidden;
-            transition: transform 0.35s cubic-bezier(.4,0,.2,1),
-                        border-color 0.35s ease,
-                        box-shadow 0.35s ease;
+            transition: transform 0.35s cubic-bezier(.4, 0, .2, 1),
+                border-color 0.35s ease,
+                box-shadow 0.35s ease;
         }
 
         /* Left accent bar */
@@ -434,19 +486,24 @@
             left: 0;
             right: 0;
             height: 40%;
-            background: linear-gradient(180deg, rgba(195,157,99,0.04) 0%, transparent 100%);
+            background: linear-gradient(180deg, rgba(195, 157, 99, 0.04) 0%, transparent 100%);
             transition: top 0.5s ease;
             pointer-events: none;
         }
 
         .hub-card:hover {
-            border-color: rgba(195,157,99,0.4);
+            border-color: rgba(195, 157, 99, 0.4);
             transform: translateY(-6px);
-            box-shadow: 0 16px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(195,157,99,0.08);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(195, 157, 99, 0.08);
         }
 
-        .hub-card:hover::before { opacity: 1; }
-        .hub-card:hover::after  { top: 0; }
+        .hub-card:hover::before {
+            opacity: 1;
+        }
+
+        .hub-card:hover::after {
+            top: 0;
+        }
 
         /* IATA code */
         .iata-code {
@@ -474,8 +531,8 @@
 
         .status-online {
             color: var(--online);
-            background: rgba(34,211,160,0.08);
-            border: 1px solid rgba(34,211,160,0.25);
+            background: rgba(34, 211, 160, 0.08);
+            border: 1px solid rgba(34, 211, 160, 0.25);
         }
 
         .status-online .dot {
@@ -565,7 +622,7 @@
             letter-spacing: 1.5px;
             text-transform: uppercase;
             color: var(--muted);
-            background: rgba(255,255,255,0.03);
+            background: rgba(255, 255, 255, 0.03);
             border: 1px solid var(--border);
             padding: 3px 8px;
             border-radius: 2px;
@@ -573,323 +630,334 @@
         }
     </style>
 </head>
+
 <body>
+
+    <!-- ── Map Background Layer ── -->
+    <div class="dashboard-background" aria-hidden="true"></div>
 
     <!-- ── Transition Overlay ── -->
     <div class="st-overlay" id="stOverlay"></div>
 
     <div class="st-page-entry" id="pageContent">
 
-    <!-- ── Mobile Close ── -->
-    <button class="page-close-btn" onclick="navigateBack(event)" aria-label="Return to index">&#x2715;&nbsp;INDEX</button>
+        <!-- ── Mobile Close ── -->
+        <button class="page-close-btn" onclick="navigateBack(event)"
+            aria-label="Return to index">&#x2715;&nbsp;INDEX</button>
 
-    <!-- ── Hero Section ── -->
-    <section class="page-hero">
-        <div class="page-hero-grid">
-            <div class="grid-v"></div>
-            <div class="grid-v"></div>
-            <div class="grid-v"></div>
-            <div class="grid-h"></div>
-        </div>
-        <div class="page-hero-inner">
-            <div class="page-hero-label">SEC.03 // APT_STATUS</div>
-            <div class="page-hero-icon">
-                <svg viewBox="0 0 320 220" fill="none">
-                    <rect x="50" y="65" width="220" height="115" stroke="rgba(255,255,255,0.18)" stroke-width="1.5"/>
-                    <rect x="135" y="28" width="50" height="37" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
-                    <line x1="160" y1="10" x2="160" y2="28" stroke="rgba(255,255,255,0.1)" stroke-width="1.5"/>
-                    <circle cx="160" cy="8" r="3" fill="rgba(255,255,255,0.1)"/>
-                    <rect x="75" y="95" width="35" height="45" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
-                    <rect x="142" y="95" width="35" height="45" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
-                    <rect x="210" y="95" width="35" height="45" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
-                    <text x="82" y="155" fill="rgba(255,255,255,0.08)" font-size="8" font-family="'JetBrains Mono', monospace" letter-spacing="1">A1</text>
-                    <text x="149" y="155" fill="rgba(255,255,255,0.08)" font-size="8" font-family="'JetBrains Mono', monospace" letter-spacing="1">B2</text>
-                    <text x="216" y="155" fill="rgba(255,255,255,0.08)" font-size="8" font-family="'JetBrains Mono', monospace" letter-spacing="1">C3</text>
-                    <line x1="25" y1="180" x2="295" y2="180" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-                    <line x1="25" y1="184" x2="295" y2="184" stroke="rgba(255,255,255,0.03)" stroke-width="1" stroke-dasharray="10 5"/>
-                </svg>
+        <!-- ── Hero Section ── -->
+        <section class="page-hero">
+            <div class="page-hero-grid">
+                <div class="grid-v"></div>
+                <div class="grid-v"></div>
+                <div class="grid-v"></div>
+                <div class="grid-h"></div>
             </div>
-            <div class="page-hero-text">
-                <h1 class="page-hero-title">AIRPORTS</h1>
-                <p class="page-hero-sub">Find airport-based flight statuses</p>
+            <div class="page-hero-inner">
+                <div class="page-hero-label">SEC.03 // APT_STATUS</div>
+                <div class="page-hero-icon">
+                    <svg viewBox="0 0 320 220" fill="none">
+                        <rect x="50" y="65" width="220" height="115" stroke="rgba(255,255,255,0.18)"
+                            stroke-width="1.5" />
+                        <rect x="135" y="28" width="50" height="37" stroke="rgba(255,255,255,0.15)"
+                            stroke-width="1.5" />
+                        <line x1="160" y1="10" x2="160" y2="28" stroke="rgba(255,255,255,0.1)" stroke-width="1.5" />
+                        <circle cx="160" cy="8" r="3" fill="rgba(255,255,255,0.1)" />
+                        <rect x="75" y="95" width="35" height="45" stroke="rgba(255,255,255,0.08)" stroke-width="1" />
+                        <rect x="142" y="95" width="35" height="45" stroke="rgba(255,255,255,0.08)" stroke-width="1" />
+                        <rect x="210" y="95" width="35" height="45" stroke="rgba(255,255,255,0.08)" stroke-width="1" />
+                        <text x="82" y="155" fill="rgba(255,255,255,0.08)" font-size="8"
+                            font-family="'JetBrains Mono', monospace" letter-spacing="1">A1</text>
+                        <text x="149" y="155" fill="rgba(255,255,255,0.08)" font-size="8"
+                            font-family="'JetBrains Mono', monospace" letter-spacing="1">B2</text>
+                        <text x="216" y="155" fill="rgba(255,255,255,0.08)" font-size="8"
+                            font-family="'JetBrains Mono', monospace" letter-spacing="1">C3</text>
+                        <line x1="25" y1="180" x2="295" y2="180" stroke="rgba(255,255,255,0.06)" stroke-width="1" />
+                        <line x1="25" y1="184" x2="295" y2="184" stroke="rgba(255,255,255,0.03)" stroke-width="1"
+                            stroke-dasharray="10 5" />
+                    </svg>
+                </div>
+                <div class="page-hero-text">
+                    <h1 class="page-hero-title">AIRPORTS</h1>
+                    <p class="page-hero-sub">Find airport-based flight statuses</p>
+                </div>
+                <div class="page-hero-geo">
+                    <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
+                        <rect x="1" y="1" width="20" height="20" stroke="rgba(255,255,255,0.1)" stroke-width="1" />
+                        <rect x="31" y="1" width="20" height="20" stroke="rgba(255,255,255,0.1)" stroke-width="1" />
+                        <rect x="1" y="31" width="20" height="20" stroke="rgba(255,255,255,0.1)" stroke-width="1" />
+                        <rect x="31" y="31" width="20" height="20" stroke="rgba(255,255,255,0.1)" stroke-width="1" />
+                    </svg>
+                </div>
             </div>
-            <div class="page-hero-geo">
-                <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
-                    <rect x="1" y="1" width="20" height="20" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-                    <rect x="31" y="1" width="20" height="20" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-                    <rect x="1" y="31" width="20" height="20" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-                    <rect x="31" y="31" width="20" height="20" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-                </svg>
-            </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- ─────────────────────────────────────────────
+        <!-- ─────────────────────────────────────────────
          MAIN NAVIGATION
     ───────────────────────────────────────────── -->
-    <nav class="site-nav flex flex-col md:flex-row justify-between items-center px-6 md:px-10 py-5">
-        <a href="index.html" class="logo mb-4 md:mb-0" onclick="navigateBack(event)">SKYTRACE</a>
-        <div class="nav-links flex flex-wrap justify-center gap-2 md:gap-4">
-            <a href="index.html">Home</a>
-            <a href="search.html">Flights</a>
-            <a href="status.html">Status</a>
-            <a href="destinations.html">Explore</a>
-            <a href="hubs.html" class="active-link">Hubs</a>
-            <a href="about.html">About</a>
-        </div>
-    </nav>
+        <nav class="site-nav flex flex-col md:flex-row justify-between items-center px-6 md:px-10 py-5">
+            <a href="index.html" class="logo mb-4 md:mb-0" onclick="navigateBack(event)">SKYTRACE</a>
+            <div class="nav-links flex flex-wrap justify-center gap-2 md:gap-4">
+                <a href="index.html">Home</a>
+                <a href="search.html">Flights</a>
+                <a href="status.html">Status</a>
+                <a href="destinations.html">Explore</a>
+                <a href="hubs.html" class="active-link">Hubs</a>
+                <a href="about.html">About</a>
+            </div>
+        </nav>
 
-    <!-- ─────────────────────────────────────────────
+        <!-- ─────────────────────────────────────────────
          LIVE SYSTEM STATUS BAR
     ───────────────────────────────────────────── -->
-    <div class="system-bar py-2 px-6 md:px-10">
-        <div class="max-w-7xl mx-auto flex flex-wrap gap-6 md:gap-12 justify-start">
-            <div class="sys-item"><span class="dot"></span>SYSTEM ONLINE</div>
-            <div class="sys-item"><span class="dot"></span>12 ACTIVE HUBS</div>
-            <div class="sys-item"><span class="dot"></span>DATA FEED LIVE</div>
-            <div class="sys-item" id="sys-time">UTC 00:00:00</div>
+        <div class="system-bar py-2 px-6 md:px-10">
+            <div class="max-w-7xl mx-auto flex flex-wrap gap-6 md:gap-12 justify-start">
+                <div class="sys-item"><span class="dot"></span>SYSTEM ONLINE</div>
+                <div class="sys-item"><span class="dot"></span>12 ACTIVE HUBS</div>
+                <div class="sys-item"><span class="dot"></span>DATA FEED LIVE</div>
+                <div class="sys-item" id="sys-time">UTC 00:00:00</div>
+            </div>
         </div>
-    </div>
 
-    <!-- ─────────────────────────────────────────────
+        <!-- ─────────────────────────────────────────────
          COMMAND HEADER / HERO
     ───────────────────────────────────────────── -->
-    <header class="command-header py-20 md:py-28 px-6 text-center">
-        <div class="max-w-5xl mx-auto" data-aos="fade-in" data-aos-duration="1000">
-            <div class="flex justify-center mb-6">
-                <span class="badge-system"><span class="live-dot"></span>LIVE OPERATIONS DASHBOARD</span>
+        <header class="command-header py-20 md:py-28 px-6 text-center">
+            <div class="max-w-5xl mx-auto" data-aos="fade-in" data-aos-duration="1000">
+                <div class="flex justify-center mb-6">
+                    <span class="badge-system"><span class="live-dot"></span>LIVE OPERATIONS DASHBOARD</span>
+                </div>
+                <h1 class="hero-title mb-6">
+                    Global Aviation<br>
+                    <span class="accent">Hub Network</span>
+                </h1>
+                <p class="max-w-2xl mx-auto text-base md:text-lg leading-relaxed" style="color: var(--muted);">
+                    Major international connectivity centers powering the SkyTrace global flight tracking network.
+                    Click any hub to access live departures, arrivals, gate assignments, and terminal status boards.
+                </p>
             </div>
-            <h1 class="hero-title mb-6">
-                Global Aviation<br>
-                <span class="accent">Hub Network</span>
-            </h1>
-            <p class="max-w-2xl mx-auto text-base md:text-lg leading-relaxed" style="color: var(--muted);">
-                Major international connectivity centers powering the SkyTrace global flight tracking network. 
-                Click any hub to access live departures, arrivals, gate assignments, and terminal status boards.
-            </p>
-        </div>
-    </header>
+        </header>
 
-    <!-- ─────────────────────────────────────────────
+        <!-- ─────────────────────────────────────────────
          NETWORK STATISTICS
     ───────────────────────────────────────────── -->
-    <section class="max-w-6xl mx-auto px-6 py-10">
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6" data-aos="fade-up" data-aos-delay="150">
-            <div class="network-stat p-6 text-center">
-                <div class="stat-number">12</div>
-                <div class="stat-label">Global Hubs</div>
+        <section class="max-w-6xl mx-auto px-6 py-10">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6" data-aos="fade-up" data-aos-delay="150">
+                <div class="network-stat p-6 text-center">
+                    <div class="stat-number">12</div>
+                    <div class="stat-label">Global Hubs</div>
+                </div>
+                <div class="network-stat p-6 text-center">
+                    <div class="stat-number">72+</div>
+                    <div class="stat-label">Tracked Flights</div>
+                </div>
+                <div class="network-stat p-6 text-center">
+                    <div class="stat-number">6</div>
+                    <div class="stat-label">Regions Covered</div>
+                </div>
+                <div class="network-stat p-6 text-center">
+                    <div class="stat-number" id="airlines-count">18+</div>
+                    <div class="stat-label">Partner Airlines</div>
+                </div>
             </div>
-            <div class="network-stat p-6 text-center">
-                <div class="stat-number">72+</div>
-                <div class="stat-label">Tracked Flights</div>
-            </div>
-            <div class="network-stat p-6 text-center">
-                <div class="stat-number">6</div>
-                <div class="stat-label">Regions Covered</div>
-            </div>
-            <div class="network-stat p-6 text-center">
-                <div class="stat-number" id="airlines-count">18+</div>
-                <div class="stat-label">Partner Airlines</div>
-            </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- ─────────────────────────────────────────────
+        <!-- ─────────────────────────────────────────────
          HUB GRID — MAIN CONTENT
     ───────────────────────────────────────────── -->
-    <main class="max-w-7xl mx-auto px-6 pb-24">
+        <main class="max-w-7xl mx-auto px-6 pb-24">
 
-        <!-- Section Header -->
-        <div class="section-header mb-10" data-aos="fade-right" data-aos-delay="200">
-            <span class="label">Active Hub Registry</span>
-            <div class="line"></div>
-        </div>
+            <!-- Section Header -->
+            <div class="section-header mb-10" data-aos="fade-right" data-aos-delay="200">
+                <span class="label">Active Hub Registry</span>
+                <div class="line"></div>
+            </div>
 
-        <!-- Dynamically rendered hub cards -->
-        <div id="hubGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            <!-- Dynamically rendered hub cards -->
+            <div id="hubGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
 
-    </main>
+        </main>
 
-    <!-- ─────────────────────────────────────────────
+        <!-- ─────────────────────────────────────────────
          LIBRARIES
     ───────────────────────────────────────────── -->
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+        <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
-    <script>
-        // ─────────────────────────────────────────────
-        // AIRPORT HUB DATA — Operational Metadata
-        // Each hub carries airport identity, stats, and navigation context
-        // ─────────────────────────────────────────────
-        const HUBS = [
-            {
-                code:      "DOH",
-                name:      "Hamad International Airport",
-                city:      "Doha",
-                country:   "Qatar",
-                region:    "Middle East",
-                owner:     "Primary Qatar Airways Hub",
-                routes:    126,
-                daily:     410,
-                terminals: 1,
-                runways:   4,
-                rank:      "#1 ME"
-            },
-            {
-                code:      "DXB",
-                name:      "Dubai International Airport",
-                city:      "Dubai",
-                country:   "UAE",
-                region:    "Middle East",
-                owner:     "Primary Emirates Hub",
-                routes:    238,
-                daily:     1200,
-                terminals: 3,
-                runways:   2,
-                rank:      "#1 Global"
-            },
-            {
-                code:      "LHR",
-                name:      "Heathrow Airport",
-                city:      "London",
-                country:   "United Kingdom",
-                region:    "Europe",
-                owner:     "British Airways Hub",
-                routes:    216,
-                daily:     1350,
-                terminals: 5,
-                runways:   2,
-                rank:      "#1 Europe"
-            },
-            {
-                code:      "CDG",
-                name:      "Charles de Gaulle Airport",
-                city:      "Paris",
-                country:   "France",
-                region:    "Europe",
-                owner:     "Air France Hub",
-                routes:    192,
-                daily:     950,
-                terminals: 3,
-                runways:   4,
-                rank:      "#2 Europe"
-            },
-            {
-                code:      "FRA",
-                name:      "Frankfurt Airport",
-                city:      "Frankfurt",
-                country:   "Germany",
-                region:    "Europe",
-                owner:     "Lufthansa Hub",
-                routes:    174,
-                daily:     880,
-                terminals: 2,
-                runways:   4,
-                rank:      "#3 Europe"
-            },
-            {
-                code:      "IST",
-                name:      "Istanbul Airport",
-                city:      "Istanbul",
-                country:   "Turkey",
-                region:    "Europe",
-                owner:     "Turkish Airlines Hub",
-                routes:    312,
-                daily:     1500,
-                terminals: 1,
-                runways:   6,
-                rank:      "#4 Europe"
-            },
-            {
-                code:      "JFK",
-                name:      "John F. Kennedy Int'l Airport",
-                city:      "New York",
-                country:   "United States",
-                region:    "Americas",
-                owner:     "American / Delta Hub",
-                routes:    201,
-                daily:     1100,
-                terminals: 6,
-                runways:   4,
-                rank:      "#1 Americas"
-            },
-            {
-                code:      "YYZ",
-                name:      "Toronto Pearson Int'l Airport",
-                city:      "Toronto",
-                country:   "Canada",
-                region:    "Americas",
-                owner:     "Air Canada Hub",
-                routes:    128,
-                daily:     510,
-                terminals: 2,
-                runways:   5,
-                rank:      "#2 Americas"
-            },
-            {
-                code:      "DEL",
-                name:      "Indira Gandhi Int'l Airport",
-                city:      "Delhi",
-                country:   "India",
-                region:    "Asia",
-                owner:     "Air India Hub",
-                routes:    142,
-                daily:     720,
-                terminals: 3,
-                runways:   3,
-                rank:      "#1 South Asia"
-            },
-            {
-                code:      "SIN",
-                name:      "Singapore Changi Airport",
-                city:      "Singapore",
-                country:   "Singapore",
-                region:    "Asia",
-                owner:     "Singapore Airlines Hub",
-                routes:    198,
-                daily:     920,
-                terminals: 4,
-                runways:   2,
-                rank:      "#1 SE Asia"
-            },
-            {
-                code:      "HND",
-                name:      "Tokyo Haneda Airport",
-                city:      "Tokyo",
-                country:   "Japan",
-                region:    "Asia",
-                owner:     "JAL / ANA Hub",
-                routes:    156,
-                daily:     980,
-                terminals: 3,
-                runways:   4,
-                rank:      "#1 East Asia"
-            },
-            {
-                code:      "SYD",
-                name:      "Kingsford Smith Airport",
-                city:      "Sydney",
-                country:   "Australia",
-                region:    "Pacific",
-                owner:     "Qantas Hub",
-                routes:    98,
-                daily:     440,
-                terminals: 3,
-                runways:   3,
-                rank:      "#1 Pacific"
-            }
-        ];
+        <script>
+            // ─────────────────────────────────────────────
+            // AIRPORT HUB DATA — Operational Metadata
+            // Each hub carries airport identity, stats, and navigation context
+            // ─────────────────────────────────────────────
+            const HUBS = [
+                {
+                    code: "DOH",
+                    name: "Hamad International Airport",
+                    city: "Doha",
+                    country: "Qatar",
+                    region: "Middle East",
+                    owner: "Primary Qatar Airways Hub",
+                    routes: 126,
+                    daily: 410,
+                    terminals: 1,
+                    runways: 4,
+                    rank: "#1 ME"
+                },
+                {
+                    code: "DXB",
+                    name: "Dubai International Airport",
+                    city: "Dubai",
+                    country: "UAE",
+                    region: "Middle East",
+                    owner: "Primary Emirates Hub",
+                    routes: 238,
+                    daily: 1200,
+                    terminals: 3,
+                    runways: 2,
+                    rank: "#1 Global"
+                },
+                {
+                    code: "LHR",
+                    name: "Heathrow Airport",
+                    city: "London",
+                    country: "United Kingdom",
+                    region: "Europe",
+                    owner: "British Airways Hub",
+                    routes: 216,
+                    daily: 1350,
+                    terminals: 5,
+                    runways: 2,
+                    rank: "#1 Europe"
+                },
+                {
+                    code: "CDG",
+                    name: "Charles de Gaulle Airport",
+                    city: "Paris",
+                    country: "France",
+                    region: "Europe",
+                    owner: "Air France Hub",
+                    routes: 192,
+                    daily: 950,
+                    terminals: 3,
+                    runways: 4,
+                    rank: "#2 Europe"
+                },
+                {
+                    code: "FRA",
+                    name: "Frankfurt Airport",
+                    city: "Frankfurt",
+                    country: "Germany",
+                    region: "Europe",
+                    owner: "Lufthansa Hub",
+                    routes: 174,
+                    daily: 880,
+                    terminals: 2,
+                    runways: 4,
+                    rank: "#3 Europe"
+                },
+                {
+                    code: "IST",
+                    name: "Istanbul Airport",
+                    city: "Istanbul",
+                    country: "Turkey",
+                    region: "Europe",
+                    owner: "Turkish Airlines Hub",
+                    routes: 312,
+                    daily: 1500,
+                    terminals: 1,
+                    runways: 6,
+                    rank: "#4 Europe"
+                },
+                {
+                    code: "JFK",
+                    name: "John F. Kennedy Int'l Airport",
+                    city: "New York",
+                    country: "United States",
+                    region: "Americas",
+                    owner: "American / Delta Hub",
+                    routes: 201,
+                    daily: 1100,
+                    terminals: 6,
+                    runways: 4,
+                    rank: "#1 Americas"
+                },
+                {
+                    code: "YYZ",
+                    name: "Toronto Pearson Int'l Airport",
+                    city: "Toronto",
+                    country: "Canada",
+                    region: "Americas",
+                    owner: "Air Canada Hub",
+                    routes: 128,
+                    daily: 510,
+                    terminals: 2,
+                    runways: 5,
+                    rank: "#2 Americas"
+                },
+                {
+                    code: "DEL",
+                    name: "Indira Gandhi Int'l Airport",
+                    city: "Delhi",
+                    country: "India",
+                    region: "Asia",
+                    owner: "Air India Hub",
+                    routes: 142,
+                    daily: 720,
+                    terminals: 3,
+                    runways: 3,
+                    rank: "#1 South Asia"
+                },
+                {
+                    code: "SIN",
+                    name: "Singapore Changi Airport",
+                    city: "Singapore",
+                    country: "Singapore",
+                    region: "Asia",
+                    owner: "Singapore Airlines Hub",
+                    routes: 198,
+                    daily: 920,
+                    terminals: 4,
+                    runways: 2,
+                    rank: "#1 SE Asia"
+                },
+                {
+                    code: "HND",
+                    name: "Tokyo Haneda Airport",
+                    city: "Tokyo",
+                    country: "Japan",
+                    region: "Asia",
+                    owner: "JAL / ANA Hub",
+                    routes: 156,
+                    daily: 980,
+                    terminals: 3,
+                    runways: 4,
+                    rank: "#1 East Asia"
+                },
+                {
+                    code: "SYD",
+                    name: "Kingsford Smith Airport",
+                    city: "Sydney",
+                    country: "Australia",
+                    region: "Pacific",
+                    owner: "Qantas Hub",
+                    routes: 98,
+                    daily: 440,
+                    terminals: 3,
+                    runways: 3,
+                    rank: "#1 Pacific"
+                }
+            ];
 
-        // ─────────────────────────────────────────────
-        // RENDER HUB CARDS
-        // ─────────────────────────────────────────────
-        function renderHubs() {
-            const grid = document.getElementById('hubGrid');
-            grid.innerHTML = '';
+            // ─────────────────────────────────────────────
+            // RENDER HUB CARDS
+            // ─────────────────────────────────────────────
+            function renderHubs() {
+                const grid = document.getElementById('hubGrid');
+                grid.innerHTML = '';
 
-            HUBS.forEach((hub, idx) => {
-                const delay = (idx % 3) * 120; // Staggered AOS entry per column
+                HUBS.forEach((hub, idx) => {
+                    const delay = (idx % 3) * 120; // Staggered AOS entry per column
 
-                grid.innerHTML += `
+                    grid.innerHTML += `
                     <!-- Hub Card: ${hub.code} — Links to status.html with origin context -->
                     <a href="status.html?origin=${hub.code}"
                        class="hub-card p-7"
@@ -944,63 +1012,64 @@
 
                     </a>
                 `;
-            });
+                });
 
-            // Refresh AOS after DOM injection
-            setTimeout(() => AOS.refresh(), 100);
-        }
-
-        // ─────────────────────────────────────────────
-        // UTC CLOCK in system bar
-        // ─────────────────────────────────────────────
-        function updateClock() {
-            const now = new Date();
-            const h = String(now.getUTCHours()).padStart(2, '0');
-            const m = String(now.getUTCMinutes()).padStart(2, '0');
-            const s = String(now.getUTCSeconds()).padStart(2, '0');
-            const el = document.getElementById('sys-time');
-            if (el) el.textContent = `UTC ${h}:${m}:${s}`;
-        }
-
-        // ─────────────────────────────────────────────
-        // INIT
-        // ─────────────────────────────────────────────
-        AOS.init({ once: true, offset: 40, duration: 700 });
-        renderHubs();
-        updateClock();
-        setInterval(updateClock, 1000);
-
-        /* ── Page transition helpers ── */
-        function navigateBack(e) {
-            e.preventDefault();
-            var dest = (e.currentTarget && e.currentTarget.href) ? e.currentTarget.href : 'index.html';
-            var overlay = document.getElementById('stOverlay');
-            sessionStorage.setItem('st_transition', '1');
-            overlay.classList.add('active');
-            setTimeout(function() { window.location.href = dest; }, 420);
-        }
-
-        (function() {
-            if (sessionStorage.getItem('st_transition') === '1') {
-                sessionStorage.removeItem('st_transition');
-                var overlay = document.getElementById('stOverlay');
-                overlay.style.transition = 'none';
-                overlay.style.opacity = '1';
-                overlay.style.pointerEvents = 'none';
-                setTimeout(function() {
-                    overlay.style.transition = 'opacity 500ms ease';
-                    overlay.style.opacity = '0';
-                    setTimeout(function() {
-                        overlay.style.transition = '';
-                        overlay.style.opacity = '';
-                        overlay.style.pointerEvents = '';
-                    }, 520);
-                }, 20);
+                // Refresh AOS after DOM injection
+                setTimeout(() => AOS.refresh(), 100);
             }
-        })();
-    </script>
+
+            // ─────────────────────────────────────────────
+            // UTC CLOCK in system bar
+            // ─────────────────────────────────────────────
+            function updateClock() {
+                const now = new Date();
+                const h = String(now.getUTCHours()).padStart(2, '0');
+                const m = String(now.getUTCMinutes()).padStart(2, '0');
+                const s = String(now.getUTCSeconds()).padStart(2, '0');
+                const el = document.getElementById('sys-time');
+                if (el) el.textContent = `UTC ${h}:${m}:${s}`;
+            }
+
+            // ─────────────────────────────────────────────
+            // INIT
+            // ─────────────────────────────────────────────
+            AOS.init({ once: true, offset: 40, duration: 700 });
+            renderHubs();
+            updateClock();
+            setInterval(updateClock, 1000);
+
+            /* ── Page transition helpers ── */
+            function navigateBack(e) {
+                e.preventDefault();
+                var dest = (e.currentTarget && e.currentTarget.href) ? e.currentTarget.href : 'index.html';
+                var overlay = document.getElementById('stOverlay');
+                sessionStorage.setItem('st_transition', '1');
+                overlay.classList.add('active');
+                setTimeout(function () { window.location.href = dest; }, 420);
+            }
+
+            (function () {
+                if (sessionStorage.getItem('st_transition') === '1') {
+                    sessionStorage.removeItem('st_transition');
+                    var overlay = document.getElementById('stOverlay');
+                    overlay.style.transition = 'none';
+                    overlay.style.opacity = '1';
+                    overlay.style.pointerEvents = 'none';
+                    setTimeout(function () {
+                        overlay.style.transition = 'opacity 500ms ease';
+                        overlay.style.opacity = '0';
+                        setTimeout(function () {
+                            overlay.style.transition = '';
+                            overlay.style.opacity = '';
+                            overlay.style.pointerEvents = '';
+                        }, 520);
+                    }, 20);
+                }
+            })();
+        </script>
 
     </div><!-- end .st-page-entry -->
 
 </body>
+
 </html>
